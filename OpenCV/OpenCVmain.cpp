@@ -13,17 +13,17 @@
 //	double maxratio = 0.9, minratio = 0.25, alpha = 0, beta = 500;
 //
 //
-//	cv::VideoCapture cap("C:\\\\\\\\Users\\\\\\\\ÀÌ°æ½Å\\\\\\\\kyonggi.ac.kr\\\\\\\\ÀÌÀçºó - 2020-1 ÇÁ·ÎÁ§Æ®\\\\\\\\°ü·Ã ÀÚ·á\\\\\\\\¹ö½º¿µ»ó\\\\\\\\1.mp4");
+//	cv::VideoCapture cap("C:\\\\\\\\Users\\\\\\\\ì´ê²½ì‹ \\\\\\\\kyonggi.ac.kr\\\\\\\\ì´ì¬ë¹ˆ - 2020-1 í”„ë¡œì íŠ¸\\\\\\\\ê´€ë ¨ ìë£Œ\\\\\\\\ë²„ìŠ¤ì˜ìƒ\\\\\\\\1.mp4");
 //	if (!cap.isOpened()) {
-//		cerr << "¿¡·¯ - Ä«¸Ş¶ó¸¦ ¿­ ¼ö ¾ø½À´Ï´Ù.\\\\n";
+//		cerr << "ì—ëŸ¬ - ì¹´ë©”ë¼ë¥¼ ì—´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\\\\n";
 //		return -1;
 //	}
 //	while (1)
 //	{
-//		// Ä«¸Ş¶ó·ÎºÎÅÍ Ä¸ÃÄÇÑ ¿µ»óÀ» frame¿¡ ÀúÀåÇÕ´Ï´Ù.
+//		// ì¹´ë©”ë¼ë¡œë¶€í„° ìº¡ì³í•œ ì˜ìƒì„ frameì— ì €ì¥í•©ë‹ˆë‹¤.
 //		cap.read(inputimage);
 //		if (inputimage.empty()) {
-//			cerr << "ºó ¿µ»óÀÌ Ä¸ÃÄµÇ¾ú½À´Ï´Ù.\\\\n";
+//			cerr << "ë¹ˆ ì˜ìƒì´ ìº¡ì³ë˜ì—ˆìŠµë‹ˆë‹¤.\\\\n";
 //			break;
 //		}
 //
@@ -104,7 +104,7 @@
 //
 //				if (abs(gap) < max(rect_list[idx].height*0.2, (double)10)) {
 //
-//					//¿À¹ö·¦ÀÎÁö ÆÇ´Ü.
+//					//ì˜¤ë²„ë©ì¸ì§€ íŒë‹¨.
 //					if (gap > rect_list[idx].width*0.15) {
 //						continue;
 //					}
@@ -191,7 +191,7 @@
 //				double gap = testRect.x + testRect.width - opRectList[idx].x;
 //				if (abs(gap) < max(testRect.height*0.2, (double)10)) {
 //
-//					//¿À¹ö·¦ÀÎÁö ÆÇ´Ü.
+//					//ì˜¤ë²„ë©ì¸ì§€ íŒë‹¨.
 //					if (gap > testRect.width*0.15) {
 //						continue;
 //					}
@@ -230,7 +230,7 @@
 //				Rect downBoundingRect(Point(resultGroupList[j][0].tl().x, resultGroupList[j][0].tl().y < resultGroupList[j].back().tl().y ? resultGroupList[j][0].tl().y : resultGroupList[j].back().tl().y),
 //					Point(resultGroupList[j].back().br().x, resultGroupList[j][0].br().y > resultGroupList[j].back().br().y ? resultGroupList[j][0].br().y : resultGroupList[j].back().br().y));
 //
-//				if (upBoundingRect.y > downBoundingRect.y) { //i´Â À§¿©¾ß ÇÑ´Ù ¾Æ´Ï¸é ³¡
+//				if (upBoundingRect.y > downBoundingRect.y) { //iëŠ” ìœ„ì—¬ì•¼ í•œë‹¤ ì•„ë‹ˆë©´ ë
 //					continue;
 //				}
 //				double gap2 = upBoundingRect.br().y - downBoundingRect.tl().y;
@@ -240,10 +240,10 @@
 //				double wg = (downBoundingRect.br().x - downBoundingRect.tl().x);
 //				double xgap = (upBoundingRect.x - downBoundingRect.x);
 //				int rectCount = resultGroupList[j].size();
-//				if (xgap >= (wg / rectCount) && xgap <= 3 * (wg / rectCount)) { //³í¹®(7)ÀÌ°í 
+//				if (xgap >= (wg / rectCount) && xgap <= 3 * (wg / rectCount)) { //ë…¼ë¬¸(7)ì´ê³  
 //					double ht = upBoundingRect.height;
 //					double ygap = downBoundingRect.tl().y - upBoundingRect.br().y;
-//					if (ygap <= ht * 0.2) {//³í¹®(8)ÀÌ¸é µÎÁÙ¹øÈ£ÆÇ
+//					if (ygap <= ht * 0.2) {//ë…¼ë¬¸(8)ì´ë©´ ë‘ì¤„ë²ˆí˜¸íŒ
 //
 //						Rect boundingRect2(Point(upBoundingRect.x < downBoundingRect.x ? upBoundingRect.x : downBoundingRect.x,
 //							upBoundingRect.y < downBoundingRect.y ? upBoundingRect.y : downBoundingRect.y),
@@ -265,7 +265,7 @@
 //		imshow("imagedebuger", imagedebuger);
 //
 //
-//		//		// ESC Å°¸¦ ÀÔ·ÂÇÏ¸é ·çÇÁ°¡ Á¾·áµË´Ï´Ù.
+//		//		// ESC í‚¤ë¥¼ ì…ë ¥í•˜ë©´ ë£¨í”„ê°€ ì¢…ë£Œë©ë‹ˆë‹¤.
 //		if (cv::waitKey(25) >= 0)
 //			break;
 //	}
@@ -273,7 +273,7 @@
 //}
 
 
-
+// ê²½ì‹ ì´ ë°”ë³´
 
 
 using namespace std;
