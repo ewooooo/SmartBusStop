@@ -44,7 +44,7 @@ int main()
 	double maxratio = 0.9, minratio = 0.25, alpha = 0, beta = 500;
 
 
-	cv::VideoCapture cap("C:\\\\\\\\Users\\\\\\\\이경신\\\\\\\\kyonggi.ac.kr\\\\\\\\이재빈 - 2020-1 프로젝트\\\\\\\\관련 자료\\\\\\\\버스영상\\\\\\\\1.mp4");
+	cv::VideoCapture cap("/home/test/opencv_test/1.mp4");
 	if (!cap.isOpened()) {
 		cerr << "에러 - 카메라를 열 수 없습니다.\\\\n";
 		return -1;
@@ -291,7 +291,7 @@ int main()
 
 		for (int idx = 0; idx < GroupList.size(); idx++) {
 			rectangle(imagedebuger, GroupList[idx].tl(), GroupList[idx].br(), Scalar(0, 0, 255), 3);
-			Rect OCRrect(GroupList[idx].tl(), GroupList[idx].br());
+			Rect OCRrect(Point(GroupList[idx].tl().x-20,GroupList[idx].tl().y-20), Point(GroupList[idx].br().x+20,GroupList[idx].br().y+20));
 			Mat OCRimg = image(OCRrect);
 			cout << OCR(OCRimg) << endl;
 		}
