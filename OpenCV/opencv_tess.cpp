@@ -5,9 +5,38 @@
 #include <algorithm>// min() max();
 #include <iostream>
 #include <cstdlib>
+
+#include <string>
+#include <tesseract/baseapi.h>
+#include <leptonica/allheaders.h>
+
 using namespace cv;
 using namespace std;
 
+String OCR(Mat test) {
+	Mat GaussIMG;
+	Mat Ggrays;
+	cvtColor(test, GaussIMG, COLOR_BGR2GRAY);
+	Mat test1;
+	cvtColor(GaussIMG, Ggrays, COLOR_GRAY2BGR);
+	GaussianBlur(Ggrays, test1, Size(5, 5), 0);
+	imshow("tset", test1);
+
+
+
+	string outText;
+	tesseract::TessBaseAPI *ocr = new tesseract::TessBaseAPI();
+
+	ocr->Init(NULL, "kor", tesseract::OEM_LSTM_ONLY);
+	ocr->SetPageSegMode(tesseract::PSM_AUTO);
+
+	ocr->SetImage(test1.data, test1.cols, test1.rows, 3, test1.step);
+	outText = string(ocr->GetUTF8Text());
+	//cout << outText;
+	ocr->End();
+
+	return outText;
+}
 
 int main()
 {
@@ -262,7 +291,12 @@ int main()
 
 		for (int idx = 0; idx < GroupList.size(); idx++) {
 			rectangle(imagedebuger, GroupList[idx].tl(), GroupList[idx].br(), Scalar(0, 0, 255), 3);
+			Rect OCRrect(GroupList[idx].tl(), GroupList[idx].br());
+			Mat OCRimg = image(OCRrect);
+			cout << OCR(OCRimg) << endl;
 		}
+
+
 
 		imshow("imagedebuger", imagedebuger);
 
