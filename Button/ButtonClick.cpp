@@ -10,14 +10,14 @@ int main (void)
   pinMode (2, INPUT);
   pullUpDnControl (2, PUD_UP);
   pullUpDnControl (3, PUD_DOWN);
-  int count = 0;
+  clock_t count = 0;
   for (;;)
   {
 
     if (digitalRead(3) || digitalRead(2)) {
       digitalWrite (0, HIGH);
       if (count == 0) {
-        count = time(0) % 60;
+        count = clock();
       }
     } else {
       digitalWrite (0,  LOW) ;
@@ -25,16 +25,11 @@ int main (void)
     }
     
     if (count != 0) {
-      int delaytime = time(0) % 60 - count;
-      if (delaytime < 0) {
-        count = count + 60;
-      }
-      if(delaytime > 3){
+      double delaytime =(double)(clock() - count); //1000000clock = 1s
+      if(delaytime*1000000 > 2){
         std::cout << "set" << std::endl;
         count = 0;
       }
-      
-
     }
   }
   return 0 ;
