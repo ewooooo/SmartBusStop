@@ -9,17 +9,48 @@ using namespace cv;
 using namespace std;
 
 
+vector<Point> pointList;
+Mat mask;
+
+void mouse_callback(int event, int x, int y, int flags, void *userdata) {
+	Mat *im = reinterpret_cast<Mat*>(userdata);
+	
+
+	if (event == EVENT_LBUTTONDOWN)
+	{
+		pointList.push_back(Point(x, y));
+		if(pointList.size()>1)
+			line(*im, pointList[pointList.size() - 2], pointList.back(), Scalar(255, 0, 0), 2);
+		std::cout << "Left button of the mouse is clicked - position (" << x << ", " << y << ")" << std::endl;
+	}
+
+	else if (event == EVENT_RBUTTONDOWN)
+	{	
+		const Point *pts = (const cv::Point*) Mat(pointList).data;
+		int npts = Mat(pointList).rows;
+		polylines(*im, &pts, &npts, 1, true, Scalar(0,0,255), 3);
+		polylines(mask, &pts, &npts, 1, true, Scalar(255, 255, 255), 1);
+		fillPoly(mask, &pts, &npts, 1, Scalar(255, 255, 255));
+		pointList.clear();
+		std::cout << "Right button of the mouse is clicked - position (" << x << ", " << y << ")" << std::endl;
+	}
+
+}
+
+
 int main()
 {
 	Mat inputimage, grayscale, image3, drawing; // Make images.
 	double maxratio = 0.9, minratio = 0.25, alpha = 0, beta = 500;
 
 
-	cv::VideoCapture cap("C:\\\\\\\\Users\\\\\\\\이경신\\\\\\\\kyonggi.ac.kr\\\\\\\\이재빈 - 2020-1 프로젝트\\\\\\\\관련 자료\\\\\\\\버스영상\\\\\\\\1.mp4");
+	cv::VideoCapture cap("D:\\remove\\test.mp4");
 	if (!cap.isOpened()) {
 		cerr << "에러 - 카메라를 열 수 없습니다.\\\\n";
 		return -1;
 	}
+	mask = Mat::ones(cap.get(CAP_PROP_FRAME_HEIGHT), cap.get(CAP_PROP_FRAME_WIDTH), CV_8UC1);
+
 	while (1)
 	{
 		// 카메라로부터 캡쳐한 영상을 frame에 저장합니다.
@@ -29,8 +60,25 @@ int main()
 			break;
 		}
 
-		Rect ROIRect(0, inputimage.rows/2, inputimage.cols, inputimage.rows/2); //x,y,w,h
-		Mat	image = inputimage(ROIRect);
+		
+		if (mask.empty()) {
+			mask = Mat::zeros(cap.get(CAP_PROP_FRAME_HEIGHT), cap.get(CAP_PROP_FRAME_WIDTH), CV_8UC1); 
+			pointList.clear();
+			Mat mouseImage = inputimage.clone();
+			while (1) {
+				imshow("imagefirst", mouseImage);
+				imshow("mask", mask);
+				vector<Point> pointList;
+				setMouseCallback("imagefirst", mouse_callback, reinterpret_cast<void*>(&mouseImage));
+				if (cv::waitKey(3) == 27)
+					break;
+			}
+			destroyAllWindows(); //모든 창 닫기
+		}
+	
+
+		//Rect ROIRect(0, inputimage.rows/2, inputimage.cols, inputimage.rows/2); //x,y,w,h
+		Mat	image = inputimage;//(ROIRect);
 
 
 		//imshow("Original", image);
@@ -57,6 +105,8 @@ int main()
 		Canny(GaussImage, CannyImage, 100, 300, 3);  //  Getting edges by Canny algorithm.
 		//imshow("Original->Gray->Canny", CannyImage);
 
+		bitwise_and(CannyImage, mask, CannyImage);
+		imshow("canny", CannyImage);
 
 		//  Finding contours.
 		vector<vector<Point> > contours;  //  Vectors for 'findContours' function.
@@ -267,8 +317,11 @@ int main()
 		imshow("imagedebuger", imagedebuger);
 
 
-		//		// ESC 키를 입력하면 루프가 종료됩니다.
-		if (cv::waitKey(25) >= 0)
+		//		// a제외 키 누르면 종료
+		int key = waitKey(1);
+		if (key == 97) // 소문자 a 누르면 mask 설정 모드
+			mask.release();
+		else if (key > 0)
 			break;
 	}
 	return 0;
