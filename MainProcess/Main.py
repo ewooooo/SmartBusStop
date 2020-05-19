@@ -1,54 +1,93 @@
 import time
 from threading import Thread
-from multiprocessing import Process, Queue
-from my_socket import *
-#from Button import *
+# from multiprocessing import Process, Manager
+# from multiprocessing.managers import BaseManager
 
+from my_socket import *
+from myButton import MyButton
+from Bus import BusList
+from TTS import *
+
+# class MyManager(BaseManager): pass
+#
+# def Manager():
+#     m = MyManager()
+#     m.start()
+#     return m
+#
+# MyManager.register('mySocket',mySocket)
+# MyManager.register('MyButton',MyButton)
+#
 
 class LoopSystem:
-    
-    #button = Button()  # 클래스 변수(static 변수)
-    #busList = BusList()
-    #userBusList = UserBusList()
-    #tts = TTS()
-    
-    systemState = False
-    
+
+    def __init__(self):
+        self.mysocket = mySocket(self)
+        self.button = MyButton(self)
+        self.bus = BusList()
+        self.tts = TTS(self)
 
 
-    # def __init__(self):
-    #     next()
+        self.systemState = False
 
-    # def Controll(self):
-    #     if self.userBusList.state():
-    #             print("정보요청")
-    #             if Communication.buffer
+
+        #test
+        self.listTest = [0]
+
+        # self.socketManager = Manager()
+        # self.mysocket = self.socketManager.mySocket()
+        # self.buttonManager = Manager()
+        # self.button = self.buttonManager.MyButton()
+        # self.busManager = Manager()
+        # self.bus = self.busManager.BusList()
+        # self.userBusManager = Manager()
+        # self.userBus = self.userBusManager.UserBusList()
+
+
+    def Controll(self):
+        while True:
+            if self.bus.userState(): #저장된 버스가 있고
+                checkBusList = self.bus.enterUserBus()
+                if not checkBusList: # 버스 상태가 진입중이면
+                    continue
+                else:
+                    checkBusList # secondprocess한테 1 보내서 영상 내놔라 하고
+                                    # 큐에 정보 들어왔으면 체크 해서 tts 조정하고
+                                    #
+                    print("정보요청")
 
     def loopStart(self):
         #시스템 자고 있으면 깨우기(버튼 체크)_버튼 눌리면일어남
         while(True):
-            print("test1")
-            # while not self.systemState:
-            #     self.button.wakeUpTest()
 
-            # th0 = Thread(target=Button.checkButton(), args=()) #버튼 입력 시작
-            # th3 = Thread(target=self.Controll())
+            # 시스템 자고 있으면 깨우기(버튼 체크)_버튼 눌리면일어남
+            while not self.systemState:
+                self.systemState = self.button.wakeUpTest()
+
+            socketProcess = Thread(target=self.mysocket.RecvLoop) #메인 통신 시작
+            buttonProcess = Thread(target=self.button.checkButton) #버튼 입력 시작
+            busUpdateProcess = Thread(target=self.bus.update)
+            TTSProcess = Thread(target=self.tts.playTTS)
+
+            socketProcess.start()
+            buttonProcess.start()
+            busUpdateProcess.start()
+            TTSProcess.start()
+
+            socketProcess.join()
+            buttonProcess.join()
+            busUpdateProcess.join()
+            TTSProcess.join()
+
+            self.systemState = False
+
             
-            # socketThtread.start()
-            # socketThtread.join()
-
-            
-
+        
 
 
 if __name__ == "__main__":
-    mysocket = mySocket()#소켓 연결
-    loop = LoopSystem()   
+    print("Start")
 
-    socketThtread = Thread(target=mysocket.RecvLoop(), args=()) #메인 통신 시작
-    LoopThtread = Thread(target=loop.loopStart(), args=()) #통신시작
+    loop = LoopSystem()
+    loop.loopStart()
 
-    socketThtread.start()
-    LoopThtread.start()
-    socketThtread.join()
-    LoopThtread.join()

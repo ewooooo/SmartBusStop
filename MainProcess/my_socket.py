@@ -1,11 +1,13 @@
 # import socket
-
+import time
 class mySocket:
     # HOST = '192.168.35.163'  # Server IP or Hostname
     # PORT = 12345  # Pick an open Port (1000+ recommended), must match the client sport
 
     # buffer = []
-    # def __init__(self):
+    def __init__(self,obj):
+        print("makeSocket")
+        self.main = obj
     #     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     #     print('Socket created')
 
@@ -21,8 +23,13 @@ class mySocket:
 
     def RecvLoop(self):
         # awaiting for message
+        i = 1
         while True:
-            print("test2")
+
+            self.main.listTest.append(i)
+            i=i+1
+            time.sleep(1)
+            #print("socket")
         #     data = self.clientsocket.recv(1024)
         #     print('I sent a message back in response to: ' + data)
         #     reply = ''
