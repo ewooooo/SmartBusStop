@@ -13,10 +13,12 @@ class Bus:
 
 
 class BusList:
-    def __init__(self):
+    def __init__(self, obj):
+        print("makeBusList")
+        self.main = obj
         self.busDic = {}  # busNumber : Bus
         self.userBusList = {}
-        self.enterBus = []
+        self.enterBus = {}
 
         #test  bus 객체 생성은 한번만
         bus1 = Bus('10', '10가4511', '진입')
@@ -27,16 +29,21 @@ class BusList:
         #test
 
     def update(self):  # busDic update
+        while True:
+            self.main.listTest.append("BusUpdate")
+            time.sleep(4)
+
         # 기존꺼는 그대로 남기고 중복 제거해야한다..
-        print("busUpdate")
-        b = ['10', '20']
-        self.enterBus.clear()
-        for a in b:
-            bus = self.busDic.get(a)
-            bus.modifyBus('변경', '진입')
-            if bus.state == '진입':
-                self.enterBus[bus.busNumber] = bus
-        time.sleep(3)
+
+        # print("busUpdate")
+        # b = ['10', '20']
+        # self.enterBus.clear()
+        # for a in b:
+        #     bus = self.busDic.get(a)
+        #     bus.modifyBus('변경', '진입')
+        #     if bus.state == '진입':
+        #         self.enterBus[bus.busNumber] = bus
+        # time.sleep(3)
 
     def add(self, busNumber):  # userbus add
         bus = self.busDic.get(busNumber)

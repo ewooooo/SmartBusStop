@@ -44,9 +44,9 @@ int main()
 	double maxratio = 0.9, minratio = 0.25, alpha = 0, beta = 500;
 
 
-	cv::VideoCapture cap("D:\\remove\\test.mp4");
+	cv::VideoCapture cap("D:\\1.mp4");
 	if (!cap.isOpened()) {
-		cerr << "에러 - 카메라를 열 수 없습니다.\\\\n";
+		cerr << "에러 - 카메라를 열 수 없습니다.\n";
 		return -1;
 	}
 	mask = Mat::ones(cap.get(CAP_PROP_FRAME_HEIGHT), cap.get(CAP_PROP_FRAME_WIDTH), CV_8UC1);
@@ -119,6 +119,7 @@ int main()
 		int rectindex = 0;
 		RNG rng(12345);
 		Mat drawing = Mat::zeros(image.size(), CV_8UC3);
+
 		for (int idx = 0; idx < contours.size(); idx++) {
 
 			Scalar color = Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255));
@@ -207,6 +208,9 @@ int main()
 		}
 
 
+		if (opRectList.size() == 0) {
+			continue;
+		}
 
 		for (int a = opRectList.size() - 1; a > 0; a--) {
 			for (int j = 0; j < a; j++) {
@@ -226,8 +230,7 @@ int main()
 
 		vector<vector<Rect>> resultGroupList;
 		vector<Rect> fiartGroup;
-		if (opRectList.size() == 0)
-			continue;
+
 
 		fiartGroup.push_back(opRectList[0]);
 		resultGroupList.push_back(fiartGroup);

@@ -6,12 +6,9 @@ class MyButton:
         self.main = obj
         print("makebutton")
     def checkButton(self):
-        i = 1
         while True:
-            self.main.listTest.append(i)
-            i = i + 1
+            self.main.listTest.append("ButtonCheck")
             time.sleep(1)
-            #print("checkButton")
 
     def oneClick(self):
         #현재재생중 버스 번호 받아 userbuslist에 저장

@@ -6,6 +6,8 @@ class mySocket:
 
     # buffer = []
     def __init__(self,obj):
+        self.SocketState = 0;
+
         print("makeSocket")
         self.main = obj
     #     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -22,13 +24,10 @@ class mySocket:
     #     print('Connected')
 
     def RecvLoop(self):
-        # awaiting for message
-        i = 1
         while True:
-
-            self.main.listTest.append(i)
-            i=i+1
+            self.main.listTest.append("SocketCheck")
             time.sleep(1)
+
             #print("socket")
         #     data = self.clientsocket.recv(1024)
         #     print('I sent a message back in response to: ' + data)
