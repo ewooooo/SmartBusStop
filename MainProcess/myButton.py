@@ -1,4 +1,4 @@
-#from Main import LoopSystem
+from Main import LoopSystem
 import RPi.GPIO as GPIO
 import time
 
@@ -7,17 +7,23 @@ class MyButton:
     DOUBLECLICKTIME = 0.5
     ONECLICKTIME = 0.05
 
-    def __init__(self):
+    def __init__(self,obj):
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)    # set GPIO25 as input (button)  
         GPIO.setup(17, GPIO.OUT)   # set GPIO24 as an output (LED)  
 
-        #self.main = obj
-        #print("makebutton")
+        self.main = obj
+        print("makebutton")
 
     def checkButton(self):
-        # self.main.listTest.append("ButtonCheck")
-        # time.sleep(1)
+        # while True:
+        #     # self.oneClick()
+        #     # time.sleep(2)
+        #     # self.doubleClick()
+        #     # time.sleep(2)
+        #     # self.longClick()
+        #     # time.sleep(2)
+    
         try:
             count =0
             doubleClickCount = 0
@@ -81,29 +87,22 @@ class MyButton:
 
     def oneClick(self):
         print("oneClick")
+        self.main.mysocket.Send("oneClick")
 
     def doubleClick(self):
         print("doubleClick")
-
+        self.main.mysocket.Send("doubleClick")
     def longClick(self):
         print("longClick")
-
+        self.main.mysocket.Send("longClick")
     def wakeUpTest(self):
         print("wakeUp")
         return True
 
 
 
-if __name__ == "__main__":
-    print("start")
-    # doubleClickCount = time.time_ns()
-    # count = 1
-    # while(True):
-    #     delaytime = (time.time_ns() - doubleClickCount)/1000000000
-    #     if delaytime > count :
-    #         count = count + 1
-    #         print(delaytime)
-    #         print(count)
-    
-    b= MyButton()
-    b.checkButton()
+# if __name__ == "__main__":
+#     print("start")
+
+#     b= MyButton()
+#     b.checkButton()

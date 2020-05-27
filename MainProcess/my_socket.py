@@ -1,54 +1,48 @@
-# import socket
+import socket
 import time
 class mySocket:
-    # HOST = '192.168.35.163'  # Server IP or Hostname
-    # PORT = 12345  # Pick an open Port (1000+ recommended), must match the client sport
+    HOST = '192.168.0.15'
+    PORT = 12345
 
-    # buffer = []
-    def __init__(self,obj):
-        self.SocketState = 0;
-
-        print("makeSocket")
-        self.main = obj
-    #     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    #     print('Socket created')
-
-    #     # managing error exception
-    #     try:
-    #         s.bind((self.HOST, self.PORT))
-    #     except socket.error:
-    #         print('Bind failed ')
-    #     s.listen(5)
-    #     print('Socket awaiting messages')
-    #     (self.clientsocket, self.address) = s.accept()
-    #     print('Connected')
+    sendBuffer = []
+    recvBuffer = []
+    def __init__(self):
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.s.connect((self.HOST,self.PORT))
 
     def RecvLoop(self):
         while True:
-            self.main.listTest.append("SocketCheck")
-            time.sleep(1)
 
-            #print("socket")
-        #     data = self.clientsocket.recv(1024)
-        #     print('I sent a message back in response to: ' + data)
-        #     reply = ''
-        #     # process your message
-        #     if data == 'Hello':
-        #         reply = 'Hi, back!'
-        #     elif data == 'This is important':
-        #         reply = 'OK, I have done the important thing you have asked me!'
-        #     # and so on and on until...
-        #     elif data == 'quit':
-        #         self.clientsocket.send('Terminating')
-        #         break
-        #     else:
-        #         reply = 'Unknown command'
-        #     self.clientsocket.send(reply)   # Sending reply
-        # self.clientsocket.close()           # Close connections
+            # self.main.listTest.append("SocketCheck")
+            # time.sleep(1)
+            #print(self.sendBuffer)
+            if self.sendBuffer:
+                command = self.sendBuffer[0]
+                self.s.send(command.encode())
+                del self.sendBuffer[0]
+                reply = self.s.recv(1024)
+                reply= reply.decode()
+                if reply == 'Terminating':
+                    quit()
+                print(reply)
+            #time.sleep(0.0001)
 
-    # def Send(self):
-    #     next()
+            # command = input('Enter your command: ')
+            # self.s.send(command.encode())
+            
+            
+
+    def Send(self, data):
+        self.sendBuffer.append(data)
+
     # def checkBuffer(self):
     #     value = self.buffer
     #     self.buffer.clear()
     #     return value
+
+if __name__ == "__main__":
+    print("start")
+
+    st= mySocket()
+    st.RecvLoop()
+
