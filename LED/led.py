@@ -24,7 +24,7 @@ def demo(n, block_orientation, rotate, inreverse):
        text(draw, (11, 20), msg[3], fill="white")
     print(msg1)
     time.sleep(4)
-
+#test
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='matrix_demo arguments',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
