@@ -1,6 +1,5 @@
 import time
 
-
 class Bus:
     def __init__(self, busNumber, carNumber, state):
         self.busNumber = busNumber
