@@ -7,43 +7,53 @@ response = requests.get(url)
 text = response.text
 root = ET.fromstring(text)
 
-route1 = ''
-route1list = []
-plate1 = ''
-plate1list = []
-plate2 = ''
-plate2list = []
+
+class bus:
+    def __init__(self,routeId,plateNo1,location1):
+        self.routeId = routeId
+        self.plateNo1 = plateNo1
+        self.locationNo1 = location1
+busDict= {}
+routenamelist = []
 for child in root:
-    # print(child.tag, child.attrib)
+    if child.tag != 'msgBody':
+        continue
     for kid in child:
-        # print(kid.tag, kid.attrib)
+        route1 , plate1, location1  = "","",""
         for ac in kid:
-            for routeId in ac.iter('routeId'):
-                route1 = routeId.text
+            if ac.tag == "routeId": #노선번호
+                route1 = ac.text
 
-            for plateNo1 in ac.iter('plateNo1'):
-                plate1 = plateNo1.text
+            if ac.tag == "plateNo1": #먼저 도착하는 버스번호
+                plate1 = ac.text
 
-            for plateNo2 in ac.iter('plateNo2'):
-                plate2 = plateNo2.text
+            if ac.tag == "locationNo1": #먼저 도착하는 버스의 남은 정거장
+                location1 = ac.text
 
-            route1list.append(route1)
-            plate1list.append(plate1)
-            plate2list.append(plate2)
-route1list = ' '.join(route1list).split()
-# plate1list = ' '.join(plate1list).split()
-# plate2list = ' '.join(plate2list).split()
+            # route1 : plate1, location1, plate2, location2
+        busDict[route1]= bus(route1,plate1,location1)
 
-route1list = list(set(route1list))
-plate1list = list(set(plate1list))
-plate2list = list(set(plate2list))
+print(busDict.keys()) #결과 확인
+for a in busDict.keys():            #결과 확인
+    b = busDict.get(a)
+    # print("버스 번호 :" + b.routeId)
+    # print("버스 번호판 : " + b.plateNo1)
+    # print("남은 정거장 : " + b.locationNo1)
+routenamelist = []
+for c in busDict.keys():
+    url1 = "http://openapi.gbis.go.kr/ws/rest/busrouteservice/info?serviceKey=1234567890&routeId="
+    url2 = url1 + c
+    # print(url2)
+    responseroute = requests.get(url2)
+    textroute = responseroute.text
+    rootroute = ET.fromstring(textroute)
+    for top in rootroute:
+        if top.tag != 'msgBody':
+            continue
+        for mid in top:
+            for bot in mid:
+                if bot.tag == "routeName":  # 노선번호
+                    routenamelist = bot.text
+                    print(routenamelist)
 
-
-print(route1list)
-print(plate1list)
-print(plate2list)
-# total = {route1list: (plate1list, plate2list)}
-# print(total.items())
-
-
-            # 리스트 형태로 값을 받아들여서 리스트 내의 빈칸과 중복값을 제거해주고 딕셔너리리 형태로 완성
+                # 리스트 형태로 값을 받아들여서 리스트 내의 빈칸과 중복값을 제거해주고 딕셔너리리 형태로 완성
