@@ -1,48 +1,29 @@
 import socket
 import time
+
 class mySocket:
-    HOST = '192.168.0.15'
-    PORT = 12345
-
-    sendBuffer = []
-    recvBuffer = []
-    def __init__(self):
+    def __init__(self,HOST,PORT):
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.s.connect((self.HOST,self.PORT))
-
-    def RecvLoop(self):
         while True:
+            try:
+                self.s.connect((HOST,PORT))
+                print("Connected")
+                break
+            except:
+                print("re test socket")
+                continue
 
-            # self.main.listTest.append("SocketCheck")
-            # time.sleep(1)
-            #print(self.sendBuffer)
-            if self.sendBuffer:
-                command = self.sendBuffer[0]
-                self.s.send(command.encode())
-                del self.sendBuffer[0]
-                reply = self.s.recv(1024)
-                reply= reply.decode()
-                if reply == 'Terminating':
-                    quit()
-                print(reply)
-            #time.sleep(0.0001)
+    def Send_Recv(self,command):
 
-            # command = input('Enter your command: ')
-            # self.s.send(command.encode())
-            
-            
+        self.s.send(command.encode())
+        mode = self.s.recv(1024).decode()
+        SList = mode.split('|')
 
-    def Send(self, data):
-        self.sendBuffer.append(data)
+        return SList
 
-    # def checkBuffer(self):
-    #     value = self.buffer
-    #     self.buffer.clear()
-    #     return value
-
-if __name__ == "__main__":
-    print("start")
-
-    st= mySocket()
-    st.RecvLoop()
+# if __name__ == "__main__":
+#     print("start")
+#
+#     st= mySocket()
+#     st.RecvLoop()
 
