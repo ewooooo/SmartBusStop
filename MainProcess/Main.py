@@ -4,16 +4,17 @@ from threading import Thread
 # from multiprocessing.managers import BaseManager
 
 from my_socket import *
-#from myButton import *
+# from myButton import *
 from Bus import *
 from TTS import *
 
 import keyData
 
+#===========test=======
+from OpenCV_Socket import ServerSocket
+#========================
 
 class busPlayList(TTS):
-
-
     class status:
         # 상태 파일 네임
         button_1_Info = "button_1_Info"
@@ -23,13 +24,15 @@ class busPlayList(TTS):
         button_3_Cancel_Fail = "button_3_Cancel_Fail"
         button_4_doubleClick = "button_4_doubleClick"
         bus_arrive = "bus_arrive"
+        bus_stop = "bus_stop"
         bus_before_1_station = "bus_before_1_station"
         bus_before_2_station = "bus_before_2_station"
         bus_before_3_station = "bus_before_3_station"
+        bus_no_stop = "bus_no_stop"
 
-    def __init__(self,client_id, client_secret):
+    def __init__(self, client_id, client_secret):
         self.nowPlay = None
-        TTS.__init__(self,client_id, client_secret)
+        TTS.__init__(self, client_id, client_secret)
         # self.tts_api("탑승하고자 하는 버스 번호가 들리면 버튼을 누르세요", self.status.button_1_Info)
         # self.tts_api("버스가 등록되었습니다. 등록하신 버스가 아니시면 버튼을 길게 눌러주세요", self.status.button_2_Push_Succes)
         # self.tts_api("버스가 이미등록되어있습니다.", self.status.button_2_Push_Fail)
@@ -37,9 +40,11 @@ class busPlayList(TTS):
         # self.tts_api("취소할 버스가 없습니다", self.status.button_3_Cancel_Fail)
         # self.tts_api("버튼을 한번만 눌러주세요", self.status.button_4_doubleClick)
         # self.tts_api("버스가 잠시후에 도착합니다", self.status.bus_arrive)
+        # self.tts_api("버스가 정차했습니다. 다시 한번 버스정차소리와 문열림 소리를 듣고 안전에 유의하여 탑승하시기 바랍니다.", self.status.bus_stop)
         # self.tts_api("버스가  한정거장 전에 있습니다", self.status.bus_before_1_station)
         # self.tts_api("버스가  두정거장 전에 있습니다", self.status.bus_before_2_station)
         # self.tts_api("버스가  세정거장 전에 있습니다", self.status.bus_before_3_station)
+        # self.tts_api("버스 정차를 파악할 수 없습니다. 정차하지 않았거나 식별하지 못한 경우일 수 있으니 확인후 탑승 부탁드립니다. 다시 안내를 받으려면 해당 번호가 나오는 시점에 버튼을 눌러주세요", self.status.bus_no_stop)
 
     def busPlay(self, bus):
         busState = int(bus.location)
@@ -55,6 +60,14 @@ class busPlayList(TTS):
         elif busState == 0:
             self.play(bus.busNumber)
             self.play(self.status.bus_arrive)
+        elif busState == 4: # 여기 수정하면 control 도 수정해야함
+            self.play(bus.busNumber)
+            self.play(self.status.bus_stop)
+            bus.location = -1
+        elif busState == -2:
+            self.play(bus.busNumber)
+            self.play(self.status.bus_no_stop)
+            bus.location = -1
 
     def playLoop(self):
         while True:
@@ -64,21 +77,21 @@ class busPlayList(TTS):
                 self.playlist.append(self.playlist[0])
                 del self.playlist[0]
 
-    def addBusData(self, bus): # 버스 추가 될때 실행되야함.
-        if self.tts_api(bus.busNumber+"번",bus.busNumber):
+    def addBusData(self, bus):  # 버스 추가 될때 실행되야함.
+        if self.tts_api(bus.busNumber + "번", bus.busNumber):
             self.playlist.append(bus)
-        else :
+        else:
             print("error")
         pass
 
-    def priorityBUS(self,bus):
+    def priorityBUS(self, bus):
         self.playlist.remove(bus)
         self.playlist.insert(1, bus)
 
     def getNowPlayRout(self):
         return self.nowPlay.busNumber
 
-    def playButtonInfo(self,state,bus):
+    def playButtonInfo(self, state, bus):
         bus.busNumber
         if state == self.status.button_2_Push_Succes:
             pass
@@ -97,8 +110,6 @@ class busPlayList(TTS):
     def arriveBus(self):
         self.playlist.remove(bus)
         self.playlist.insert(1, bus)
-
-
 
 
 class UserBus:
@@ -120,7 +131,8 @@ class UserBus:
             return True
         else:
             return False
-
+    def endDelete(self, bus):
+        del self.userBusList[bus.routeId]
 
     def getEnterUserBus(self):
         # carNumber in userBusList 요소가 있는지 확인 T/F
@@ -133,88 +145,108 @@ class UserBus:
 
     def checkBus(self):
         if not self.userBusList:
-            return False # 비어있으면
+            return False  # 비어있으면
         else:
             return True
+
 
 class status:
     status_1_ActivateCamera = '1'
     status_0_EndCamera = '0'
     status_2_BusWaiting = '2'
     status_3_BusStop = '3'
-    status_5_checkState = '5'
 
 
 class LoopSystem:
     def __init__(self):
-        self.kySocket = mySocket(keyData.HOST,keyData.PORT)
+        #######test#######
+        kySocket = ServerSocket()
+        ################
+
+        # self.kySocket = mySocket(keyData.HOST,keyData.PORT)
         # self.button = MyButton(self)
 
         self.tts = busPlayList(keyData.TTS_client_id, keyData.TTS_client_secret)
-        self.bus = StationDict(self,keyData.stationNumber,keyData.serviceKey) # 순서 중요 tts -> bus
+        self.bus = StationDict(self, keyData.stationNumber, keyData.serviceKey)  # 순서 중요 tts -> bus
 
         self.userBus = UserBus()
 
-        self.systemState = False    # 시스템 상태(default : 대기)
-
+        self.systemState = False  # 시스템 상태(default : 대기)
 
     def Control(self):
-        arriveCheckBus = None
         stationState = status.status_0_EndCamera
+        recvBuffer = None
+        waitBusBuffer = []
         while True:
 
-            if self.userBus.checkBus(): #저장된 버스가 있고
+            if self.userBus.checkBus():  # 저장된 버스가 있고
                 checkBusList = self.userBus.getEnterUserBus()
-                if not checkBusList: # 버스 상태가 진입중인 요소가 없으면
+                if not checkBusList:  # 버스 상태가 진입중인 요소가 없으면
                     continue
                 else:
-                    if stationState == status.status_0_EndCamera:
-                        if self.kySocket.Send_Recv(status.status_1_ActivateCamera)[0] == status.status_1_ActivateCamera:
+                    # 카메라가 작동하지 않는 상태라면 영상을 켜서 정보를 달라고한다.
+                    if stationState == status.status_0_EndCamera or stationState == status.status_1_ActivateCamera:
+                        recvBuffer = self.kySocket.Send_Recv(stationState)
+                        if recvBuffer[0] == status.status_1_ActivateCamera:
                             stationState = status.status_1_ActivateCamera
+                            if recvBuffer[1] != None:
+                                for bus in checkBusList:
+                                    if bus.location == recvBuffer[1]:
+                                        # tts 진입 정보 수정
+                                        self.tts.priorityBUS(bus)
+                                        waitBusBuffer.append(bus)
+                                        stationState = status.status_2_BusWaiting
+                                        break;
                         else:
-                            self.kySocket.Send_Recv(status.status_1_ActivateCamera)
-                            stationState = status.status_1_ActivateCamera
-
-                    elif stationState == status.status_1_ActivateCamera:
-                        response = self.kySocket.Send_Recv(status.status_5_checkState)
-                        if response[0] == status.status_5_checkState:
-                            for bus in checkBusList:
-                                if response[1] == '0':
-                                if bus.location == response[2]:
-                                    #tts 진입 정보 수정
-                                    self.tts.priorityBUS(bus)
-                                    stationState = status.status_2_BusWaiting
-                                    arriveCheckBus = bus
-                                    if self.kySocket.Send_Recv(status.status_2_BusWaiting)[0] == status.status_2_BusWaiting:
-                                        stationState = status.status_2_BusWaiting
-                                    else:
-                                        self.kySocket.Send_Recv(status.status_2_BusWaiting)
-                                        stationState = status.status_2_BusWaiting
+                            print("통신실패 직전 state로 돌아가서 다시 전송한다.")
+                            stationState = status.status_0_EndCamera
 
                     elif stationState == status.status_2_BusWaiting:
-                        response = self.kySocket.Send_Recv(status.status_5_checkState)
-                        if response[0] == status.status_5_checkState:
-                            if response[1] == '-1':
-                                if response[2] == arriveCheckBus.busNumber:
-                                    arriveCheckBus.station = '0'
-                                    del self.userBus.userBusList[arriveCheckBus.routeId]
-                                    arriveCheckBus = None
-                                    stationState == status.status_3_BusStop
-                    elif stationState == status.status_3_BusStop:
-                        arriveCheckBus = None
-                        if self.kySocket.Send_Recv(status.status_3_BusStop)[0] == status.status_3_BusStop:
-                            stationState = status.status_1_ActivateCamera
+                        recvBuffer = self.kySocket.Send_Recv(stationState)
+                        if recvBuffer[0] == status.status_2_BusWaiting:     # [2, (0_버스 발견못함 1_버스 발견됨 2_버스 정차함 -1_대기 시간초과(버싀나감)), 버스번호]
+                            if recvBuffer[1] == '0':
+                                continue
+                            elif recvBuffer[1] == '1':
+                                for bus in checkBusList:
+                                    if bus in waitBusBuffer:
+                                        continue
+                                    if bus.location == recvBuffer[2]:
+                                        # tts 진입 정보 수정
+                                        bus.location = 0
+                                        self.tts.priorityBUS(bus)
+                                        waitBusBuffer.append(bus)
+                                        stationState = status.status_2_BusWaiting
+                                        break;
+                            elif recvBuffer[1] =='2':
+                                for bus in waitBusBuffer:
+                                    if bus.location == recvBuffer[2]:
+                                        bus.location = 4
+                                        self.tts.priorityBUS(bus)
+                                        waitBusBuffer.remove(bus)
+                                        self.userBus.endDelete(bus)
+                                        if not waitBusBuffer:
+                                            if self.userBus.checkBus():
+                                                stationState = status.status_1_ActivateCamera
+                                            else:
+                                                self.systemState = False
+                                                return
+
+                            elif recvBuffer[1] =='-1':
+                                for bus in waitBusBuffer:
+                                    if bus.location == recvBuffer[2]:
+                                        bus.location = -2
+                                        self.tts.priorityBUS(bus)
+                                        waitBusBuffer.remove(bus)
+                                        self.userBus.endDelete(bus)
+                                        if not waitBusBuffer:
+                                            if self.userBus.checkBus():
+                                                stationState = status.status_1_ActivateCamera
+                                            else:
+                                                self.systemState = False
+                                                return
                         else:
-                            self.kySocket.Send_Recv(status.status_3_BusStop)
-                            stationState = status.status_1_ActivateCamera
-            else :
-                if stationState == status.status_3_BusStop:
-                    arriveCheckBus = None
-                    if self.kySocket.Send_Recv(status.status_0_EndCamera)[0] == status.status_0_EndCamera:
-                        stationState = status.status_0_EndCamera
-                    else:
-                        self.kySocket.Send_Recv(status.status_0_EndCamera)
-                        stationState = status.status_0_EndCamera
+                            print("통신실패")
+
 
 
     def loopStart(self):
@@ -222,24 +254,24 @@ class LoopSystem:
         while True:
             # 시스템 자고 있으면 깨우기(버튼 체크)_버튼 눌리면일어남
             while not self.systemState:
-                #self.systemState = self.button.wakeUpTest()
+                # self.systemState = self.button.wakeUpTest()
                 break
             self.tts.playStartInfo()
 
-            #socket_Thread = Thread(target=self.kySocket.RecvLoop)   # 메인 통신 시작
+            # socket_Thread = Thread(target=self.kySocket.RecvLoop)   # 메인 통신 시작
             # button_Thread = Thread(target=self.button.checkButton)  # 버튼 입력 시작
-            busUpdate_Thread = Thread(target=self.bus.loopUpdate, args=(keyData.updateCycle,))       # 버스 정보 갱신 시작
-            TTS_Thread = Thread(target=self.tts.playLoop)            # 음성 안내 시작
-            Control_Thread = Thread(target=self.Control)          # 연산 시작
+            busUpdate_Thread = Thread(target=self.bus.loopUpdate, args=(keyData.updateCycle,))  # 버스 정보 갱신 시작
+            TTS_Thread = Thread(target=self.tts.playLoop)  # 음성 안내 시작
+            Control_Thread = Thread(target=self.Control)  # 연산 시작
 
-            #socket_Thread.start()
-            #button_Thread.start()
+            # socket_Thread.start()
+            # button_Thread.start()
             busUpdate_Thread.start()
             TTS_Thread.start()
             Control_Thread.start()
 
-            #socket_Thread.join()
-            #button_Thread.join()
+            # socket_Thread.join()
+            # button_Thread.join()
             busUpdate_Thread.join()
             TTS_Thread.join()
             Control_Thread.join()
@@ -247,12 +279,8 @@ class LoopSystem:
             self.systemState = False
 
 
-
-
-
 if __name__ == "__main__":
     print("Start")
 
     loop = LoopSystem()
     loop.loopStart()
-
