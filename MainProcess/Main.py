@@ -22,30 +22,35 @@ class busPlayList(TTS):
         button_2_Push_Fail = "button_2_Push_Fail"
         button_3_Cancel = "button_3_Cancel"
         button_3_Cancel_Fail = "button_3_Cancel_Fail"
-        button_4_doubleClick = "button_4_doubleClick"
+        bus_state = "bus_state"
         bus_arrive = "bus_arrive"
         bus_stop = "bus_stop"
         bus_before_1_station = "bus_before_1_station"
         bus_before_2_station = "bus_before_2_station"
         bus_before_3_station = "bus_before_3_station"
         bus_no_stop = "bus_no_stop"
+        error_bus_not = "error_bus_not"
 
-    def __init__(self, client_id, client_secret):
+    def __init__(self, obj,client_id, client_secret):
+        self.main = obj
         self.nowPlay = None
+        self.playInfo = None
+        self.playInfoBus = None
+        self.busStatePlay = False
         TTS.__init__(self, client_id, client_secret)
-        # self.tts_api("탑승하고자 하는 버스 번호가 들리면 버튼을 누르세요", self.status.button_1_Info)
-        # self.tts_api("버스가 등록되었습니다. 등록하신 버스가 아니시면 버튼을 길게 눌러주세요", self.status.button_2_Push_Succes)
-        # self.tts_api("버스가 이미등록되어있습니다.", self.status.button_2_Push_Fail)
-        # self.tts_api("버스가 취소되었습니다", self.status.button_3_Cancel)
-        # self.tts_api("취소할 버스가 없습니다", self.status.button_3_Cancel_Fail)
-        # self.tts_api("버튼을 한번만 눌러주세요", self.status.button_4_doubleClick)
-        # self.tts_api("버스가 잠시후에 도착합니다", self.status.bus_arrive)
-        # self.tts_api("버스가 정차했습니다. 다시 한번 버스정차소리와 문열림 소리를 듣고 안전에 유의하여 탑승하시기 바랍니다.", self.status.bus_stop)
-        # self.tts_api("버스가  한정거장 전에 있습니다", self.status.bus_before_1_station)
-        # self.tts_api("버스가  두정거장 전에 있습니다", self.status.bus_before_2_station)
-        # self.tts_api("버스가  세정거장 전에 있습니다", self.status.bus_before_3_station)
-        # self.tts_api("버스 정차를 파악할 수 없습니다. 정차하지 않았거나 식별하지 못한 경우일 수 있으니 확인후 탑승 부탁드립니다. 다시 안내를 받으려면 해당 번호가 나오는 시점에 버튼을 눌러주세요", self.status.bus_no_stop)
-
+        self.tts_api("탑승하고자 하는 버스 번호가 들리면 버튼을 누르세요", self.status.button_1_Info)
+        self.tts_api("버스가 등록되었습니다. 등록하신 버스가 아니시면 버튼을 길게 눌러주세요", self.status.button_2_Push_Succes)
+        self.tts_api("버스가 이미등록되어있습니다.", self.status.button_2_Push_Fail)
+        self.tts_api("최근 등록한 버스가 취소되었습니다", self.status.button_3_Cancel)
+        self.tts_api("버스가 등록되어있습니다", self.status.bus_state)
+        self.tts_api("취소할 버스가 없습니다", self.status.button_3_Cancel_Fail)
+        self.tts_api("버스가 잠시후에 도착합니다", self.status.bus_arrive)
+        self.tts_api("버스가 정차했습니다. 다시 한번 버스정차소리와 문열림 소리를 듣고 안전에 유의하여 탑승하시기 바랍니다.", self.status.bus_stop)
+        self.tts_api("버스가  한정거장 전에 있습니다", self.status.bus_before_1_station)
+        self.tts_api("버스가  두정거장 전에 있습니다", self.status.bus_before_2_station)
+        self.tts_api("버스가  세정거장 전에 있습니다", self.status.bus_before_3_station)
+        self.tts_api("버스 정차를 파악할 수 없습니다. 정차하지 않았거나 식별하지 못한 경우일 수 있으니 확인후 탑승 부탁드립니다. 다시 안내를 받으려면 해당 번호가 나오는 시점에 버튼을 눌러주세요", self.status.bus_no_stop)
+        self.tts_api("현재 조회할수 있는 버스 정보가 없습니다.", self.status.error_bus_not)
     def busPlay(self, bus):
         busState = int(bus.location)
         if busState == 1:
@@ -71,11 +76,27 @@ class busPlayList(TTS):
 
     def playLoop(self):
         while True:
-            if bool(self.playlist):
-                self.nowPlay = self.playlist[0]
-                self.busPlay(self.playlist[0])
-                self.playlist.append(self.playlist[0])
-                del self.playlist[0]
+
+            if bool(self.playInfo) or bool(self.playInfoBus):
+                if bool(self.playInfoBus):
+                    self.play(self.playInfoBus.busNumber)
+                self.play(self.playInfo)
+                self.playInfo = None
+                self.playInfoBus = None
+            elif self.busStatePlay:
+                for bus in self.main.userBus.userBusList:
+                    self.play(bus.busNumber)
+                self.play(self.status.bus_state)
+                self.busStatePlay = False
+            else:
+                if bool(self.playlist):
+                    self.nowPlay = self.playlist[0]
+                    self.playlist.append(self.playlist[0])
+                    del self.playlist[0]
+                    self.busPlay(self.playlist[0])
+            if not self.main.systemState:
+                print("endTTS")
+                return
 
     def addBusData(self, bus):  # 버스 추가 될때 실행되야함.
         if self.tts_api(bus.busNumber + "번", bus.busNumber):
@@ -88,29 +109,35 @@ class busPlayList(TTS):
         self.playlist.remove(bus)
         self.playlist.insert(1, bus)
 
-    def getNowPlayRout(self):
-        return self.nowPlay.busNumber
+    def getNowPlayBus(self):
+        return self.nowPlay
 
-    def playButtonInfo(self, state, bus):
-        bus.busNumber
+    def playButtonInfo(self, state, bus=None):
+
         if state == self.status.button_2_Push_Succes:
-            pass
+            self.playInfoBus = bus
+            self.playInfo = self.status.button_2_Push_Succes
+            self.setPlayStop()
         elif state == self.status.button_2_Push_Fail:
-            pass
+            self.playInfoBus = bus
+            self.playInfo = self.status.button_2_Push_Fail
+            self.setPlayStop()
         elif state == self.status.button_3_Cancel:
-            pass
+            self.playInfo = self.status.button_3_Cancel
+            self.setPlayStop()
         elif state == self.status.button_3_Cancel_Fail:
-            pass
-        elif state == self.status.button_4_doubleClick:
-            pass
+            self.playInfo = self.status.button_3_Cancel_Fail
+            self.setPlayStop()
+
+
+    def busStateInfo(self):
+        self.busStatePlay = True
+        self.setPlayStop()
 
     def playStartInfo(self):
         self.play(self.status.button_1_Info)
-
-    def arriveBus(self):
-        self.playlist.remove(bus)
-        self.playlist.insert(1, bus)
-
+    def errorNotBusInfo(self):
+        self.play(self.status.error_bus_not)
 
 class UserBus:
     def __init__(self):
@@ -157,16 +184,41 @@ class status:
     status_3_BusStop = '3'
 
 
+
 class LoopSystem:
+    #============test=================
+    class Button:
+        def __init__(self, obj):
+            self.main = obj
+            print("makebutton")
+
+        def checkButton(self):
+            while True:
+                time.sleep(5)
+                print("checkButton")
+                #self.main.tts.playButtonInfo(self.main.tts.status.button_3_Cancel)
+                #self.main.tts.playButtonInfo(self.main.tts.status.button_3_Cancel_Fail)
+                self.main.systemState = False
+
+
+                if not self.main.systemState:
+                    return
+
+        def wakeUpTest(self):
+            return True
+
+    # ============test=================
     def __init__(self):
         #######test#######
         kySocket = ServerSocket()
+
+        self.button = self.Button(self)
         ################
 
         # self.kySocket = mySocket(keyData.HOST,keyData.PORT)
         # self.button = MyButton(self)
 
-        self.tts = busPlayList(keyData.TTS_client_id, keyData.TTS_client_secret)
+        self.tts = busPlayList(self, keyData.TTS_client_id, keyData.TTS_client_secret)
         self.bus = StationDict(self, keyData.stationNumber, keyData.serviceKey)  # 순서 중요 tts -> bus
 
         self.userBus = UserBus()
@@ -174,10 +226,25 @@ class LoopSystem:
         self.systemState = False  # 시스템 상태(default : 대기)
 
     def Control(self):
+
         stationState = status.status_0_EndCamera
         recvBuffer = None
         waitBusBuffer = []
         while True:
+            EndTest = True
+            if bool(self.bus.busDict):
+                for bkey in self.bus.busDict.keys():
+                    bus = self.bus.busDict.get(bkey)
+                    if bus.plateNo != '-1':
+                        EndTest = False
+                        break
+            if EndTest:
+                self.systemState = False
+                time.sleep(1) #tts 꺼지길 기다리기
+                self.tts.errorNotBusInfo()
+                return
+
+
 
             if self.userBus.checkBus():  # 저장된 버스가 있고
                 checkBusList = self.userBus.getEnterUserBus()
@@ -246,6 +313,8 @@ class LoopSystem:
                                                 return
                         else:
                             print("통신실패")
+            if not self.systemState:
+                return
 
 
 
@@ -254,29 +323,29 @@ class LoopSystem:
         while True:
             # 시스템 자고 있으면 깨우기(버튼 체크)_버튼 눌리면일어남
             while not self.systemState:
-                # self.systemState = self.button.wakeUpTest()
-                break
+                self.systemState = self.button.wakeUpTest()
             self.tts.playStartInfo()
 
             # socket_Thread = Thread(target=self.kySocket.RecvLoop)   # 메인 통신 시작
-            # button_Thread = Thread(target=self.button.checkButton)  # 버튼 입력 시작
+            button_Thread = Thread(target=self.button.checkButton)  # 버튼 입력 시작
             busUpdate_Thread = Thread(target=self.bus.loopUpdate, args=(keyData.updateCycle,))  # 버스 정보 갱신 시작
             TTS_Thread = Thread(target=self.tts.playLoop)  # 음성 안내 시작
             Control_Thread = Thread(target=self.Control)  # 연산 시작
 
             # socket_Thread.start()
-            # button_Thread.start()
+            button_Thread.start()
             busUpdate_Thread.start()
             TTS_Thread.start()
             Control_Thread.start()
 
             # socket_Thread.join()
-            # button_Thread.join()
+            button_Thread.join()
             busUpdate_Thread.join()
             TTS_Thread.join()
             Control_Thread.join()
 
             self.systemState = False
+            print("endProcess")
 
 
 if __name__ == "__main__":

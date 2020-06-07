@@ -90,15 +90,24 @@ class StationDict:
         pass    # 버스가 추가 될때 액션
             # play 리스트 추가 등
 
-    def loopUpdate(self,t):  # busDict update LOOP
+    def loopUpdate(self, t):  # busDict update LOOP
+
+        startTime = time.time()
         while True:
-            print("update bus")
-            self.stationAPI()
-            for bkey in self.busDict.keys():
-                bus = self.busDict.get(bkey)
-                print(bus.busNumber + " : " + bus.plateNo + "  " + bus.location)
-            print("=================")
-            time.sleep(t) # 90으로 해야함
+            if time.time()-startTime > t:
+
+                print("update bus")
+                self.stationAPI()
+
+                for bkey in self.busDict.keys():
+                    bus = self.busDict.get(bkey)
+                    print(bus.busNumber + " : " + bus.plateNo + "  " + bus.location)
+                print("=================")
+
+                startTime = time.time()
+            if not self.main.systemState:
+                print("endBusUpdate")
+                return
 
 
     def getBus(self,bus):

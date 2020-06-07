@@ -67,18 +67,22 @@ class MyButton:
                                 count = 0
                                 doubleClickCount = 0
                                 doubleClickON = False
+                if not self.main.systemState:
+                    return
         finally :
             GPIO.cleanup()
 
     def oneClick(self):
         print("oneClick")
-        if self.main.userBus.add(self.main.tts.getNowPlayRout()):
-            self.main.tts.playButtonInfo(self.main.tts.status.button_2_Push_Succes)
+        nowbus = self.main.tts.getNowPlayBus()
+        if self.main.userBus.add(nowbus):
+            self.main.tts.playButtonInfo(self.main.tts.status.button_2_Push_Succes,nowbus)
         else:
-            self.main.tts.playButtonInfo(self.main.tts.status.button_2_Push_Fail)
+            self.main.tts.playButtonInfo(self.main.tts.status.button_2_Push_Fail,nowbus)
 
     def doubleClick(self):
-        self.main.tts.playButtonInfo(self.main.tts.status.button_3_Cancel_Fail)
+        self.main.tts.busStateInfo()
+        # 현재 등록된 버스 번호들
 
     def longClick(self):
         print("longClick")
