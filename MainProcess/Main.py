@@ -100,9 +100,11 @@ class busPlayList(TTS):
             if bool(self.playInfo) or bool(self.playInfoBus):
                 if bool(self.playInfoBus):
                     self.play(self.playInfoBus.busNumber)
+                playInfo = self.playInfo
                 self.playInfo = None
                 self.playInfoBus = None
-                self.play(self.playInfo)
+                self.play(playInfo)
+
                 if self.playStop:
                     self.playStop = False
                     time.sleep(1)
