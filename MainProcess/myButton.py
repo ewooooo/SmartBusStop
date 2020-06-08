@@ -76,7 +76,7 @@ class MyButton:
         print("oneClick")
         nowbus = self.main.tts.getNowPlayBus()
         if not nowbus:
-            self.main.tts.playButtonInfo(self.main.tts.status.bus_state_error)
+            self.main.tts.playButtonInfo(self.main.tts.status.error_inf_not)
         else:
 
             if self.main.userBus.add(nowbus):
