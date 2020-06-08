@@ -1,0 +1,5 @@
+keyData.py
+sound/
+.idea/
+.vscode/
+__pycache__/
