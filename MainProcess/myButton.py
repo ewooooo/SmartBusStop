@@ -75,10 +75,14 @@ class MyButton:
     def oneClick(self):
         print("oneClick")
         nowbus = self.main.tts.getNowPlayBus()
-        if self.main.userBus.add(nowbus):
-            self.main.tts.playButtonInfo(self.main.tts.status.button_2_Push_Succes,nowbus)
+        if not nowbus:
+            self.main.tts.playButtonInfo(self.main.tts.status.bus_state_error)
         else:
-            self.main.tts.playButtonInfo(self.main.tts.status.button_2_Push_Fail,nowbus)
+                
+            if self.main.userBus.add(nowbus):
+                self.main.tts.playButtonInfo(self.main.tts.status.button_2_Push_Succes,nowbus)
+            else:
+                self.main.tts.playButtonInfo(self.main.tts.status.button_2_Push_Fail,nowbus)
 
     def doubleClick(self):
         self.main.tts.busStateInfo()
