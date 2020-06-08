@@ -39,10 +39,10 @@ class TTS() :
 
         pygame.mixer.music.load(fileName)
         pygame.mixer.music.play()
-
+        if self.playStop:
+            return
         while pygame.mixer.music.get_busy() == True:
             if self.playStop:
-                self.playStop = False
                 return
             continue
 

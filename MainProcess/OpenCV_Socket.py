@@ -4,7 +4,7 @@
 class status:
     status_1_ActivateCamera = '1'
     status_2_BusWaiting = '2'
-
+    status_reset = '-1'
 class ServerSocket:
     def __init__(self):
         pass
@@ -12,7 +12,7 @@ class ServerSocket:
 
         # data = conn.recv(1024).decode()
         replyData = []
-        if data == status.status_1_ActivateCamera:
+        if data == status.status_1_ActivateCamera or data == status.status_0_EndCamera:
             replyData.append(status.status_1_ActivateCamera)
             # 카메라 시작
             replyData.append("번호판")
@@ -21,6 +21,10 @@ class ServerSocket:
             # 카운팅 시작
             replyData.append("0_1_2_-1")  # [2, (0_버스 발견못함 1_버스 발견됨 2_버스 정차함 -1_대기 시간초과(버싀나감)), 버스번호]
             replyData.append("번호판")
+        elif data == status.status_reset:
+            replyData.append(status.status_reset)
+            #모든 카운드 리셋 종료
+        print(replyData)
         return replyData
 
 
