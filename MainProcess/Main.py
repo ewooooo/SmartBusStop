@@ -21,6 +21,7 @@ class busPlayList(TTS):
         button_3_Cancel = "button_3_Cancel"
         button_3_Cancel_Fail = "button_3_Cancel_Fail"
         bus_state = "bus_state"
+        bus_state_error = "bus_state_error"
         bus_arrive = "bus_arrive"
         bus_stop = "bus_stop"
         bus_before_1_station = "bus_before_1_station"
@@ -38,10 +39,11 @@ class busPlayList(TTS):
         self.busStatePlay = False
         TTS.__init__(self, client_id, client_secret)
         self.tts_api("탑승하고자 하는 버스 번호가 들리면 안내가 모두 끝난 후 버튼을 누르세요", self.status.button_1_Info)
-        self.tts_api("버스가 등록되었습니다. 등록하신 버스가 아니시면 버튼을 길게 눌러주세요", self.status.button_2_Push_Succes)
+        self.tts_api("버스가 등록되었습니다. 등록하신 버스가 아니시면 버튼을 길게 눌러주시고 등록된 버스를 확인하려면 버튼을 두번 누르세요!", self.status.button_2_Push_Succes)
         self.tts_api("버스가 이미등록되어있습니다.", self.status.button_2_Push_Fail)
         self.tts_api("최근 등록한 버스가 취소되었습니다", self.status.button_3_Cancel)
         self.tts_api("버스가 등록되어있습니다", self.status.bus_state)
+        self.tts_api("현재 등록된 버스가 없습니다.", self.status.bus_state_error)
         self.tts_api("취소할 버스가 없습니다", self.status.button_3_Cancel_Fail)
         self.tts_api("버스가 잠시후에 도착합니다", self.status.bus_arrive)
         self.tts_api("버스가 정차했습니다. 다시 한번 버스정차소리와 문열림 소리를 듣고 안전에 유의하여 탑승하시기 바랍니다.", self.status.bus_stop)
@@ -106,10 +108,13 @@ class busPlayList(TTS):
                     time.sleep(1)
 
             elif self.busStatePlay:
-                for key in self.main.userBus.userBusList.keys():
-                    bus = self.main.userBus.userBusList.get(key)
-                    self.play(bus.busNumber)
-                self.play(self.status.bus_state)
+                if not self.main.userBus.userBusList:
+                    self.play(self.status.bus_state_error)
+                else:
+                    for key in self.main.userBus.userBusList.keys():
+                        bus = self.main.userBus.userBusList.get(key)
+                        self.play(bus.busNumber)
+                    self.play(self.status.bus_state)
                 self.busStatePlay = False
                 if self.playStop:
                     self.playStop = False
