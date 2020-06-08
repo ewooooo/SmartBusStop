@@ -102,7 +102,7 @@ class MyButton:
                 else:
                     delaytime = (time.time_ns() - count) / 1000000000
                     if delaytime > self.ONECLICKTIME:
-                        break
+                        return True
             else:
                 GPIO.output(17, 0)
 
