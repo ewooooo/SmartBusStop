@@ -183,7 +183,7 @@ class UserBus:
         self.recentBus = None
 
     def add(self, bus):  # userbus add
-        if not bus.routeId in self.userBusList and bus.location <= 3 and bus.location >= -3:
+        if not bus.routeId in self.userBusList and int(bus.location) <= 3 and int(bus.location) >= -3:
             self.recentBus = bus.routeId
             self.userBusList[bus.routeId] = bus
             return True
