@@ -10,7 +10,7 @@ using namespace std;
 
 
 vector<Point> pointList;
-Mat mask;
+Mat mask = Mat::ones(cap.get(CAP_PROP_FRAME_HEIGHT), cap.get(CAP_PROP_FRAME_WIDTH), CV_8UC1);
 
 void mouse_callback(int event, int x, int y, int flags, void *userdata) {
 	Mat *im = reinterpret_cast<Mat*>(userdata);
@@ -37,88 +37,98 @@ void mouse_callback(int event, int x, int y, int flags, void *userdata) {
 
 }
 
+class BusNumber {
+private:
+	cv::VideoCapture cap("D:\\remove\\test.mp4");
+	Mat inputimage;
+	double maxratio = 0.9, minratio = 0.25, alpha = 0, beta = 500;
+	Mat beforProcess(Mat image);
+
+public:
+	BusNumber() {
+		if (!cap.isOpened()) {
+			cerr << "에러 - 카메라를 열 수 없습니다.\\\\n";
+			return -1;
+		}
+	}
+	string ProcessOpenCV();
+
+
+
+
+};
+
+string BusNumber::ProcessOpenCV() {
+	cap.read(inputimage);
+	if (inputimage.empty()) {
+		cerr << "빈 영상이 캡쳐되었습니다.\\\\n";
+		break;
+	}
+
+
+	if (mask.empty()) {
+		mask = Mat::zeros(cap.get(CAP_PROP_FRAME_HEIGHT), cap.get(CAP_PROP_FRAME_WIDTH), CV_8UC1);
+		pointList.clear();
+		Mat mouseImage = inputimage.clone();
+		while (1) {
+			imshow("imagefirst", mouseImage);
+			imshow("mask", mask);
+			vector<Point> pointList;
+			setMouseCallback("imagefirst", mouse_callback, reinterpret_cast<void*>(&mouseImage));
+			if (cv::waitKey(3) == 27)
+				break;
+		}
+		destroyAllWindows(); //모든 창 닫기
+	}
+	inputimage = beforProcess(inputimage);
+}
+
+Mat BusNumber::beforProcess(Mat image) {
+	Mat imagedebuger = inputimage.clone();
+
+	cvtColor(image, image, COLOR_BGR2GRAY);  //  Convert to gray image.COLOR_BGR2GRAY
+
+	Size userSize = Size(3, 3);
+	Mat imgTopHat, imgBlackHat;
+	morphologyEx(image, imgTopHat, MORPH_TOPHAT, getStructuringElement(MORPH_ELLIPSE, userSize));
+	morphologyEx(image, imgBlackHat, MORPH_BLACKHAT, getStructuringElement(MORPH_ELLIPSE, userSize));
+
+	Mat imgGrayscalePlusTopHat;
+	add(image, imgTopHat, imgGrayscalePlusTopHat);
+	Mat morphoImage;
+	subtract(imgGrayscalePlusTopHat, imgBlackHat, image);
+
+	GaussianBlur(image, image, Size(5, 5), 0);
+
+	Canny(image, image, 100, 300, 3);  //  Getting edges by Canny algorithm.
+	//imshow("Original->Gray->Canny", CannyImage);
+	bitwise_and(image, mask, image);
+	//  Finding contours.
+	return image;
+}
+
+
 
 int main()
 {
-	Mat inputimage, grayscale, image3, drawing; // Make images.
-	double maxratio = 0.9, minratio = 0.25, alpha = 0, beta = 500;
-
-
-	cv::VideoCapture cap("D:\\remove\\test.mp4");
-	if (!cap.isOpened()) {
-		cerr << "에러 - 카메라를 열 수 없습니다.\\\\n";
-		return -1;
-	}
-	mask = Mat::ones(cap.get(CAP_PROP_FRAME_HEIGHT), cap.get(CAP_PROP_FRAME_WIDTH), CV_8UC1);
-
+	
 	while (1)
 	{
-		// 카메라로부터 캡쳐한 영상을 frame에 저장합니다.
-		cap.read(inputimage);
-		if (inputimage.empty()) {
-			cerr << "빈 영상이 캡쳐되었습니다.\\\\n";
-			break;
-		}
 
-		
-		if (mask.empty()) {
-			mask = Mat::zeros(cap.get(CAP_PROP_FRAME_HEIGHT), cap.get(CAP_PROP_FRAME_WIDTH), CV_8UC1); 
-			pointList.clear();
-			Mat mouseImage = inputimage.clone();
-			while (1) {
-				imshow("imagefirst", mouseImage);
-				imshow("mask", mask);
-				vector<Point> pointList;
-				setMouseCallback("imagefirst", mouse_callback, reinterpret_cast<void*>(&mouseImage));
-				if (cv::waitKey(3) == 27)
-					break;
-			}
-			destroyAllWindows(); //모든 창 닫기
-		}
-	
-
-		//Rect ROIRect(0, inputimage.rows/2, inputimage.cols, inputimage.rows/2); //x,y,w,h
-		Mat	image = inputimage;//(ROIRect);
-
-
-		//imshow("Original", image);
-		Mat imagedebuger = image.clone();
-
-		cvtColor(image, grayscale, COLOR_BGR2GRAY);  //  Convert to gray image.COLOR_BGR2GRAY
-		//imshow("Original->Gray", grayscale);
-
-
-		Size userSize = Size(3, 3);
-		Mat imgTopHat, imgBlackHat;
-		morphologyEx(grayscale, imgTopHat, MORPH_TOPHAT, getStructuringElement(MORPH_ELLIPSE, userSize));
-		morphologyEx(grayscale, imgBlackHat, MORPH_BLACKHAT, getStructuringElement(MORPH_ELLIPSE, userSize));
-
-		Mat imgGrayscalePlusTopHat;
-		add(grayscale, imgTopHat, imgGrayscalePlusTopHat);
-		Mat morphoImage;
-		subtract(imgGrayscalePlusTopHat, imgBlackHat, morphoImage);
-
-		Mat GaussImage;
-		GaussianBlur(morphoImage, GaussImage, Size(5, 5), 0);
-
-		Mat CannyImage;
-		Canny(GaussImage, CannyImage, 100, 300, 3);  //  Getting edges by Canny algorithm.
-		//imshow("Original->Gray->Canny", CannyImage);
-
-		bitwise_and(CannyImage, mask, CannyImage);
-		imshow("canny", CannyImage);
 
 		//  Finding contours.
 		vector<vector<Point> > contours;  //  Vectors for 'findContours' function.
 		vector<Vec4i> hierarchy;
 		findContours(CannyImage, contours, hierarchy, RETR_LIST, CHAIN_APPROX_SIMPLE, Point());
 
+		if contours
 
 		vector<Rect> rect_list(contours.size());
-		//vector<momoRect> rect_list(contours.size());
+		
+
 		int rectindex = 0;
-		RNG rng(12345);
-		Mat drawing = Mat::zeros(image.size(), CV_8UC3);
+		//RNG rng(12345);
+		//Mat drawing = Mat::zeros(image.size(), CV_8UC3);
 		for (int idx = 0; idx < contours.size(); idx++) {
 
 			Scalar color = Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255));
