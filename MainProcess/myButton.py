@@ -78,7 +78,7 @@ class MyButton:
         if not nowbus:
             self.main.tts.playButtonInfo(self.main.tts.status.bus_state_error)
         else:
-                
+
             if self.main.userBus.add(nowbus):
                 self.main.tts.playButtonInfo(self.main.tts.status.button_2_Push_Succes,nowbus)
             else:
