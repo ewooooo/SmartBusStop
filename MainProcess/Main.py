@@ -179,7 +179,7 @@ class UserBus:
 
     def add(self, bus):  # userbus add
         if not bus.routeId in self.userBusList:
-            self.recentBus = bus
+            self.recentBus = bus.routeId
             self.userBusList[bus.routeId] = bus
             return True
         else:
