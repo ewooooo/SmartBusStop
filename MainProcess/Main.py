@@ -276,15 +276,15 @@ class UserBus:
 
     def getEnterUserBus(self):
         # carNumber in userBusList 요소가 있는지 확인 T/F
-        if not self.userBusList:
-            return None
         userbusEnter = []
-        for key in self.userBusList.keys():
-            bus = self.userBusList.get(key)
-            if int(bus.location) == 1:
-                userbusEnter.append(bus)
-        return userbusEnter
-
+        if bool(self.userBusList):
+            for key in self.userBusList.keys():
+                bus = self.userBusList.get(key)
+                if int(bus.location) == 1:
+                    userbusEnter.append(bus)
+            return userbusEnter
+        else:
+            return None
     def checkBus(self):
         if not self.userBusList:
             return False  # 비어있으면
