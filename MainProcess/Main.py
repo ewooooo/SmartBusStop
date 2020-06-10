@@ -358,10 +358,13 @@ class LoopSystem:
 
     def loopLed(self):
         while True:
-            self.led.SET_LED("400-4")
-            time.sleep(3)
+            self.led.SET_LED("4000-1")
+            print("onLed")
+            time.sleep(4)
             self.led.OFF_LED()
-            time.sleep(3)
+            print("offLed")
+            time.sleep(1)
+
             if not self.systemState:
                 return
 
