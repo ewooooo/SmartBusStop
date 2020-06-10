@@ -368,19 +368,18 @@ class LoopSystem:
             busUpdate_Thread = Thread(target=self.bus.loopUpdate, args=(keyData.updateCycle,))  # 버스 정보 갱신 시작
             TTS_Thread = Thread(target=self.tts.playLoop)  # 음성 안내 시작
             Control_Thread = Thread(target=self.Control)  # 연산 시작
-            LED_Thread = Thread(target=self.loopLed)  # 연산 시작
+
 
             button_Thread.start()
             busUpdate_Thread.start()
             TTS_Thread.start()
             Control_Thread.start()
-            LED_Thread.start()
 
             button_Thread.join()
             busUpdate_Thread.join()
             TTS_Thread.join()
             Control_Thread.join()
-            LED_Thread.join()
+
 
             self.systemState = False
             print("endProcess")
