@@ -76,67 +76,67 @@ class busPlayList(TTS):
             self.play(self.status.bus_before_1_station)
             if self.playStop:
                 self.playStop = False
-                time.sleep(2)
+                time.sleep(1)
         elif busState == 2:
             self.play(bus.busNumber)
             self.play(self.status.bus_before_2_station)
             if self.playStop:
                 self.playStop = False
-                time.sleep(2)
+                time.sleep(1)
         elif busState == 3:
             self.play(bus.busNumber)
             self.play(self.status.bus_before_3_station)
             if self.playStop:
                 self.playStop = False
-                time.sleep(2)
+                time.sleep(1)
         elif busState == 4:
             self.play(bus.busNumber)
             self.play(self.status.bus_before_4_station)
             if self.playStop:
                 self.playStop = False
-                time.sleep(2)
+                time.sleep(1)
         elif busState == 5:
             self.play(bus.busNumber)
             self.play(self.status.bus_before_5_station)
             if self.playStop:
                 self.playStop = False
-                time.sleep(2)
+                time.sleep(1)
         elif busState == 6:
             self.play(bus.busNumber)
             self.play(self.status.bus_before_6_station)
             if self.playStop:
                 self.playStop = False
-                time.sleep(2)
+                time.sleep(1)
         elif busState == 7:
             self.play(bus.busNumber)
             self.play(self.status.bus_before_7_station)
             if self.playStop:
                 self.playStop = False
-                time.sleep(2)
+                time.sleep(1)
         elif busState == 8:
             self.play(bus.busNumber)
             self.play(self.status.bus_before_8_station)
             if self.playStop:
                 self.playStop = False
-                time.sleep(2)
+                time.sleep(1)
         elif busState == 9:
             self.play(bus.busNumber)
             self.play(self.status.bus_before_9_station)
             if self.playStop:
                 self.playStop = False
-                time.sleep(2)
+                time.sleep(1)
         elif busState == 10:
             self.play(bus.busNumber)
             self.play(self.status.bus_before_10_station)
             if self.playStop:
                 self.playStop = False
-                time.sleep(2)
+                time.sleep(1)
         elif busState == 0:
             self.play(bus.busNumber)
             self.play(self.status.bus_arrive)
             if self.playStop:
                 self.playStop = False
-                time.sleep(2)
+                time.sleep(1)
         elif busState == -2: # 여기 수정하면 control 도 수정해야함
             self.play(bus.busNumber)
             self.play(self.status.bus_stop)
@@ -149,12 +149,12 @@ class busPlayList(TTS):
             bus.location = -1
             if self.playStop:
                 self.playStop = False
-                time.sleep(2)
+                time.sleep(1)
 
     def playLoop(self):
 
         while True:
-
+            time.sleep(1)
             if bool(self.playInfo) or bool(self.playInfoBus):
                 if bool(self.playInfoBus):
                     self.play(self.playInfoBus.busNumber)
