@@ -5,7 +5,7 @@ from my_socket import *
 from myButton import *
 from Bus import *
 from TTS import *
-
+from LED import *
 import keyData
 
 #===========test=======
@@ -244,59 +244,10 @@ class status:
 
 
 class LoopSystem:
-    #============test=================
-    class Button:
-        def __init__(self, obj):
-            self.main = obj
-            print("makebutton")
 
-        def checkButton(self):
-            while True:
-                time.sleep(5)
-                print("checkButton")
-                #self.main.tts.playButtonInfo(self.main.tts.status.button_3_Cancel)
-                #self.main.tts.playButtonInfo(self.main.tts.status.button_3_Cancel_Fail)
-                #self.main.systemState = False
-
-                print("oneClick")
-                nowbus = self.main.tts.getNowPlayBus()
-                if not nowbus:
-                    self.main.tts.playButtonInfo(self.main.tts.status.error_inf_not)
-                else:
-                    if self.main.userBus.add(nowbus):
-                        self.main.tts.playButtonInfo(self.main.tts.status.button_2_Push_Succes, nowbus)
-                    else:
-                        self.main.tts.playButtonInfo(self.main.tts.status.button_2_Push_Fail, nowbus)
-
-                if not self.main.systemState:
-                    return
-
-                time.sleep(5)
-                print("longClick")
-                if self.main.userBus.delete():
-                    self.main.tts.playButtonInfo(self.main.tts.status.button_3_Cancel)
-                else:
-                    self.main.tts.playButtonInfo(self.main.tts.status.button_3_Cancel_Fail)
-                time.sleep(5)
-                print("oneClick")
-                nowbus = self.main.tts.getNowPlayBus()
-                if self.main.userBus.add(nowbus):
-                    self.main.tts.playButtonInfo(self.main.tts.status.button_2_Push_Succes, nowbus)
-                else:
-                    self.main.tts.playButtonInfo(self.main.tts.status.button_2_Push_Fail, nowbus)
-                time.sleep(5)
-                self.main.tts.busStateInfo()
-
-
-        def wakeUpTest(self):
-            return True
-
-    # ============test=================
     def __init__(self):
         # #######test#######
         self.kySocket = ServerSocket()
-        #
-        # self.button = self.Button(self)
         # ################
 
         #self.kySocket = mySocket(keyData.HOST,keyData.PORT)
@@ -304,7 +255,7 @@ class LoopSystem:
 
         self.tts = busPlayList(self, keyData.TTS_client_id, keyData.TTS_client_secret)
         self.bus = StationDict(self, keyData.stationNumber, keyData.serviceKey)  # 순서 중요 tts -> bus
-
+        self.led = LED()
         self.userBus = UserBus()
 
         self.systemState = False  # 시스템 상태(default : 대기)
@@ -405,7 +356,14 @@ class LoopSystem:
             if not self.systemState:
                 return
 
-
+    def loopLed(self):
+        while True:
+            self.led.SET_LED("test")
+            time.sleep(3)
+            self.led.OFF_LED()
+            time.sleep(3)
+            if not self.systemState:
+                return
 
     def loopStart(self):
 
@@ -419,16 +377,19 @@ class LoopSystem:
             busUpdate_Thread = Thread(target=self.bus.loopUpdate, args=(keyData.updateCycle,))  # 버스 정보 갱신 시작
             TTS_Thread = Thread(target=self.tts.playLoop)  # 음성 안내 시작
             Control_Thread = Thread(target=self.Control)  # 연산 시작
+            LED_Thread = Thread(target=self.loopLed)  # 연산 시작
 
             button_Thread.start()
             busUpdate_Thread.start()
             TTS_Thread.start()
             Control_Thread.start()
+            LED_Thread.start()
 
             button_Thread.join()
             busUpdate_Thread.join()
             TTS_Thread.join()
             Control_Thread.join()
+            LED_Thread.join()
 
             self.systemState = False
             print("endProcess")

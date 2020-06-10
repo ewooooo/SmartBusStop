@@ -2,6 +2,7 @@
 #import time
 
 class status:
+    status_0_EndCamera ='0'
     status_1_ActivateCamera = '1'
     status_2_BusWaiting = '2'
     status_reset = '-1'
