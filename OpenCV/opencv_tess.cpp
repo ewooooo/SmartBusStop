@@ -4,6 +4,7 @@
 #include <algorithm>// min() max();
 #include <iostream>
 #include <cstdlib>
+#include <ctime>
 
 #include <tesseract/baseapi.h>
 #include <leptonica/allheaders.h>
@@ -49,12 +50,15 @@ private:
 	Mat beforProcess(Mat image);
 	vector<vector<Rect>> oneCarNumber(vector<vector<Point>> contours);
 	vector<Rect> doubleCarNumber(vector<vector<Rect>> resultGroupList);
-	
+	int count = 0;
+	Rect beforeRect;
+	int beforeNumber = 0;
+	int startTime=0;
 public:
 	BusNumber() {
 
-		cap = VideoCapture("./1.mp4");
-		//cap = VideoCapture(0);
+		//cap = VideoCapture("./1.mp4");
+		cap = VideoCapture(0);
 		if (!cap.isOpened()) {
 			cerr << "에러 - 카메라를 열 수 없습니다.\\\\n";
 			exit;
@@ -347,12 +351,37 @@ String processNumber(String text) {
 	return String(inStr);
 }
 
+bool checkDim(Rect rect,Rect test) {
+	
+
+	int boundingX = 50;
+	int boundingY = 50;
+	double distBeforAfterFrameX = abs(((test.br().x - test.x) / 2) - abs((rect.br().x - rect.x) / 2));
+	double distBeforAfterFrameY = abs(((test.br().y - test.y) / 2) - abs((rect.br().y - rect.y) / 2));
+
+
+	if ((distBeforAfterFrameX < boundingX) && distBeforAfterFrameY < boundingY) {
+		return true;
+	}
+
+	return false;
+	
+}
 
 int BusNumber::BusNumberRectList(int control) {
 	cap.read(inputimage);
 	if (inputimage.empty()) {
 		cerr << "빈 영상이 캡쳐되었습니다.\\\\n";
 		exit;
+	}
+
+	if(startTime !=0){
+		if (((time(0) % 60) - startTime) > 10) {
+			count = 0;
+			beforeNumber = 0;
+			startTime = 0;
+			return -1;
+		}
 	}
 
 
@@ -385,10 +414,12 @@ int BusNumber::BusNumberRectList(int control) {
 		return {};
 
 	vector<Rect> GroupList = doubleCarNumber(busRectList);
+	
 
-	int resultNumber = 0;
 
+    int resultNumber = 0;
 	if (!GroupList.empty()) {
+
 		for (int i = 0; i < GroupList.size(); i++) {
 			rectangle(imageDebuger, GroupList[i].tl(), GroupList[i].br(), Scalar(0, 0, 255), 3);
 			Rect rectROI = Rect(Point(GroupList[i].tl().x - 25, GroupList[i].tl().y - 25), Point(GroupList[i].br().x + 25, GroupList[i].br().y + 25));
@@ -396,10 +427,46 @@ int BusNumber::BusNumberRectList(int control) {
 			String testStr = OCR(testimage);
 			String result = processNumber(testStr);
 			resultNumber =  std::stoi(result.substr(result.length() - 4));
+			
+			if (control == 0) {	//차량번호만 원할시 0
+				beforeNumber = 0;
+				count = 0;
+				return resultNumber;
+			}
+			else {	//카운트를 원할 때 1
+				if (resultNumber == 0) {	// 감지한번호없을시
+					return 0;
+				}
+				else {	
+					if (beforeRect.empty() ||  beforeNumber== 0) { // 저장된 내용 없을때.
+						startTime = time(0) % 60;
+						beforeRect = GroupList[i];
+						beforeNumber = resultNumber;
+						count = 0;
+						
+						return resultNumber;
+					}
+					else {	//저장된 내용이 있을때.
+						if (resultNumber == beforeNumber && checkDim(beforeRect,GroupList[0])) { // 이전 번호와 같고 거리를 만족한다면 카운드 ++
+							count++;
+							if (count > 5) {
+								startTime = 0;
+								beforeNumber = 0;
+								count = 0;
+								return std::stoi(result.substr(result.length() - 4)+'1');
+							}
+							return resultNumber;
+						}
+						else {
+							continue;
+						}
+					}
+				}
+			}
 		}
 	}
-	imshow("imagedebuger", imageDebuger);
 
+	//imshow("imagedebuger", imageDebuger);
 	return resultNumber;
 
 }
