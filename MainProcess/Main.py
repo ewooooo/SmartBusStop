@@ -303,11 +303,8 @@ class status:
 class LoopSystem:
 
     def __init__(self):
-        # #######test#######
-        self.kySocket = ServerSocket()
-        # ################
 
-        #self.kySocket = mySocket(keyData.HOST,keyData.PORT)
+        self.kySocket = mySocket(keyData.HOST,keyData.PORT)
         self.button = MyButton(self)
 
         self.tts = busPlayList(self, keyData.TTS_client_id, keyData.TTS_client_secret)
