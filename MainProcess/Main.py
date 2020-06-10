@@ -46,7 +46,7 @@ class busPlayList(TTS):
         self.playInfoBus = None
         self.busStatePlay = False
         TTS.__init__(self, client_id, client_secret)
-        self.tts_api("탑승하고자 하는 버스 번호가 들리면 안내가 모두 끝난 후 버튼을 누르세요", self.status.button_1_Info)
+        self.tts_api("탑승하고자 하는 버스 번호가 들리면 버튼을 누르세요", self.status.button_1_Info)
         self.tts_api("버스가 등록되었습니다. 등록하신 버스가 아니시면 버튼을 길게 눌러주시고 등록된 버스를 확인하려면 버튼을 두번 누르세요!", self.status.button_2_Push_Succes)
         self.tts_api("버스가 이미등록되어있습니다.", self.status.button_2_Push_Fail)
         self.tts_api("최근 등록한 버스가 취소되었습니다", self.status.button_3_Cancel)
@@ -196,10 +196,11 @@ class busPlayList(TTS):
                 if bool(self.playlist):
 
                     self.playlist.append(self.playlist[0])
+                    self.nowPlay = self.playlist[0]
                     del self.playlist[0]
                     if int(self.playlist[0].location) <= 10 and int(self.playlist[0].location) >= -3:
                         self.busPlay(self.playlist[0])
-                        self.nowPlay = self.playlist[0]
+
 
 
 
