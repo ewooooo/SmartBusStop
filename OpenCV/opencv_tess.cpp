@@ -49,6 +49,7 @@ private:
 	Mat beforProcess(Mat image);
 	vector<vector<Rect>> oneCarNumber(vector<vector<Point>> contours);
 	vector<Rect> doubleCarNumber(vector<vector<Rect>> resultGroupList);
+	vector<Rect> BusNumberRectList();
 public:
 	BusNumber() {
 
@@ -61,14 +62,11 @@ public:
 
 		mask = imread("./mask.jpg", IMREAD_GRAYSCALE);
 		if ((mask.empty()) || mask.cols != cap.get(CAP_PROP_FRAME_WIDTH) || mask.rows != cap.get(CAP_PROP_FRAME_HEIGHT)) {
-			mask = Mat::ones(cap.get(CAP_PROP_FRAME_HEIGHT), cap.get(CAP_PROP_FRAME_WIDTH), CV_8UC1);
-			imwrite("./mask.jpg", mask);
+			mask.release();
 		}
 	}
-	Mat getImage() { return inputimage; };
 
-	vector<Rect> BusNumberRectList();
-
+	int busNumberProcess(int control);
 };
 
 Mat BusNumber::beforProcess(Mat image) {
@@ -400,6 +398,19 @@ String processNumber(String text) {
 	return String(inStr);
 }
 
+int BusNumber::busNumberProcess(int control) {
+	vector<Rect> busRectList = BusNumberRectList();
+	if (!busRectList.empty()) {
+		for (int i = 0; i < busRectList.size(); i++) {
+			Rect rectROI = Rect(Point(busRectList[i].tl().x - 25, busRectList[i].tl().y - 25), Point(busRectList[i].br().x + 25, busRectList[i].br().y + 25));
+			Mat testimage = inputimage(rectROI);
+			String testStr = OCR(testimage);
+			String result = processNumber(testStr);
+			return  std::stoi(result.substr(result.length() - 4));
+		}
+	}
+	return 0;
+}
 
 int main()
 {
@@ -407,17 +418,8 @@ int main()
 	
 
 	while (1) {
-
-		vector<Rect> busRectList = busTest.BusNumberRectList();
-		if (!busRectList.empty()) {
-			for (int i = 0; i < busRectList.size(); i++) {
-				Mat image = busTest.getImage();
-				Rect rectROI = Rect(Point(busRectList[i].tl().x-25, busRectList[i].tl().y-25), Point(busRectList[i].br().x+25, busRectList[i].br().y + 25));
-				Mat testimage = image(rectROI);
-				String testStr = OCR(testimage);
-				cout << processNumber(testStr) << endl;
-			}
-		}
+		cout << busTest.busNumberProcess(1) << endl;
+		
 		int key = waitKey(1);
 		if (key == 97) // 소문자 a 누르면 mask 설정 모드
 			mask.release();
