@@ -284,12 +284,9 @@ vector<Rect> BusNumber::doubleCarNumber(vector<vector<Rect>> resultGroupList) {
 }
 
 
-//
-//extern "C" {
-//	BusNumber* BusNumber_new() { return new BusNumber(); }
-//	vector<Rect> getBusNumberRectList(BusNumber* busNumber) { return busNumber->BusNumberRectList(); }
-//}
-//
+
+
+
 tesseract::TessBaseAPI* ocr = new tesseract::TessBaseAPI();
 String OCR(Mat test) {
 	string outText;
@@ -406,7 +403,10 @@ int BusNumber::BusNumberRectList(int control) {
 	return resultNumber;
 
 }
-
+extern "C" {
+	BusNumber* BusNumber_new() { return new BusNumber(); }
+	int getBusNumberRectList(BusNumber* busNumber, int controlNum) { return busNumber->BusNumberRectList(controlNum); }
+}
 
 int main()
 {
