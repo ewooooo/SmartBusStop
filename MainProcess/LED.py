@@ -11,10 +11,12 @@ from luma.core.legacy.font import proportional, CP437_FONT, TINY_FONT, SINCLAIR_
 
 class LED:
     def __init__(self):
-        serial = spi(port=0, device=0, gpio=noop())
-        self.device = max7219(serial, width=32, height=32, block_orientation=-90, rotate=1)
-
+        self.on = False
     def SET_LED(self,number):
+        if not self.on:
+            serial = spi(port=0, device=0, gpio=noop())
+            self.device = max7219(serial, width=32, height=32, block_orientation=-90, rotate=1)
+            self.on = True
         number = number.replace('-', 'l')
 
         testlen = len(number)
@@ -103,8 +105,10 @@ class LED:
                     text(draw, (21, 22), number[5], fill="white")
 
     def OFF_LED(self):
-        self.device.clear()
-        self.device.cleanup()
+        if self.on:
+            self.device.clear()
+            self.device.cleanup()
+            self.on = False
 
         pass
         #self.device.hide()
