@@ -29,6 +29,12 @@ class busPlayList(TTS):
         bus_before_3_station = "bus_before_3_station"
         bus_before_4_station = "bus_before_4_station"
         bus_before_5_station = "bus_before_5_station"
+        bus_before_6_station = "bus_before_6_station"
+        bus_before_7_station = "bus_before_7_station"
+        bus_before_8_station = "bus_before_8_station"
+        bus_before_9_station = "bus_before_9_station"
+        bus_before_10_station = "bus_before_10_station"
+
         bus_no_stop = "bus_no_stop"
         error_bus_not = "error_bus_not"
         error_inf_not = "error_inf_not"
@@ -54,6 +60,11 @@ class busPlayList(TTS):
         self.tts_api("버스가  세정거장 전에 있습니다   ", self.status.bus_before_3_station)
         self.tts_api("버스가  네정거장 전에 있습니다   ", self.status.bus_before_4_station)
         self.tts_api("버스가  다섯정거장 전에 있습니다   ", self.status.bus_before_5_station)
+        self.tts_api("버스가  여섯정거장 전에 있습니다   ", self.status.bus_before_6_station)
+        self.tts_api("버스가  일곱정거장 전에 있습니다   ", self.status.bus_before_7_station)
+        self.tts_api("버스가  여덟정거장 전에 있습니다   ", self.status.bus_before_8_station)
+        self.tts_api("버스가  아홉정거장 전에 있습니다   ", self.status.bus_before_9_station)
+        self.tts_api("버스가  열정거장 전에 있습니다   ", self.status.bus_before_10_station)
         self.tts_api("버스 정차를 파악할 수 없습니다. 정차하지 않았거나 식별하지 못한 경우일 수 있으니 확인후 탑승 부탁드립니다. 다시 안내를 받으려면 해당 번호가 나오는 시점에 버튼을 눌러주세요", self.status.bus_no_stop)
         self.tts_api("현재 조회할수 있는 버스 정보가 없습니다.", self.status.error_bus_not)
         self.tts_api("현재 등록할수 있는 버스가 없습니다.", self.status.error_inf_not)
@@ -87,6 +98,36 @@ class busPlayList(TTS):
         elif busState == 5:
             self.play(bus.busNumber)
             self.play(self.status.bus_before_5_station)
+            if self.playStop:
+                self.playStop = False
+                time.sleep(1)
+        elif busState == 6:
+            self.play(bus.busNumber)
+            self.play(self.status.bus_before_6_station)
+            if self.playStop:
+                self.playStop = False
+                time.sleep(1)
+        elif busState == 7:
+            self.play(bus.busNumber)
+            self.play(self.status.bus_before_7_station)
+            if self.playStop:
+                self.playStop = False
+                time.sleep(1)
+        elif busState == 8:
+            self.play(bus.busNumber)
+            self.play(self.status.bus_before_8_station)
+            if self.playStop:
+                self.playStop = False
+                time.sleep(1)
+        elif busState == 9:
+            self.play(bus.busNumber)
+            self.play(self.status.bus_before_9_station)
+            if self.playStop:
+                self.playStop = False
+                time.sleep(1)
+        elif busState == 10:
+            self.play(bus.busNumber)
+            self.play(self.status.bus_before_10_station)
             if self.playStop:
                 self.playStop = False
                 time.sleep(1)
@@ -143,7 +184,7 @@ class busPlayList(TTS):
 
                     self.playlist.append(self.playlist[0])
                     del self.playlist[0]
-                    if int(self.playlist[0].location) <= 5 and int(self.playlist[0].location) >= -3:
+                    if int(self.playlist[0].location) <= 10 and int(self.playlist[0].location) >= -3:
                         self.busPlay(self.playlist[0])
                         self.nowPlay = self.playlist[0]
 
@@ -201,7 +242,7 @@ class UserBus:
         self.recentBus = None
 
     def add(self, bus):  # userbus add
-        if not bus.routeId in self.userBusList and int(bus.location) <= 5 and int(bus.location) >= -3:
+        if not bus.routeId in self.userBusList and int(bus.location) <= 10 and int(bus.location) >= -3:
             self.recentBus = bus.routeId
             self.userBusList[bus.routeId] = bus
             return True
