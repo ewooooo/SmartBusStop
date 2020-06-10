@@ -3,7 +3,7 @@ import sys
 import pygame
 import urllib.request
 import time
-
+import keyData
 class TTS() :
     def __init__(self, client_id, client_secret):
         self.playlist = []
@@ -18,7 +18,7 @@ class TTS() :
     def tts_api(self, textdata, mp3FileName):   # mp3 받아오는 파일
 
         fileName = "sound/" + mp3FileName + ".mp3"
-        data = "speaker=mijin&speed=1&text=" + textdata
+        data = "speaker=mijin&speed=2&text=" + textdata
 
         response = urllib.request.urlopen(self.request, data=data.encode('utf-8'))
 
@@ -66,18 +66,22 @@ class TTS() :
 
 
 
+
+if __name__ == "__main__":
+
+    tts = TTS(keyData.TTS_client_id,keyData.TTS_client_secret)
+    tts.addPlayData("4000번","4000")
+    tts.addPlayData("버스가 잠시후에 도착합니다.","arrive")
+    tts.addPlayData("탑승하고자 하는 버스 번호가 들리면 버튼을 누르세요.","pushbutton")
+    tts.addPlayData("버스가 등록되었습니다. 등록하신 버스가 아니시면 버튼을 눌러주세요","cancel")
+    tts.addPlayData("버스가 진입중입니다.","come")
+    tts.addPlayData("버스가 정차하였습니다. 사고예방을 위해 차량 정차 소리와 문 열림 소리를 반드시 듣고 탑승해주세요", "stop")
+
 #
-# if __name__ == "__main__":
-#
-#     tts = TTS(client_id,client_secret)
-#     tts.addPlayData("4000번","4000")
-#     tts.addPlayData("버스가 잠시후에 도착합니다","arrive")
-#     tts.addPlayData("탑승하고자 하는 버스 번호가 들리면 버튼을 누르세요.","pushbutton")
-#     tts.addPlayData("버스가 등록되었습니다. 등록하신 버스가 아니시면 버튼을 눌러주세요","cancel")
-#     tts.addPlayData("버스가 진입중입니다.","come")
-#     tts.addPlayData("버스가 정차하였습니다. 사고예방을 위해 차량 정차 소리와 문 열림 소리를 반드시 듣고 탑승해주세요", "stop")
-#
-#
-#     tts.play("4000")
-#     tts.play("arrive")
+    tts.play("4000")
+
+    tts.play("arrive")
+    tts.play("4000")
+
+    tts.play("arrive")
 #     tts.play("pushbutton")
