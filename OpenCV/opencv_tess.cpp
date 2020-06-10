@@ -49,7 +49,7 @@ private:
 	Mat beforProcess(Mat image);
 	vector<vector<Rect>> oneCarNumber(vector<vector<Point>> contours);
 	vector<Rect> doubleCarNumber(vector<vector<Rect>> resultGroupList);
-	vector<Rect> BusNumberRectList();
+	
 public:
 	BusNumber() {
 
@@ -65,8 +65,7 @@ public:
 			mask.release();
 		}
 	}
-
-	int busNumberProcess(int control);
+	int BusNumberRectList(int control);
 };
 
 Mat BusNumber::beforProcess(Mat image) {
@@ -285,53 +284,6 @@ vector<Rect> BusNumber::doubleCarNumber(vector<vector<Rect>> resultGroupList) {
 }
 
 
-vector<Rect> BusNumber::BusNumberRectList() {
-	cap.read(inputimage);
-	if (inputimage.empty()) {
-		cerr << "빈 영상이 캡쳐되었습니다.\\\\n";
-		exit;
-	}
-
-
-	Mat imageDebuger = inputimage.clone();
-	Mat processImage = inputimage.clone();
-
-	if (mask.empty()) {
-		mask = Mat::zeros((int)cap.get(CAP_PROP_FRAME_HEIGHT), (int)cap.get(CAP_PROP_FRAME_WIDTH), CV_8UC1);
-		pointList.clear();
-		Mat mouseImage = inputimage.clone();
-		while (1) {
-			imshow("imagefirst", mouseImage);
-			imshow("mask", mask);
-			vector<Point> pointList;
-			setMouseCallback("imagefirst", mouse_callback, reinterpret_cast<void*>(&mouseImage));
-			if (cv::waitKey(3) == 27)
-				break;
-		}
-		destroyAllWindows(); //모든 창 닫기
-	}
-	processImage = beforProcess(processImage);
-
-	vector<vector<Point> > contours;  //  Vectors for 'findContours' function.
-	vector<Vec4i> hierarchy;
-	findContours(processImage, contours, hierarchy, RETR_LIST, CHAIN_APPROX_SIMPLE, Point());
-	if (contours.empty())
-		return {};
-	vector<vector<Rect>> busRectList = oneCarNumber(contours);
-	if (busRectList.empty())
-		return {};
-
-	vector<Rect> GroupList = doubleCarNumber(busRectList);
-
-	for (int idx = 0; idx < GroupList.size(); idx++) {
-		rectangle(imageDebuger, GroupList[idx].tl(), GroupList[idx].br(), Scalar(0, 0, 255), 3);
-	}
-	imshow("imagedebuger", imageDebuger);
-
-
-	return GroupList;
-
-}
 //
 //extern "C" {
 //	BusNumber* BusNumber_new() { return new BusNumber(); }
@@ -398,19 +350,63 @@ String processNumber(String text) {
 	return String(inStr);
 }
 
-int BusNumber::busNumberProcess(int control) {
-	vector<Rect> busRectList = BusNumberRectList();
-	if (!busRectList.empty()) {
-		for (int i = 0; i < busRectList.size(); i++) {
-			Rect rectROI = Rect(Point(busRectList[i].tl().x - 25, busRectList[i].tl().y - 25), Point(busRectList[i].br().x + 25, busRectList[i].br().y + 25));
+
+int BusNumber::BusNumberRectList(int control) {
+	cap.read(inputimage);
+	if (inputimage.empty()) {
+		cerr << "빈 영상이 캡쳐되었습니다.\\\\n";
+		exit;
+	}
+
+
+	Mat imageDebuger = inputimage.clone();
+	Mat processImage = inputimage.clone();
+
+	if (mask.empty()) {
+		mask = Mat::zeros((int)cap.get(CAP_PROP_FRAME_HEIGHT), (int)cap.get(CAP_PROP_FRAME_WIDTH), CV_8UC1);
+		pointList.clear();
+		Mat mouseImage = inputimage.clone();
+		while (1) {
+			imshow("imagefirst", mouseImage);
+			imshow("mask", mask);
+			vector<Point> pointList;
+			setMouseCallback("imagefirst", mouse_callback, reinterpret_cast<void*>(&mouseImage));
+			if (cv::waitKey(3) == 27)
+				break;
+		}
+		destroyAllWindows(); //모든 창 닫기
+	}
+	processImage = beforProcess(processImage);
+
+	vector<vector<Point> > contours;  //  Vectors for 'findContours' function.
+	vector<Vec4i> hierarchy;
+	findContours(processImage, contours, hierarchy, RETR_LIST, CHAIN_APPROX_SIMPLE, Point());
+	if (contours.empty())
+		return {};
+	vector<vector<Rect>> busRectList = oneCarNumber(contours);
+	if (busRectList.empty())
+		return {};
+
+	vector<Rect> GroupList = doubleCarNumber(busRectList);
+
+	int resultNumber = 0;
+
+	if (!GroupList.empty()) {
+		for (int i = 0; i < GroupList.size(); i++) {
+			rectangle(imageDebuger, GroupList[i].tl(), GroupList[i].br(), Scalar(0, 0, 255), 3);
+			Rect rectROI = Rect(Point(GroupList[i].tl().x - 25, GroupList[i].tl().y - 25), Point(GroupList[i].br().x + 25, GroupList[i].br().y + 25));
 			Mat testimage = inputimage(rectROI);
 			String testStr = OCR(testimage);
 			String result = processNumber(testStr);
-			return  std::stoi(result.substr(result.length() - 4));
+			resultNumber =  std::stoi(result.substr(result.length() - 4));
 		}
 	}
-	return 0;
+	imshow("imagedebuger", imageDebuger);
+
+	return resultNumber;
+
 }
+
 
 int main()
 {
@@ -418,7 +414,7 @@ int main()
 	
 
 	while (1) {
-		cout << busTest.busNumberProcess(1) << endl;
+		cout << busTest.BusNumberRectList(1) << endl;
 		
 		int key = waitKey(1);
 		if (key == 97) // 소문자 a 누르면 mask 설정 모드
