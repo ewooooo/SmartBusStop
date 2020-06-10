@@ -34,7 +34,7 @@ int main()
 	double maxratio = 0.9, minratio = 0.25, alpha = 0, beta = 500;
 
 
-	cv::VideoCapture cap("/home/test/opencv_test/1.mp4");
+	cv::VideoCapture cap("/home/pi/SmartBusStop/OpenCV/1.mp4");
 	if (!cap.isOpened()) {
 		cerr << "에러 - 카메라를 열 수 없습니다.\\\\n";
 		return -1;
