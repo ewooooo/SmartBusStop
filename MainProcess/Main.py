@@ -174,6 +174,7 @@ class busPlayList(TTS):
                 self.playInfo = None
                 self.playInfoBus = None
                 self.play(playInfo)
+                self.playwiat_1min()
 
                 if self.playStop:
                     self.playStop = False
@@ -278,10 +279,12 @@ class UserBus:
         # carNumber in userBusList 요소가 있는지 확인 T/F
         userbusEnter = []
         if bool(self.userBusList):
-            for key in self.userBusList.keys():
+            keys = self.userBusList.keys()
+            for key in keys:
                 bus = self.userBusList.get(key)
-                if int(bus.location) == 1:
-                    userbusEnter.append(bus)
+                if bool(bus):
+                    if int(bus.location) == 1:
+                        userbusEnter.append(bus)
             return userbusEnter
         else:
             return None
