@@ -14,23 +14,13 @@ using namespace cv;
 using namespace std;
 
 String OCR(Mat test) {
-	Mat GaussIMG;
-	Mat Ggrays;
-	cvtColor(test, GaussIMG, COLOR_BGR2GRAY);
-	Mat test1;
-	cvtColor(GaussIMG, Ggrays, COLOR_GRAY2BGR);
-	GaussianBlur(Ggrays, test1, Size(5, 5), 0);
-	imshow("tset", test1);
-
-
-
 	string outText;
 	tesseract::TessBaseAPI *ocr = new tesseract::TessBaseAPI();
 
 	ocr->Init(NULL, "kor", tesseract::OEM_LSTM_ONLY);
 	ocr->SetPageSegMode(tesseract::PSM_AUTO);
 
-	ocr->SetImage(test1.data, test1.cols, test1.rows, 3, test1.step);
+	ocr->SetImage(test.data, test.cols, test.rows, 3, test.step);
 	outText = string(ocr->GetUTF8Text());
 	//cout << outText;
 	ocr->End();
