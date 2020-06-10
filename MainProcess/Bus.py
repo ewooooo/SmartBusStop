@@ -91,7 +91,7 @@ class StationDict:
             # play 리스트 추가 등
 
     def loopUpdate(self, t):  # busDict update LOOP
-
+        ledState = False
         startTime = time.time()
         while True:
             if time.time()-startTime > t:
@@ -105,6 +105,20 @@ class StationDict:
                 print("=================")
 
                 startTime = time.time()
+
+
+            playLEDlist = self.main.userBus.getEnterUserBus()
+            if not playLEDlist:
+                if ledState:
+                    self.main.led.OFF_LED()
+                    ledState = False
+                continue
+            else:
+                ledState = True
+                for p in playLEDlist:
+                    self.main.led.SET_LED(p.busNumber)
+                    print("LED : " + p.busNumber)
+
             if not self.main.systemState:
                 print("endBusUpdate")
                 return

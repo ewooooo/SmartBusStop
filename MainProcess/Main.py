@@ -356,26 +356,6 @@ class LoopSystem:
             if not self.systemState:
                 return
 
-    def loopLed(self):
-        ledState = False
-        while True:
-            self.led.SET_LED("4000-1")
-            playLEDlist = self.userBus.getEnterUserBus()
-            if not playLEDlist:
-                if ledState:
-                    self.led.OFF_LED()
-                    ledState = False
-                continue
-            else:
-                ledState = True
-                for p in playLEDlist:
-                    self.led.SET_LED(p.busNumber)
-                    print("LED : " +p.busNumber)
-
-
-            if not self.systemState:
-                return
-
     def loopStart(self):
 
         while True:
