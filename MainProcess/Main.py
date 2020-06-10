@@ -74,78 +74,91 @@ class busPlayList(TTS):
         if busState == 1:
             self.play(bus.busNumber)
             self.play(self.status.bus_before_1_station)
+            self.playwiat_1min()
             if self.playStop:
                 self.playStop = False
                 time.sleep(1)
         elif busState == 2:
             self.play(bus.busNumber)
             self.play(self.status.bus_before_2_station)
+            self.playwiat_1min()
             if self.playStop:
                 self.playStop = False
                 time.sleep(1)
         elif busState == 3:
             self.play(bus.busNumber)
             self.play(self.status.bus_before_3_station)
+            self.playwiat_1min()
             if self.playStop:
                 self.playStop = False
                 time.sleep(1)
         elif busState == 4:
             self.play(bus.busNumber)
             self.play(self.status.bus_before_4_station)
+            self.playwiat_1min()
             if self.playStop:
                 self.playStop = False
                 time.sleep(1)
         elif busState == 5:
             self.play(bus.busNumber)
             self.play(self.status.bus_before_5_station)
+            self.playwiat_1min()
             if self.playStop:
                 self.playStop = False
                 time.sleep(1)
         elif busState == 6:
             self.play(bus.busNumber)
             self.play(self.status.bus_before_6_station)
+            self.playwiat_1min()
             if self.playStop:
                 self.playStop = False
                 time.sleep(1)
         elif busState == 7:
             self.play(bus.busNumber)
             self.play(self.status.bus_before_7_station)
+            self.playwiat_1min()
             if self.playStop:
                 self.playStop = False
                 time.sleep(1)
         elif busState == 8:
             self.play(bus.busNumber)
             self.play(self.status.bus_before_8_station)
+            self.playwiat_1min()
             if self.playStop:
                 self.playStop = False
                 time.sleep(1)
         elif busState == 9:
             self.play(bus.busNumber)
             self.play(self.status.bus_before_9_station)
+            self.playwiat_1min()
             if self.playStop:
                 self.playStop = False
                 time.sleep(1)
         elif busState == 10:
             self.play(bus.busNumber)
             self.play(self.status.bus_before_10_station)
+            self.playwiat_1min()
             if self.playStop:
                 self.playStop = False
                 time.sleep(1)
         elif busState == 0:
             self.play(bus.busNumber)
             self.play(self.status.bus_arrive)
+            self.playwiat_1min()
             if self.playStop:
                 self.playStop = False
                 time.sleep(1)
         elif busState == -2: # 여기 수정하면 control 도 수정해야함
             self.play(bus.busNumber)
             self.play(self.status.bus_stop)
+            self.playwiat_1min()
             bus.location = -1
             if self.playStop:
                 self.playStop = False
         elif busState == -3:
             self.play(bus.busNumber)
             self.play(self.status.bus_no_stop)
+            self.playwiat_1min()
             bus.location = -1
             if self.playStop:
                 self.playStop = False

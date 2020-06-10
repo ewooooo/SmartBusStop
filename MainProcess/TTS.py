@@ -46,6 +46,18 @@ class TTS() :
                 return
             continue
 
+    def playwiat_1min(self):
+        fileName = "./wait_1min.mp3"
+
+        pygame.mixer.music.load(fileName)
+        pygame.mixer.music.play()
+        if self.playStop:
+            return
+        while pygame.mixer.music.get_busy() == True:
+            if self.playStop:
+                return
+            continue
+
     def setPlayStop(self):
         self.playStop = True
 
