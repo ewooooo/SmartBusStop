@@ -111,8 +111,10 @@ class LED:
 if __name__ == "__main__":
 
     led = LED()
+    a = 4000
     while True:
-        led.SET_LED("4000-1")
+        a = a + 1
+        led.SET_LED(str(a)+"-1")
         print("led on")
         time.sleep(3)
         led.OFF_LED()
