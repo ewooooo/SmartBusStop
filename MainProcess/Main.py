@@ -196,9 +196,9 @@ class busPlayList(TTS):
                 if bool(self.playlist):
 
                     self.playlist.append(self.playlist[0])
-                    self.nowPlay = self.playlist[0]
                     del self.playlist[0]
                     if int(self.playlist[0].location) <= 10 and int(self.playlist[0].location) >= -3:
+                        self.nowPlay = self.playlist[0]
                         self.busPlay(self.playlist[0])
 
 
