@@ -11,6 +11,7 @@
 
 using namespace cv;
 using namespace std;
+using namespace tesseract;
 
 vector<Point> pointList;
 Mat mask;
@@ -58,11 +59,17 @@ private:
 	int limitSec;
 	int boundX;
 	int boundY;
+	TessBaseAPI* ocr;
+	String OCR(Mat test);
+	void EraseSpace(char* inStr);
+	String processNumber(String text);
 public:
 	BusNumber(int lsec, int bx, int by) {
 		limitSec = lsec;
 		boundX = bx;
 		boundY = by;
+
+		ocr = new tesseract::TessBaseAPI();
 
 		cap = VideoCapture("./1.mp4");
 		//cap = VideoCapture(0);
@@ -299,13 +306,13 @@ vector<Rect> BusNumber::doubleCarNumber(vector<vector<Rect>> resultGroupList) {
 
 
 
-tesseract::TessBaseAPI* ocr = new tesseract::TessBaseAPI();
-String OCR(Mat test) {
+
+String BusNumber::OCR(Mat test) {
 	string outText;
 
 
-	ocr->Init(NULL, "eng", tesseract::OEM_LSTM_ONLY);
-	ocr->SetPageSegMode(tesseract::PSM_AUTO);
+	ocr->Init(NULL, "eng", OEM_LSTM_ONLY);
+	ocr->SetPageSegMode(PSM_AUTO);
 
 	ocr->SetImage(test.data, test.cols, test.rows, 3, test.step);
 	outText = string(ocr->GetUTF8Text());
@@ -314,7 +321,7 @@ String OCR(Mat test) {
 	return outText;
 }
 
-void EraseSpace(char* inStr)
+void BusNumber::EraseSpace(char* inStr)
 {
 
 	char* p_dest = inStr; // p_dest 포인터도 ap_string 포인터와 동일한 메모리를 가리킨다.
@@ -335,7 +342,7 @@ void EraseSpace(char* inStr)
 }
 
 
-String processNumber(String text) {
+String BusNumber::processNumber(String text) {
 	char inStr[100];
 	char num[] = { '0','1','2','3','4','5','6','7','8','9' };
 	strcpy(inStr, text.c_str());
