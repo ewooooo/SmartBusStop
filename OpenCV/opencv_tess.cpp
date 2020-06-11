@@ -50,15 +50,22 @@ private:
 	Mat beforProcess(Mat image);
 	vector<vector<Rect>> oneCarNumber(vector<vector<Point>> contours);
 	vector<Rect> doubleCarNumber(vector<vector<Rect>> resultGroupList);
+	bool checkDim(Rect rect, Rect test);
 	int count = 0;
 	Rect beforeRect;
 	int beforeNumber = 0;
 	int startTime=0;
+	int limitSec;
+	int boundX;
+	int boundY;
 public:
-	BusNumber() {
+	BusNumber(int lsec, int bx, int by) {
+		limitSec = lsec;
+		boundX = bx;
+		boundY = by;
 
-		//cap = VideoCapture("./1.mp4");
-		cap = VideoCapture(0);
+		cap = VideoCapture("./1.mp4");
+		//cap = VideoCapture(0);
 		if (!cap.isOpened()) {
 			cerr << "에러 - 카메라를 열 수 없습니다.\\\\n";
 			exit;
@@ -69,6 +76,7 @@ public:
 			mask.release();
 		}
 	}
+
 	int BusNumberRectList(int control);
 };
 
@@ -351,16 +359,13 @@ String processNumber(String text) {
 	return String(inStr);
 }
 
-bool checkDim(Rect rect,Rect test) {
+bool BusNumber::checkDim(Rect rect,Rect test) {
 	
-
-	int boundingX = 50;
-	int boundingY = 50;
 	double distBeforAfterFrameX = abs(((test.br().x - test.x) / 2) - abs((rect.br().x - rect.x) / 2));
 	double distBeforAfterFrameY = abs(((test.br().y - test.y) / 2) - abs((rect.br().y - rect.y) / 2));
 
 
-	if ((distBeforAfterFrameX < boundingX) && distBeforAfterFrameY < boundingY) {
+	if ((distBeforAfterFrameX < boundX) && distBeforAfterFrameY < boundY) {
 		return true;
 	}
 
@@ -376,11 +381,12 @@ int BusNumber::BusNumberRectList(int control) {
 	}
 
 	if(startTime !=0){
-		if (((time(0) % 60) - startTime) > 10) {
+		if (((time(0) % 60) - startTime) > limitSec) {
 			count = 0;
+			int tmpNumber = beforeNumber;
 			beforeNumber = 0;
 			startTime = 0;
-			return -1;
+			return -tmpNumber;
 		}
 	}
 
@@ -471,13 +477,13 @@ int BusNumber::BusNumberRectList(int control) {
 
 }
 extern "C" {
-	BusNumber* BusNumber_new() { return new BusNumber(); }
+	BusNumber* BusNumber_new(int liTime,int bX,int bY) { return new BusNumber(liTime,bX,bY); }
 	int getBusNumberRectList(BusNumber* busNumber, int controlNum) { return busNumber->BusNumberRectList(controlNum); }
 }
 
 int main()
 {
-	BusNumber busTest = BusNumber();
+	BusNumber busTest = BusNumber(3,50,50);
 	
 
 	while (1) {
