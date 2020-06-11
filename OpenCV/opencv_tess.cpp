@@ -6,12 +6,19 @@
 #include <cstdlib>
 #include <ctime>
 
+#include <unistd.h> //sockaddr_in, read, write 등
+#include <arpa/inet.h>  //htnol, htons, INADDR_ANY, sockaddr_in 등
+#include <sys/socket.h>
+
 #include <tesseract/baseapi.h>
 #include <leptonica/allheaders.h>
 
 using namespace cv;
 using namespace std;
 using namespace tesseract;
+
+bool debug = true;
+Mat imageDebuger;
 
 vector<Point> pointList;
 Mat mask;
@@ -397,8 +404,9 @@ int BusNumber::BusNumberRectList(int control) {
 		}
 	}
 
+	if (debug)
+		imageDebuger = inputimage.clone();
 
-	Mat imageDebuger = inputimage.clone();
 	Mat processImage = inputimage.clone();
 
 	if (mask.empty()) {
@@ -421,10 +429,10 @@ int BusNumber::BusNumberRectList(int control) {
 	vector<Vec4i> hierarchy;
 	findContours(processImage, contours, hierarchy, RETR_LIST, CHAIN_APPROX_SIMPLE, Point());
 	if (contours.empty())
-		return {};
+		return 0;
 	vector<vector<Rect>> busRectList = oneCarNumber(contours);
 	if (busRectList.empty())
-		return {};
+		return 0;
 
 	vector<Rect> GroupList = doubleCarNumber(busRectList);
 	
@@ -434,12 +442,21 @@ int BusNumber::BusNumberRectList(int control) {
 	if (!GroupList.empty()) {
 
 		for (int i = 0; i < GroupList.size(); i++) {
-			rectangle(imageDebuger, GroupList[i].tl(), GroupList[i].br(), Scalar(0, 0, 255), 3);
+			if (debug) {
+				rectangle(imageDebuger, GroupList[i].tl(), GroupList[i].br(), Scalar(0, 0, 255), 3);
+			}
+			
 			Rect rectROI = Rect(Point(GroupList[i].tl().x - 25, GroupList[i].tl().y - 25), Point(GroupList[i].br().x + 25, GroupList[i].br().y + 25));
 			Mat testimage = inputimage(rectROI);
 			String testStr = OCR(testimage);
 			String result = processNumber(testStr);
-			resultNumber =  std::stoi(result.substr(result.length() - 4));
+			if (result.length() == 4) {
+				resultNumber = std::stoi(result.substr(result.length() - 4));
+			}
+			else {
+				resultNumber = 0;
+			}
+
 			
 			if (control == 0) {	//차량번호만 원할시 0
 				beforeNumber = 0;
@@ -479,13 +496,8 @@ int BusNumber::BusNumberRectList(int control) {
 		}
 	}
 
-	//imshow("imagedebuger", imageDebuger);
 	return resultNumber;
 
-}
-extern "C" {
-	BusNumber* BusNumber_new(int liTime,int bX,int bY) { return new BusNumber(liTime,bX,bY); }
-	int getBusNumberRectList(BusNumber* busNumber, int controlNum) { return busNumber->BusNumberRectList(controlNum); }
 }
 
 int main()
@@ -494,7 +506,15 @@ int main()
 	
 
 	while (1) {
-		cout << busTest.BusNumberRectList(1) << endl;
+		try {
+			cout << busTest.BusNumberRectList(1) << endl;
+
+		}
+		catch (int exception) {
+			cout << "error" << endl;
+		}
+		if(debug)
+			imshow("imagedebuger", imageDebuger);
 		
 		int key = waitKey(1);
 		if (key == 97) // 소문자 a 누르면 mask 설정 모드
@@ -505,3 +525,85 @@ int main()
 
 	return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void error_handling(char* message);
+
+int main(int PORT)
+{
+	int serv_sock;
+	int clnt_sock;
+
+	//sockaddr_in은 소켓 주소의 틀을 형셩해주는 구조체로 AF_INET일 경우 사용
+	struct sockaddr_in serv_addr;
+	struct sockaddr_in clnt_addr; //accept함수에서 사용됨.
+	socklen_t clnt_addr_size;
+
+	//TCP연결지향형이고 ipv4 도메인을 위한 소켓을 생성
+	serv_sock = socket(PF_INET, SOCK_STREAM, 0);
+	if (serv_sock == -1)
+		error_handling("socket error");
+
+	//주소를 초기화한 후 IP주소와 포트 지정
+	memset(&serv_addr, 0, sizeof(serv_addr));
+	serv_addr.sin_family = AF_INET;                //타입: ipv4
+	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY); //ip주소
+	serv_addr.sin_port = htons(PORT);     //port
+
+	//소켓과 서버 주소를 바인딩
+	if (bind(serv_sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1)
+		error_handling("bind error");
+
+	//연결 대기열 5개 생성 
+	if (listen(serv_sock, 5) == -1)
+		error_handling("listen error");
+
+	//클라이언트로부터 요청이 오면 연결 수락
+	clnt_addr_size = sizeof(clnt_addr);
+	clnt_sock = accept(serv_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size);
+	if (clnt_sock == -1)
+		error_handling("accept error");
+
+	/*-----데이터 전송-----*/
+	char msg[] = "Hello this is server!\n";
+	write(clnt_sock, msg, sizeof(msg));
+
+	//소켓들 닫기
+	close(clnt_sock);
+	close(serv_sock);
+
+	return 0;
+}
+void error_handling(char* message)
+{
+	fputs(message, stderr);
+	fputc('\n', stderr);
+	exit(1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
