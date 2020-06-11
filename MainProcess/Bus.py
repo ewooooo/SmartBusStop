@@ -9,7 +9,7 @@ class Bus:
         self.routeId = routeId  # 버스 ID
         self.plateNo = plateNo   # 버스 번호판 int
         self.location= location   # 도착정보 (가장빠른 버스 몇정거장 전인지)
-
+        self.state = 0
 
     def modifyBus(self, routeId, plateNo, location):
         if self.routeId == routeId:

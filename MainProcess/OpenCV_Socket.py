@@ -25,15 +25,36 @@ class ServerSocket:
             replyData = []
             if data == status.status_1_ActivateCamera or data == status.status_0_EndCamera:
                 replyData.append(status.status_1_ActivateCamera)
-                # 카메라 시작
-                replyData.append("번호판")
-                reply1 = input("입력 :")
+
+                imageRetrunData = input("입력 :") # 카메라 정보에서 리턴
+                replyData.append(imageRetrunData)
+
             elif data == status.status_2_BusWaiting:
                 replyData.append(status.status_1_ActivateCamera)
                 # 카운팅 시작
-                replyData.append("0_1_2_-1")  # [2, (0_버스 발견못함 1_버스 발견됨 2_버스 정차함 -1_대기 시간초과(버싀나감)), 버스번호]
-                replyData.append("번호판")
-                reply1 = input("입력 :")
+                imageRetrunData = str(input("입력 :")) # 버스 번호 발견 94551 발견못한 9455 버스 정
+
+                # [2, (0_버스 발견못함 1_버스 발견됨 2_버스 정차함 -1_대기 시간초과(버싀나감)), 버스번호]
+
+                if len(imageRetrunData) == 4:
+                    replyData.append('1')
+                    replyData.append(imageRetrunData)
+
+                elif len(imageRetrunData) == 5:
+                    if imageRetrunData[0] == '-':
+                        replyData.append('-1')
+                        replyData.append(imageRetrunData[1:5])
+                    elif imageRetrunData[4] == '1':
+                        replyData.append('2')
+                        replyData.append(imageRetrunData[0:4])
+                    else:
+                        replyData.append('0')
+                elif imageRetrunData == '0':
+                    replyData.append('0')
+                else:
+                    replyData.append('-')
+
+
             elif data == status.status_reset:
                 replyData.append(status.status_reset)
 

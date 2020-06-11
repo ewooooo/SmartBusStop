@@ -45,6 +45,8 @@ class busPlayList(TTS):
         self.playInfo = None
         self.playInfoBus = None
         self.busStatePlay = False
+        self.busStopCommand = False
+        self.StopBus =None
         TTS.__init__(self, client_id, client_secret)
         self.tts_api("탑승하고자 하는 버스 번호가 들리면 버튼을 누르세요", self.status.button_1_Info)
         self.tts_api("버스가 등록되었습니다. 등록하신 버스가 아니시면 버튼을 길게 눌러주시고 등록된 버스를 확인하려면 버튼을 두번 누르세요!", self.status.button_2_Push_Succes)
@@ -141,32 +143,11 @@ class busPlayList(TTS):
             if self.playStop:
                 self.playStop = False
                 time.sleep(1)
-        elif busState == 0:
-            self.play(bus.busNumber)
-            self.play(self.status.bus_arrive)
-            self.playwiat_1min()
-            if self.playStop:
-                self.playStop = False
-                time.sleep(1)
-        elif busState == -2: # 여기 수정하면 control 도 수정해야함
-            self.play(bus.busNumber)
-            self.play(self.status.bus_stop)
-            self.playwiat_1min()
-            bus.location = -1
-            if self.playStop:
-                self.playStop = False
-        elif busState == -3:
-            self.play(bus.busNumber)
-            self.play(self.status.bus_no_stop)
-            self.playwiat_1min()
-            bus.location = -1
-            if self.playStop:
-                self.playStop = False
-                time.sleep(1)
+
 
     def playLoop(self):
 
-        while True:
+        while True: #버튼 안내메시지 출력
             if bool(self.playInfo) or bool(self.playInfoBus):
                 if bool(self.playInfoBus):
                     self.play(self.playInfoBus.busNumber)
@@ -180,7 +161,11 @@ class busPlayList(TTS):
                     self.playStop = False
                     time.sleep(1)
 
-            elif self.busStatePlay:
+            elif self.busStopCommand:
+
+                self.busStopCommand = False
+                self.StopBus = None
+            elif self.busStatePlay: #등록된 버스 전보 보기
                 if not self.main.userBus.userBusList:
                     self.play(self.status.bus_state_error)
                 else:
@@ -188,6 +173,7 @@ class busPlayList(TTS):
                         bus = self.main.userBus.userBusList.get(key)
                         self.play(bus.busNumber)
                     self.play(self.status.bus_state)
+                    self.playwiat_1min()
                 self.busStatePlay = False
                 if self.playStop:
                     self.playStop = False
@@ -198,7 +184,7 @@ class busPlayList(TTS):
 
                     self.playlist.append(self.playlist[0])
                     del self.playlist[0]
-                    if int(self.playlist[0].location) <= 10 and int(self.playlist[0].location) >= -3:
+                    if int(self.playlist[0].location) <= 10 and self.playlist[0].state ==0:
                         self.nowPlay = self.playlist[0]
                         self.busPlay(self.playlist[0])
 
@@ -253,13 +239,56 @@ class busPlayList(TTS):
     def errorNotBusInfo(self):
         self.play(self.status.error_bus_not)
 
+    def busStopInfo(self,bus,state):
+        if state == -1: #진입중이다
+            self.busStopCommand = True
+            self.StopBus = bus
+            self.setPlayStop()
+        elif state == -2: #정차했다
+            bus.state = 0
+            self.busStopCommand = True
+            self.StopBus = bus
+            self.setPlayStop()
+
+        elif state == -3: #지나갔다
+            bus.state = 0
+            self.busStopCommand = True
+            self.StopBus = bus
+            self.setPlayStop()
+            bus.state = 0
+
+    def busStopPlay(self,bus):
+        busState = bus.state
+        if busState == -1:
+            self.play(bus.busNumber)
+            self.play(self.status.bus_arrive)
+            self.playwiat_1min()
+            if self.playStop:
+                self.playStop = False
+                time.sleep(1)
+        elif busState == -2: # 여기 수정하면 control 도 수정해야함
+            self.play(bus.busNumber)
+            self.play(self.status.bus_stop)
+            self.playwiat_1min()
+            bus.location = -1
+            if self.playStop:
+                self.playStop = False
+        elif busState == -3:
+            self.play(bus.busNumber)
+            self.play(self.status.bus_no_stop)
+            self.playwiat_1min()
+            bus.location = -1
+            if self.playStop:
+                self.playStop = False
+                time.sleep(1)
+
 class UserBus:
     def __init__(self):
         self.userBusList = {}
         self.recentBus = None
 
     def add(self, bus):  # userbus add
-        if not bus.routeId in self.userBusList and int(bus.location) <= 10 and int(bus.location) >= -3:
+        if not bus.routeId in self.userBusList and int(bus.location) <= 10:
             self.recentBus = bus.routeId
             self.userBusList[bus.routeId] = bus
             return True
@@ -321,7 +350,7 @@ class LoopSystem:
 
         stationState = status.status_0_EndCamera
         recvBuffer = None
-        waitBusBuffer = []
+
         while True:
             EndTest = True
             if bool(self.bus.busDict):
@@ -355,12 +384,12 @@ class LoopSystem:
                             stationState = status.status_1_ActivateCamera
                             if recvBuffer[1] != None:
                                 for bus in checkBusList:
-                                    if bus.location == recvBuffer[1]:
+                                    if bus.busNumber[len(bus.busNumber)-4:] == recvBuffer[1]:
                                         # tts 진입 정보 수정
-                                        self.tts.priorityBUS(bus)
-                                        waitBusBuffer.append(bus)
+                                        bus.state = -1 #진입중 기다리자
+                                        self.tts.busStopInfo(bus, -1)
                                         stationState = status.status_2_BusWaiting
-                                        break;
+                                        break
                         else:
                             print("통신실패")
 
@@ -372,42 +401,39 @@ class LoopSystem:
                                 continue
                             elif recvBuffer[1] == '1':
                                 for bus in checkBusList:
-                                    if bus in waitBusBuffer:
-                                        continue
-                                    if bus.location == recvBuffer[2]:
+                                    if bus.busNumber[len(bus.busNumber)-4:] == recvBuffer[2]:
                                         # tts 진입 정보 수정
-                                        bus.location = -2
-                                        self.tts.priorityBUS(bus)
-                                        waitBusBuffer.append(bus)
+                                        bus.state = -1  #진입중 기다리자
+                                        self.tts.busStopInfo(bus, -1)
                                         stationState = status.status_2_BusWaiting
-                                        break;
+                                        break
                             elif recvBuffer[1] =='2':
-                                for bus in waitBusBuffer:
-                                    if bus.location == recvBuffer[2]:
-                                        bus.location = -3
-                                        self.tts.priorityBUS(bus)
-                                        waitBusBuffer.remove(bus)
+                                for bus in checkBusList:
+                                    if bus.busNumber[len(bus.busNumber)-4:] == recvBuffer[2]:
+                                        bus.state = -2
+                                        self.tts.busStopInfo(bus, -2)
                                         self.userBus.endDelete(bus)
-                                        if not waitBusBuffer:
-                                            if self.userBus.checkBus():
-                                                stationState = status.status_1_ActivateCamera
-                                            else:
-                                                self.systemState = False
-                                                return
+
+                                        if self.userBus.checkBus():
+                                            stationState = status.status_1_ActivateCamera
+                                        else:
+                                            self.systemState = False
+                                            return
 
                             elif recvBuffer[1] =='-1':
-                                for bus in waitBusBuffer:
-                                    if bus.location == recvBuffer[2]:
-                                        bus.location = -2
-                                        self.tts.priorityBUS(bus)
-                                        waitBusBuffer.remove(bus)
+                                for bus in checkBusList:
+                                    if bus.busNumber[len(bus.busNumber)-4:] == recvBuffer[2]:
+                                        bus.state = -3
+                                        self.tts.busStopInfo(bus, -3)
                                         self.userBus.endDelete(bus)
-                                        if not waitBusBuffer:
-                                            if self.userBus.checkBus():
-                                                stationState = status.status_1_ActivateCamera
-                                            else:
-                                                self.systemState = False
-                                                return
+
+                                        if self.userBus.checkBus():
+                                            stationState = status.status_1_ActivateCamera
+                                        else:
+                                            self.systemState = False
+                                            return
+                            else:
+                                print("통신실패")
                         else:
                             print("통신실패")
             if not self.systemState:
