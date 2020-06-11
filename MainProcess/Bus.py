@@ -123,7 +123,7 @@ class StationDict:
                 else:
                     for p in playLEDlist:
                         self.main.led.SET_LED(p.busNumber)
-                        print("LED : " + p.busNumber)
+                        print(len(playLEDlist) +"LED : " + p.busNumber)
                         time.sleep(3)
 
             if not self.main.systemState:
