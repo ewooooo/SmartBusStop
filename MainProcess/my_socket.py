@@ -1,48 +1,29 @@
-# import socket
+import socket
+import time
 
 class mySocket:
-    # HOST = '192.168.35.163'  # Server IP or Hostname
-    # PORT = 12345  # Pick an open Port (1000+ recommended), must match the client sport
-
-    # buffer = []
-    # def __init__(self):
-    #     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    #     print('Socket created')
-
-    #     # managing error exception
-    #     try:
-    #         s.bind((self.HOST, self.PORT))
-    #     except socket.error:
-    #         print('Bind failed ')
-    #     s.listen(5)
-    #     print('Socket awaiting messages')
-    #     (self.clientsocket, self.address) = s.accept()
-    #     print('Connected')
-
-    def RecvLoop(self):
-        # awaiting for message
+    def __init__(self,HOST,PORT):
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         while True:
-            print("test2")
-        #     data = self.clientsocket.recv(1024)
-        #     print('I sent a message back in response to: ' + data)
-        #     reply = ''
-        #     # process your message
-        #     if data == 'Hello':
-        #         reply = 'Hi, back!'
-        #     elif data == 'This is important':
-        #         reply = 'OK, I have done the important thing you have asked me!'
-        #     # and so on and on until...
-        #     elif data == 'quit':
-        #         self.clientsocket.send('Terminating')
-        #         break
-        #     else:
-        #         reply = 'Unknown command'
-        #     self.clientsocket.send(reply)   # Sending reply
-        # self.clientsocket.close()           # Close connections
+            try:
+                self.s.connect((HOST,PORT))
+                print("Connected")
+                break
+            except:
+                print("re test socket")
+                continue
 
-    # def Send(self):
-    #     next()
-    # def checkBuffer(self):
-    #     value = self.buffer
-    #     self.buffer.clear()
-    #     return value
+    def Send_Recv(self,command):
+
+        self.s.send(command.encode())
+        mode = self.s.recv(1024).decode()
+        SList = mode.split('|')
+
+        return SList
+
+# if __name__ == "__main__":
+#     print("start")
+#
+#     st= mySocket()
+#     st.RecvLoop()
+

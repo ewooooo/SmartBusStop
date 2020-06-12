@@ -56,6 +56,7 @@ public:
 		if (!cap.isOpened()) {
 			cerr << "에러 - 카메라를 열 수 없습니다.\\\\n";
 			exit;
+
 		}
 		
 		mask = imread("./mask.jpg",IMREAD_GRAYSCALE); 
@@ -91,7 +92,9 @@ Mat BusNumber::beforProcess(Mat image) {
 	return image;
 }
 
+
 vector<vector<Rect>>  BusNumber::oneCarNumber(vector<vector<Point>> contours) {
+
 
 	vector<Rect> rect_list(contours.size());
 
@@ -184,6 +187,7 @@ vector<vector<Rect>>  BusNumber::oneCarNumber(vector<vector<Point>> contours) {
 		for (int j = 0; j < a; j++) {
 			if (opRectList[j].tl().x > opRectList[j + 1].tl().x) {
 
+
 				Rect temp_rect = opRectList[j];
 
 				opRectList[j] = opRectList[j + 1];
@@ -204,6 +208,7 @@ vector<vector<Rect>>  BusNumber::oneCarNumber(vector<vector<Point>> contours) {
 		//rectangle(imagedebuger, opRectList[idx].tl(), opRectList[idx].br(), Scalar(idx * 3, 0, idx * 5), 1);
 		int test = 0;
 		for (int i = 0; i < resultGroupList.size(); i++) {
+
 
 			Rect testRect = resultGroupList[i].back();
 
