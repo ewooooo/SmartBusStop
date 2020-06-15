@@ -33,9 +33,12 @@ class StationDict:
         url = url + self.serviceKey + "&stationId=" # 203000165&
         url = url + self.stationId
         response = requests.get(url)
-        text = testXMlL.testText#response.text
-        root = ET.fromstring(text)
 
+        text = testXMlL.testText[0]#response.text
+        testXMlL.testText.append(testXMlL.testText[0])
+        del testXMlL.testText[0]
+
+        root = ET.fromstring(text)
 
         bufferBusCode = []
         for child in root:
