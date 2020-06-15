@@ -1,4 +1,4 @@
-#from Main import LoopSystem
+from Main import LoopSystem
 import RPi.GPIO as GPIO
 import time
 class MyButton:
@@ -34,7 +34,7 @@ class MyButton:
                         if not longlock :
                             delaytime = (time.time_ns() - self.count)/1000000000
                             if delaytime >= self.LONGCLICKTIME:
-                                print(delaytime)
+                                # print(delaytime)
                                 self.longClick()
                                 doubleClickCount = 0
                                 doubleClickON = False
@@ -50,7 +50,7 @@ class MyButton:
                     if(self.count != 0):
                         delaytime = (time.time_ns() - self.count)/1000000000
                         if delaytime > self.ONECLICKTIME:
-                            print("one" + str(delaytime))
+                            # print("one" + str(delaytime))
                             if doubleClickON :
 
                                 self.doubleClick()
@@ -65,57 +65,57 @@ class MyButton:
                         if doubleClickCount != 0:
                             delaytime = (time.time_ns() - doubleClickCount)/1000000000
                             if delaytime > self.DOUBLECLICKTIME:
-                                print("dou" + str(delaytime))
+                                # print("dou" + str(delaytime))
                                 self.oneClick()
                                 self.count = 0
                                 doubleClickCount = 0
                                 doubleClickON = False
                                 longlock = False
 
-                # if not self.main.systemState:
-                #     print("endbutton")
-                #     return
+                if not self.main.systemState:
+                    print("endbutton")
+                    return
         finally :
             pass #GPIO.cleanup()
 
     def oneClick(self):
         print("oneClick")
-        # nowbus = self.main.tts.getNowPlayBus()
-        # if not nowbus:
-        #     self.main.tts.playButtonInfo(self.main.tts.status.error_inf_not)
-        # else:
-        #
-        #     if self.main.userBus.add(nowbus):
-        #         self.main.tts.playButtonInfo(self.main.tts.status.button_2_Push_Succes,nowbus)
-        #     else:
-        #         self.main.tts.playButtonInfo(self.main.tts.status.button_2_Push_Fail,nowbus)
+        nowbus = self.main.tts.getNowPlayBus()
+        if not nowbus:
+            self.main.tts.playButtonInfo(self.main.tts.status.error_inf_not)
+        else:
+
+            if self.main.userBus.add(nowbus):
+                self.main.tts.playButtonInfo(self.main.tts.status.button_2_Push_Succes,nowbus)
+            else:
+                self.main.tts.playButtonInfo(self.main.tts.status.button_2_Push_Fail,nowbus)
 
     def doubleClick(self):
         print("double")
-        # self.main.tts.busStateInfo()
+        self.main.tts.busStateInfo()
         # # 현재 등록된 버스 번호들
 
     def longClick(self):
         print("longClick")
-    #     if self.main.userBus.delete():
-    #         self.main.tts.playButtonInfo(self.main.tts.status.button_3_Cancel)
-    #     else:
-    #         self.main.tts.playButtonInfo(self.main.tts.status.button_3_Cancel_Fail)
-    #
-    # def wakeUpTest(self):
-    #     print("wakeUp")
-    #     count = 0
-    #     while True:
-    #         if GPIO.input(22):
-    #             GPIO.output(17, 1)
-    #             if count == 0:
-    #                 count = time.time_ns()
-    #             else:
-    #                 delaytime = (time.time_ns() - count) / 1000000000
-    #                 if delaytime > self.ONECLICKTIME:
-    #                     return True
-    #         else:
-    #             GPIO.output(17, 0)
+        if self.main.userBus.delete():
+            self.main.tts.playButtonInfo(self.main.tts.status.button_3_Cancel)
+        else:
+            self.main.tts.playButtonInfo(self.main.tts.status.button_3_Cancel_Fail)
+
+    def wakeUpTest(self):
+        print("wakeUp")
+        count = 0
+        while True:
+            if GPIO.input(22):
+                GPIO.output(17, 1)
+                if count == 0:
+                    count = time.time_ns()
+                else:
+                    delaytime = (time.time_ns() - count) / 1000000000
+                    if delaytime > self.ONECLICKTIME:
+                        return True
+            else:
+                GPIO.output(17, 0)
 
 
 if __name__ == "__main__":
