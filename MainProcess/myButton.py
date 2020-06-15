@@ -1,4 +1,4 @@
-from Main import LoopSystem
+#from Main import LoopSystem
 import RPi.GPIO as GPIO
 import time
 class MyButton:
