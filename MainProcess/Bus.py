@@ -2,6 +2,7 @@ from urllib.request import urlopen
 import xml.etree.ElementTree as ET
 import requests
 import time
+import testXMlL
 
 class Bus:
     def __init__(self, busNumber, routeId, plateNo, location):
@@ -76,7 +77,7 @@ class StationDict:
         url = url + self.serviceKey + "&routeId="
         url = url + routeId
         response = requests.get(url)
-        text = response.text
+        text = testXMlL.testText#response.text
         root = ET.fromstring(text)
         for top in root:
             if top.tag != 'msgBody':
