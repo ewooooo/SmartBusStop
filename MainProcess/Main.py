@@ -353,8 +353,14 @@ class LoopSystem:
 
         stationState = status.status_0_EndCamera
         recvBuffer = None
-
+        cycleNumer = 0
         while True:
+            if self.bus.testCount != cycleNumer:
+                cycleNumer = self.bus.testCount
+                recvBuffer = self.kySocket.Send_Recv(str(cycleNumer+3))
+                if recvBuffer[0] != status.status_reset:
+                    print("통신 실패")
+
             EndTest = True
             if bool(self.bus.busDict):
                 for bkey in self.bus.busDict.keys():

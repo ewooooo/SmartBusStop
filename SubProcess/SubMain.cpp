@@ -77,21 +77,23 @@ private:
 	void EraseSpace(char* inStr);
 	String processNumber(String text);
 public:
-	BusNumber(int lsec, int bx, int by,int c) {
+	BusNumber(string fileName,int lsec, int bx, int by,int c) {
 		limitSec = lsec;
 		boundX = bx;
 		boundY = by;
 		limitCount = c;
+		
 		ocr = new tesseract::TessBaseAPI();
-
-		cap = VideoCapture("./1.mp4");
+		string file = "./" + fileName + ".mp4";
+		cout << file << endl;
+		cap = VideoCapture(file);
 		//cap = VideoCapture(0);
 		if (!cap.isOpened()) {
 			cerr << "에러 - 카메라를 열 수 없습니다.\\\\n";
 			exit;
 		}
 
-		mask = imread("./mask.jpg", IMREAD_GRAYSCALE);
+		mask = imread("./mask"+fileName+".jpg", IMREAD_GRAYSCALE);
 		if ((mask.empty()) || mask.cols != cap.get(CAP_PROP_FRAME_WIDTH) || mask.rows != cap.get(CAP_PROP_FRAME_HEIGHT)) {
 			mask.release();
 		}
@@ -410,8 +412,10 @@ int BusNumber::BusNumberRectList(int control) {
 		}
 	}
 
-	if (debug)
+	if (debug) {
 		imageDebuger = inputimage.clone();
+		imshow("imageDebuger",imageDebuger);
+	}
 
 	Mat processImage = inputimage.clone();
 
@@ -450,6 +454,7 @@ int BusNumber::BusNumberRectList(int control) {
 		for (int i = 0; i < GroupList.size(); i++) {
 			if (debug) {
 				rectangle(imageDebuger, GroupList[i].tl(), GroupList[i].br(), Scalar(0, 0, 255), 3);
+				imshow("imageDebuger", imageDebuger);
 			}
 
 			Rect rectROI = Rect(Point(GroupList[i].tl().x - GroupList[i].width * 0.3, GroupList[i].tl().y - GroupList[i].height * 0.5), Point(GroupList[i].br().x + GroupList[i].width * 0.3, GroupList[i].br().y + GroupList[i].height * 0.5));
@@ -557,7 +562,7 @@ int main()
 
 
 	Status status = Status();
-	BusNumber busTest = BusNumber(limitTime, boundX, boundY, count);
+	BusNumber busTest = BusNumber("1",limitTime, boundX, boundY, count);
 
 	
 
@@ -619,6 +624,7 @@ int main()
 				buffer[0] = status.status_1_ActivateCamera[0];
 				buffer[1] = '|';
 				string imageRetrunData;
+
 				imageRetrunData = to_string(busTest.BusNumberRectList(1));
 				insertString(buffer, 2, imageRetrunData);
 
@@ -663,6 +669,10 @@ int main()
 			}
 			else if (data == status.status_reset) {
 				buffer[0] = status.status_reset[0];
+			}
+			else if (stoi(data)>2) {
+				buffer[0] = status.status_reset[0];
+				busTest = BusNumber(data,limitTime, boundX, boundY, count);
 			}
 
 			cout << buffer << endl;
