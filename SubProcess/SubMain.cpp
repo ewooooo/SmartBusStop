@@ -401,7 +401,7 @@ int BusNumber::BusNumberRectList(int control) {
 		cerr << "빈 영상이 캡쳐되었습니다.\\\\n";
 		exit;
 	}
-
+	imshow("inputimage", inputimage);
 	if (startTime != 0) {
 		if (((time(0) % 60) - startTime) > limitSec) {
 			count = 0;
