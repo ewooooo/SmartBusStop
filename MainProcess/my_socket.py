@@ -12,18 +12,27 @@ class mySocket:
             except:
                 print("re test socket")
                 continue
-
     def Send_Recv(self,command):
 
+        #[2, (0_버스 발견못함 1_버스 발견됨 2_버스 정차함 -1_대기 시간초과(버싀나감)), 버스번호]
         self.s.send(command.encode())
-        mode = self.s.recv(1024).decode()
+
+        mode = self.s.recv(10).decode("UTF-8")
+        print(mode)
+        mode = mode[0:9]
+        mode = mode.replace('_','')
         SList = mode.split('|')
 
         return SList
 
-# if __name__ == "__main__":
-#     print("start")
-#
-#     st= mySocket()
-#     st.RecvLoop()
+if __name__ == "__main__":
+    print("start")
+
+    st= mySocket("192.168.0.32",12345)
+    while True:
+        buffer = '_________'
+        a = input("입력 : ")
+        buffer = a +buffer
+        print(st.Send_Recv(buffer))
+
 
