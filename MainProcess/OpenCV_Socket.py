@@ -68,5 +68,5 @@ class ServerSocket:
 
 
 if __name__ == "__main__":
-    server = ServerSocket('192.168.0.5',12345)
+    server = ServerSocket('192.168.0.9',12345)
     server.Send_Recv()
