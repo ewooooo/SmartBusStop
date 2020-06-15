@@ -67,6 +67,7 @@ class MyButton:
                                 doubleClickCount = 0
                                 doubleClickON = False
                 if not self.main.systemState:
+                    print("endbutton")
                     return
         finally :
             GPIO.cleanup()
