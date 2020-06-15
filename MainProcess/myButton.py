@@ -3,7 +3,7 @@ import RPi.GPIO as GPIO
 import time
 class MyButton:
     LONGCLICKTIME = 1
-    DOUBLECLICKTIME = 0.5
+    DOUBLECLICKTIME = 0.7
     ONECLICKTIME = 0.02
 
     def __init__(self,obj):
