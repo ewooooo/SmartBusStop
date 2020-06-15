@@ -1,7 +1,0 @@
-https://medium.com/building-a-simple-text-correction-tool/basic-ocr-with-tesseract-and-opencv-34fae6ab3400
-
-https://www.howtoforge.com/tutorial/tesseract-ocr-installation-and-usage-on-ubuntu-16-04/
-
-http://m.blog.daum.net/rayolla/1141?tp_nil_a=1
-
-https://webnautes.tistory.com/1186?category=704653
