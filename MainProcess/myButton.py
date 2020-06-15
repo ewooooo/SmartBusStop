@@ -1,11 +1,10 @@
 from Main import LoopSystem
 import RPi.GPIO as GPIO
 import time
-import keyData
 class MyButton:
-    LONGCLICKTIME = keyData.LONGCLICKTIME
-    DOUBLECLICKTIME = keyData.DOUBLECLICKTIME
-    ONECLICKTIME = keyData.ONECLICKTIME
+    LONGCLICKTIME = 1
+    DOUBLECLICKTIME = 0.5
+    ONECLICKTIME = 0.1
 
     def __init__(self,obj):
         GPIO.setmode(GPIO.BCM)
