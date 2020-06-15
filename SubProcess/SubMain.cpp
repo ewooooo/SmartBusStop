@@ -1,17 +1,22 @@
 
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <errno.h>
 
 #include <opencv2/opencv.hpp> 
 #include <algorithm>// min() max();
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
 #include <ctime>
 
-#include <unistd.h> //sockaddr_in, read, write ë“±
-#include <arpa/inet.h>  //htnol, htons, INADDR_ANY, sockaddr_in ë“±
-#include <sys/socket.h>
-
 #include <tesseract/baseapi.h>
 #include <leptonica/allheaders.h>
+
+#define SA  struct sockaddr_in
 
 using namespace cv;
 using namespace std;
@@ -62,26 +67,27 @@ private:
 	int count = 0;
 	Rect beforeRect;
 	int beforeNumber = 0;
-	int startTime=0;
+	int startTime = 0;
 	int limitSec;
 	int boundX;
 	int boundY;
+	int limitCount
 	TessBaseAPI* ocr;
 	String OCR(Mat test);
 	void EraseSpace(char* inStr);
 	String processNumber(String text);
 public:
-	BusNumber(int lsec, int bx, int by) {
+	BusNumber(int lsec, int bx, int by,int c) {
 		limitSec = lsec;
 		boundX = bx;
 		boundY = by;
-
+		limitCount = c;
 		ocr = new tesseract::TessBaseAPI();
 
 		cap = VideoCapture("./1.mp4");
 		//cap = VideoCapture(0);
 		if (!cap.isOpened()) {
-			cerr << "ì—ëŸ¬ - ì¹´ë©”ë¼ë¥¼ ì—´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\\\\n";
+			cerr << "¿¡·¯ - Ä«¸Ş¶ó¸¦ ¿­ ¼ö ¾ø½À´Ï´Ù.\\\\n";
 			exit;
 		}
 
@@ -154,7 +160,7 @@ vector<vector<Rect>>  BusNumber::oneCarNumber(vector<vector<Point>> contours) {
 
 			if (abs(gap) < max(rect_list[idx].height * 0.2, (double)10)) {
 
-				//ì˜¤ë²„ë©ì¸ì§€ íŒë‹¨.
+				//¿À¹ö·¦ÀÎÁö ÆÇ´Ü.
 				if (gap > rect_list[idx].width * 0.15) {
 					continue;
 				}
@@ -236,7 +242,7 @@ vector<vector<Rect>>  BusNumber::oneCarNumber(vector<vector<Point>> contours) {
 			double gap = testRect.x + testRect.width - opRectList[idx].x;
 			if (abs(gap) < max(testRect.height * 0.2, (double)10)) {
 
-				//ì˜¤ë²„ë©ì¸ì§€ íŒë‹¨.
+				//¿À¹ö·¦ÀÎÁö ÆÇ´Ü.
 				if (gap > testRect.width * 0.15) {
 					continue;
 				}
@@ -282,7 +288,7 @@ vector<Rect> BusNumber::doubleCarNumber(vector<vector<Rect>> resultGroupList) {
 			Rect downBoundingRect(Point(resultGroupList[j][0].tl().x, resultGroupList[j][0].tl().y < resultGroupList[j].back().tl().y ? resultGroupList[j][0].tl().y : resultGroupList[j].back().tl().y),
 				Point(resultGroupList[j].back().br().x, resultGroupList[j][0].br().y > resultGroupList[j].back().br().y ? resultGroupList[j][0].br().y : resultGroupList[j].back().br().y));
 
-			if (upBoundingRect.y > downBoundingRect.y) { //iëŠ” ìœ„ì—¬ì•¼ í•œë‹¤ ì•„ë‹ˆë©´ ë
+			if (upBoundingRect.y > downBoundingRect.y) { //i´Â À§¿©¾ß ÇÑ´Ù ¾Æ´Ï¸é ³¡
 				continue;
 			}
 			double gap2 = upBoundingRect.br().y - downBoundingRect.tl().y;
@@ -292,10 +298,10 @@ vector<Rect> BusNumber::doubleCarNumber(vector<vector<Rect>> resultGroupList) {
 			double wg = (downBoundingRect.br().x - downBoundingRect.tl().x);
 			double xgap = (upBoundingRect.x - downBoundingRect.x);
 			int rectCount = resultGroupList[j].size();
-			if (xgap >= (wg / rectCount) && xgap <= 3 * (wg / rectCount)) { //ë…¼ë¬¸(7)ì´ê³  
+			if (xgap >= (wg / rectCount) && xgap <= 3 * (wg / rectCount)) { //³í¹®(7)ÀÌ°í 
 				double ht = upBoundingRect.height;
 				double ygap = downBoundingRect.tl().y - upBoundingRect.br().y;
-				if (ygap <= ht * 0.2) {//ë…¼ë¬¸(8)ì´ë©´ ë‘ì¤„ë²ˆí˜¸íŒ
+				if (ygap <= ht * 0.2) {//³í¹®(8)ÀÌ¸é µÎÁÙ¹øÈ£ÆÇ
 					Rect boundingRect2(Point(upBoundingRect.x < downBoundingRect.x ? upBoundingRect.x : downBoundingRect.x,
 						upBoundingRect.y < downBoundingRect.y ? upBoundingRect.y : downBoundingRect.y),
 						Point(upBoundingRect.br().x < downBoundingRect.br().x ? downBoundingRect.br().x : upBoundingRect.br().x,
@@ -314,10 +320,11 @@ vector<Rect> BusNumber::doubleCarNumber(vector<vector<Rect>> resultGroupList) {
 
 
 
-String BusNumber::OCR(Mat test) {
+String BusNumber::OCR(Mat image) {
+	Mat test = image.clone();
+	resize(test, test, Size(), 2, 2, INTER_NEAREST);
 	string outText;
-
-
+	imshow("ROI", test);
 	ocr->Init(NULL, "eng", OEM_LSTM_ONLY);
 	ocr->SetPageSegMode(PSM_AUTO);
 
@@ -331,20 +338,20 @@ String BusNumber::OCR(Mat test) {
 void BusNumber::EraseSpace(char* inStr)
 {
 
-	char* p_dest = inStr; // p_dest í¬ì¸í„°ë„ ap_string í¬ì¸í„°ì™€ ë™ì¼í•œ ë©”ëª¨ë¦¬ë¥¼ ê°€ë¦¬í‚¨ë‹¤.
+	char* p_dest = inStr; // p_dest Æ÷ÀÎÅÍµµ ap_string Æ÷ÀÎÅÍ¿Í µ¿ÀÏÇÑ ¸Ş¸ğ¸®¸¦ °¡¸®Å²´Ù.
 
-	// ë¬¸ìì—´ì˜ ëì„ ë§Œë‚ ë•Œê¹Œì§€ ë°˜ë³µí•œë‹¤.
+	// ¹®ÀÚ¿­ÀÇ ³¡À» ¸¸³¯¶§±îÁö ¹İº¹ÇÑ´Ù.
 	while (*inStr != 0) {
-		// ap_stringì´ ê°€ë¦¬í‚¤ëŠ” ê°’ì´ ê³µë°± ë¬¸ìê°€ ì•„ë‹Œ ê²½ìš°ë§Œ
-		// p_destê°€ ê°€ë¦¬í‚¤ëŠ” ë©”ëª¨ë¦¬ì— ê°’ì„ ë³µì‚¬í•œë‹¤.
+		// ap_stringÀÌ °¡¸®Å°´Â °ªÀÌ °ø¹é ¹®ÀÚ°¡ ¾Æ´Ñ °æ¿ì¸¸
+		// p_dest°¡ °¡¸®Å°´Â ¸Ş¸ğ¸®¿¡ °ªÀ» º¹»çÇÑ´Ù.
 		if (*inStr != ' ') {
-			if (p_dest != inStr) *p_dest = *inStr; // ì¼ë°˜ ë¬¸ìë¥¼ ë³µì‚¬í•˜ë©´ ë‹¤ìŒ ë³µì‚¬í•  ìœ„ì¹˜ë¡œ ì´ë™í•œë‹¤.
+			if (p_dest != inStr) *p_dest = *inStr; // ÀÏ¹İ ¹®ÀÚ¸¦ º¹»çÇÏ¸é ´ÙÀ½ º¹»çÇÒ À§Ä¡·Î ÀÌµ¿ÇÑ´Ù.
 			p_dest++;
 		}
-		// ë‹¤ìŒ ë¬¸ì ìœ„ì¹˜ë¡œ ì´ë™í•œë‹¤.
+		// ´ÙÀ½ ¹®ÀÚ À§Ä¡·Î ÀÌµ¿ÇÑ´Ù.
 		inStr++;
 	}
-	// ë¬¸ìì—´ì˜ ëì— NULL ë¬¸ìë¥¼ ì €ì¥í•œë‹¤.
+	// ¹®ÀÚ¿­ÀÇ ³¡¿¡ NULL ¹®ÀÚ¸¦ ÀúÀåÇÑ´Ù.
 	*p_dest = 0;
 }
 
@@ -373,28 +380,27 @@ String BusNumber::processNumber(String text) {
 	return String(inStr);
 }
 
-bool BusNumber::checkDim(Rect rect,Rect test) {
-	
-	double distBeforAfterFrameX = abs(((test.br().x - test.x) / 2) - abs((rect.br().x - rect.x) / 2));
-	double distBeforAfterFrameY = abs(((test.br().y - test.y) / 2) - abs((rect.br().y - rect.y) / 2));
+bool BusNumber::checkDim(Rect rect, Rect test) {
+
+	double distBeforAfterFrameX = abs((test.br().x - test.x) / 2) - abs((rect.br().x - rect.x) / 2);
+	double distBeforAfterFrameY = abs((test.br().y - test.y) / 2) - abs((rect.br().y - rect.y) / 2);
 
 
-	if ((distBeforAfterFrameX < boundX) && distBeforAfterFrameY < boundY) {
+	if (distBeforAfterFrameX < boundX && distBeforAfterFrameY < boundY) {
 		return true;
 	}
-
 	return false;
-	
+
 }
 
 int BusNumber::BusNumberRectList(int control) {
 	cap.read(inputimage);
 	if (inputimage.empty()) {
-		cerr << "ë¹ˆ ì˜ìƒì´ ìº¡ì³ë˜ì—ˆìŠµë‹ˆë‹¤.\\\\n";
+		cerr << "ºó ¿µ»óÀÌ Ä¸ÃÄµÇ¾ú½À´Ï´Ù.\\\\n";
 		exit;
 	}
 
-	if(startTime !=0){
+	if (startTime != 0) {
 		if (((time(0) % 60) - startTime) > limitSec) {
 			count = 0;
 			int tmpNumber = beforeNumber;
@@ -421,7 +427,7 @@ int BusNumber::BusNumberRectList(int control) {
 			if (cv::waitKey(3) == 27)
 				break;
 		}
-		destroyAllWindows(); //ëª¨ë“  ì°½ ë‹«ê¸°
+		destroyAllWindows(); //¸ğµç Ã¢ ´İ±â
 	}
 	processImage = beforProcess(processImage);
 
@@ -435,19 +441,20 @@ int BusNumber::BusNumberRectList(int control) {
 		return 0;
 
 	vector<Rect> GroupList = doubleCarNumber(busRectList);
-	
 
 
-    int resultNumber = 0;
+
+	int resultNumber = 0;
 	if (!GroupList.empty()) {
 
 		for (int i = 0; i < GroupList.size(); i++) {
 			if (debug) {
 				rectangle(imageDebuger, GroupList[i].tl(), GroupList[i].br(), Scalar(0, 0, 255), 3);
 			}
-			
-			Rect rectROI = Rect(Point(GroupList[i].tl().x - 25, GroupList[i].tl().y - 25), Point(GroupList[i].br().x + 25, GroupList[i].br().y + 25));
+
+			Rect rectROI = Rect(Point(GroupList[i].tl().x - GroupList[i].width * 0.3, GroupList[i].tl().y - GroupList[i].height * 0.5), Point(GroupList[i].br().x + GroupList[i].width * 0.3, GroupList[i].br().y + GroupList[i].height * 0.5));
 			Mat testimage = inputimage(rectROI);
+
 			String testStr = OCR(testimage);
 			String result = processNumber(testStr);
 			if (result.length() == 4) {
@@ -457,35 +464,46 @@ int BusNumber::BusNumberRectList(int control) {
 				resultNumber = 0;
 			}
 
-			
-			if (control == 0) {	//ì°¨ëŸ‰ë²ˆí˜¸ë§Œ ì›í• ì‹œ 0
+
+			if (control == 0) {	//Â÷·®¹øÈ£¸¸ ¿øÇÒ½Ã 0
 				beforeNumber = 0;
 				count = 0;
 				return resultNumber;
 			}
-			else {	//ì¹´ìš´íŠ¸ë¥¼ ì›í•  ë•Œ 1
-				if (resultNumber == 0) {	// ê°ì§€í•œë²ˆí˜¸ì—†ì„ì‹œ
+			else {	//Ä«¿îÆ®¸¦ ¿øÇÒ ¶§ 1
+				if (resultNumber == 0) {	// °¨ÁöÇÑ¹øÈ£¾øÀ»½Ã
 					return 0;
 				}
-				else {	
-					if (beforeRect.empty() ||  beforeNumber== 0) { // ì €ì¥ëœ ë‚´ìš© ì—†ì„ë•Œ.
+				else {
+					if (beforeNumber == 0) { // ÀúÀåµÈ ³»¿ë ¾øÀ»¶§.
 						startTime = time(0) % 60;
 						beforeRect = GroupList[i];
 						beforeNumber = resultNumber;
 						count = 0;
-						
+
 						return resultNumber;
 					}
-					else {	//ì €ì¥ëœ ë‚´ìš©ì´ ìˆì„ë•Œ.
-						if (resultNumber == beforeNumber && checkDim(beforeRect,GroupList[0])) { // ì´ì „ ë²ˆí˜¸ì™€ ê°™ê³  ê±°ë¦¬ë¥¼ ë§Œì¡±í•œë‹¤ë©´ ì¹´ìš´ë“œ ++
-							count++;
-							if (count > 5) {
-								startTime = 0;
-								beforeNumber = 0;
-								count = 0;
-								return std::stoi(result.substr(result.length() - 4)+'1');
+					else {	//ÀúÀåµÈ ³»¿ëÀÌ ÀÖÀ»¶§.
+						if (resultNumber == beforeNumber) {
+
+							if (checkDim(beforeRect, GroupList[i])) { // ÀÌÀü ¹øÈ£¿Í °°°í °Å¸®¸¦ ¸¸Á·ÇÑ´Ù¸é Ä«¿îµå ++
+								count++;
+								cout << "count" << count << endl;
+								if (count > limitCount) { //kyonsin a i gu bagguer
+									startTime = 0;
+									beforeNumber = 0;
+									count = 0;
+
+									return std::stoi(result.substr(result.length() - 4) + "1");
+								}
+								return resultNumber;
 							}
-							return resultNumber;
+							else {
+								cout << "recount" << count << endl;
+								count++;
+								beforeRect = GroupList[i];
+								continue;
+							}
 						}
 						else {
 							continue;
@@ -495,35 +513,200 @@ int BusNumber::BusNumberRectList(int control) {
 			}
 		}
 	}
-
 	return resultNumber;
 
 }
 
-int main()
-{
-	BusNumber busTest = BusNumber(3,50,50);
-	
 
-	while (1) {
-		try {
-			cout << busTest.BusNumberRectList(1) << endl;
-
-		}
-		catch (int exception) {
-			cout << "error" << endl;
-		}
-		if(debug)
-			imshow("imagedebuger", imageDebuger);
-		
-		int key = waitKey(1);
-		if (key == 97) // ì†Œë¬¸ì a ëˆ„ë¥´ë©´ mask ì„¤ì • ëª¨ë“œ
-			mask.release();
-		else if (key > 0)
-			break;
+class Status {
+public:
+	string status_0_EndCamera = "0";
+	string status_1_ActivateCamera = "1";
+	string status_2_BusWaiting = "2";
+	string status_reset = "-1";
+};
+void insertString(char* result, int locate, string data) {
+	int len = data.length();
+	for (int i = 0; i < len; i++) {
+		result[locate + i] = data[i];
 	}
-
-	return 0;
 }
 
 
+int main()
+{
+	ifstream readFile;
+	readFile.open("./dat");
+
+	string indata[5];
+	if (readFile.is_open()) {
+		for (int i = 0; i < 5; i++) {
+			if (readFile.eof()) {
+				getline(readFile, indata[i]);
+			}
+		}
+		readFile.close();
+	}
+
+	const int port = stoi(indata[0]);
+	int limitTime = stoi(indata[1]);
+	int boundX = stoi(indata[2]);
+	int boundY = stoi(indata[3]);
+	int count = stoi(indata[4]);
+
+
+
+	Status status = Status();
+	BusNumber busTest = BusNumber(limitTime, boundX, boundY, count);
+
+	
+
+	int sock = socket(AF_INET, SOCK_STREAM, 0);
+	int conn;
+
+	SA addr, clientAddr;
+	socklen_t len = sizeof(clientAddr);
+
+
+	int send_len;
+	int recv_len;
+
+	addr.sin_family = AF_INET;
+	addr.sin_port = htons(port);
+	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+	if (bind(sock, (struct sockaddr*)&addr, sizeof(SA)) == -1) {
+		fprintf(stderr, "Bind Error : %s\n", strerror(errno));
+		close(sock);
+		return(-1);
+	}
+	else printf("connected\n");
+
+	if (listen(sock, 5) == -1) {
+		printf("listen fail\n");
+	}
+
+	while (1) {
+
+		conn = accept(sock, (struct sockaddr*)&clientAddr, &len);
+		while (1) {
+
+			char buffer[10];
+			///////////////////////// recv ///////////////////////////////////
+			while (recv_len = recv(conn, buffer, sizeof(buffer), 0) == -1) {
+				if (errno == EINTR) {
+					continue;
+				}
+				else {
+					fprintf(stderr, "Recv Error : %s\n", strerror(errno));
+					return -1;
+				}
+			}
+			///////////////////////////////////////////////////////////////////
+
+			for (int i = 0; i < strlen(buffer); i++) {
+				if (buffer[i] == '_') {
+					buffer[i] = '\0';
+				}
+			}
+
+			cout << buffer << endl;
+
+
+			string data(buffer);
+			strcpy(buffer, "_________");
+			if (data == status.status_1_ActivateCamera || data == status.status_0_EndCamera) {
+				buffer[0] = status.status_1_ActivateCamera[0];
+				buffer[1] = '|';
+				string imageRetrunData;
+				imageRetrunData = busTest.BusNumberRectList(1);
+				insertString(buffer, 2, imageRetrunData);
+
+			}
+			else if (data == status.status_2_BusWaiting) {
+				buffer[0] = status.status_2_BusWaiting[0];
+				buffer[1] = '|';
+				//  ¹ö½º ¹øÈ£ ¹ß°ß 94551 ¹ß°ß¸øÇÑ 9455 ¹ö½º Á¤
+				// [2, (0_¹ö½º ¹ß°ß¸øÇÔ 1_¹ö½º ¹ß°ßµÊ 2_¹ö½º Á¤Â÷ÇÔ -1_´ë±â ½Ã°£ÃÊ°ú(¹öšÃ³ª°¨)), ¹ö½º¹øÈ£]
+				string imageRetrunData;
+				imageRetrunData = busTest.BusNumberRectList(1);
+
+				if (imageRetrunData.length() == 4) {
+					buffer[2] = '1';
+					buffer[3] = '|';
+					insertString(buffer, 4, imageRetrunData);
+				}
+				else if (imageRetrunData.length() == 5) {
+					if (imageRetrunData[0] == '-') {
+						buffer[2] = '-';
+						buffer[3] = '1';
+						buffer[4] = '|';
+						insertString(buffer, 5, imageRetrunData.substr(imageRetrunData.length() - 4));
+					}
+					else if (imageRetrunData[4] == '1') {
+						buffer[2] = '2';
+						buffer[3] = '|';
+						insertString(buffer, 4, imageRetrunData.substr(0, 4));
+					}
+					else {
+						buffer[2] = '0';
+					}
+				}
+				else if (imageRetrunData == "0") {
+					buffer[2] = '0';
+				}
+
+				else {
+					buffer[2] = '-';
+				}
+
+			}
+			else if (data == status.status_reset) {
+				buffer[0] = status.status_reset[0];
+			}
+
+			cout << buffer << endl;
+			cout << sizeof(buffer) << endl;
+			///////////////////////// Send ///////////////////////////////////
+			while (send_len = send(conn, buffer, sizeof(buffer), 0) == -1) {
+				if (errno == EINTR) {
+					continue;
+				}
+				else {
+					fprintf(stderr, "Send Error : %s\n", strerror(errno));
+					return -1;
+				}
+			}
+			///////////////////////////////////////////////////////////////////
+		}
+		close(conn);
+	}
+}
+
+
+//
+//int main()
+//{
+//	BusNumber busTest = BusNumber(30, 100, 100); //limitTime boundX boundY
+//
+//
+//	while (1) {
+//		try {
+//			cout << busTest.BusNumberRectList(1) << endl;
+//
+//		}
+//		catch (int exception) {
+//			cout << "error" << endl;
+//		}
+//		if (debug)
+//			imshow("imagedebuger", imageDebuger);
+//
+//		int key = waitKey(1);
+//		if (key == 97) // ¼Ò¹®ÀÚ a ´©¸£¸é mask ¼³Á¤ ¸ğµå
+//			mask.release();
+//		else if (key > 0)
+//			break;
+//	}
+//
+//	return 0;
+//}
