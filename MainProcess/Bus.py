@@ -95,6 +95,9 @@ class StationDict:
         oneset = False
         startTime = time.time()
         while True:
+            if not self.main.systemState:
+                print("endBusUpdate")
+                return
             if time.time()-startTime > t:
 
                 print("update bus")
@@ -127,9 +130,7 @@ class StationDict:
                         print(+"LED : " + p.busNumber)
                         time.sleep(3)
 
-            if not self.main.systemState:
-                print("endBusUpdate")
-                return
+
 
 
     def getBus(self,bus):
