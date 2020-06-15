@@ -26,7 +26,7 @@ class MyButton:
                     GPIO.output(17, 1)
                     if self.count == 0:
                         self.count = time.time_ns()
-                        if(doubleClickCount != 0):
+                        if(doubleClickCount != 0):      #다시눌린 시간을 측정한다.
                             delaytime = (time.time_ns() - doubleClickCount)/1000000000
                             if delaytime <= self.DOUBLECLICKTIME:
                                 doubleClickON = True
@@ -39,6 +39,7 @@ class MyButton:
                                 doubleClickCount = 0
                                 doubleClickON = False
                                 longlock = True
+                                self.count = 0
                             
 
                 else:
@@ -55,6 +56,7 @@ class MyButton:
                                 self.count = 0
                                 doubleClickON = False
                                 doubleClickCount = 0
+                                longlock = False
                             else:
                                 doubleClickCount = time.time_ns()
                         self.count = 0
@@ -67,6 +69,8 @@ class MyButton:
                                 self.count = 0
                                 doubleClickCount = 0
                                 doubleClickON = False
+                                longlock = False
+
                 if not self.main.systemState:
                     print("endbutton")
                     return
