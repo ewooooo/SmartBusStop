@@ -120,5 +120,5 @@ class MyButton:
 if __name__ == "__main__":
     print("start")
 
-    b= MyButton()
+    b= MyButton(None)
     b.checkButton()
