@@ -70,7 +70,7 @@ class MyButton:
                     print("endbutton")
                     return
         finally :
-            GPIO.cleanup()
+            pass #GPIO.cleanup()
 
     def oneClick(self):
         print("oneClick")
