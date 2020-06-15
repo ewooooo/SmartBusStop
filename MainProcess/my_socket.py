@@ -36,9 +36,7 @@ if __name__ == "__main__":
 
     st= mySocket("192.168.0.32",12345)
     while True:
-        buffer = '_________'
         a = input("입력 : ")
-        buffer = a +buffer
-        print(st.Send_Recv(buffer))
+        print(st.Send_Recv(a))
 
 

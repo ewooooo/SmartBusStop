@@ -425,7 +425,7 @@ int BusNumber::BusNumberRectList(int control) {
 		Mat mouseImage = inputimage.clone();
 		while (1) {
 			imshow("imagefirst", mouseImage);
-			imshow("mask", mask);
+			//imshow("mask", mask);
 			vector<Point> pointList;
 			setMouseCallback("imagefirst", mouse_callback, reinterpret_cast<void*>(&mouseImage));
 			if (cv::waitKey(3) == 27)
@@ -669,9 +669,11 @@ int main()
 			}
 			else if (data == status.status_reset) {
 				buffer[0] = status.status_reset[0];
+				buffer[1] = status.status_reset[1];
 			}
 			else if (stoi(data)>2) {
 				buffer[0] = status.status_reset[0];
+				buffer[1] = status.status_reset[1];
 				busTest = BusNumber(data,limitTime, boundX, boundY, count);
 			}
 
