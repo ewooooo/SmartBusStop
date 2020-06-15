@@ -49,8 +49,8 @@ class MyButton:
                         longlock = False
                     if(self.count != 0):
                         delaytime = (time.time_ns() - self.count)/1000000000
-                        print("one"+str(delaytime))
                         if delaytime > self.ONECLICKTIME:
+                            print("one" + str(delaytime))
                             if doubleClickON :
 
                                 self.doubleClick()
@@ -64,8 +64,8 @@ class MyButton:
                     else :
                         if doubleClickCount != 0:
                             delaytime = (time.time_ns() - doubleClickCount)/1000000000
-                            print("dou" + str(delaytime))
                             if delaytime > self.DOUBLECLICKTIME:
+                                print("dou" + str(delaytime))
                                 self.oneClick()
                                 self.count = 0
                                 doubleClickCount = 0
