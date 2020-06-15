@@ -237,6 +237,7 @@ class busPlayList(TTS):
     def playStartInfo(self):
         self.play(self.status.button_1_Info)
     def errorNotBusInfo(self):
+        self.setPlayStop()
         self.play(self.status.error_bus_not)
 
     def busStopInfo(self,bus,state):
