@@ -39,7 +39,7 @@ class StationDict:
         text = testXMlL.testText[0]#response.text
         testXMlL.testText.append(testXMlL.testText[0])
         del testXMlL.testText[0]
-        self.testCount = self.testCount +1
+        self.testCount = self.testCount + 1
         if self.testCount > len(testXMlL.testText):
             self.testCount = 0
 
