@@ -11,6 +11,7 @@ class mySocket:
                 break
             except:
                 print("re test socket")
+                time.sleep(1)
                 continue
     def Send_Recv(self,command):
 
