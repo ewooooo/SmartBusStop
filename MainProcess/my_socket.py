@@ -18,12 +18,15 @@ class mySocket:
         self.s.send(command.encode())
 
         mode = self.s.recv(10).decode("UTF-8")
-        print(mode)
         mode = mode[0:9]
         mode = mode.replace('_','')
         SList = mode.split('|')
 
         return SList
+
+
+
+
 
 if __name__ == "__main__":
     print("start")

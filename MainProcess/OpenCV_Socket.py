@@ -21,7 +21,6 @@ class ServerSocket:
     def Send_Recv(self):
         while True:
             data = self.conn.recv(1024).decode()
-            print("data:" +data)
             replyData = []
             if data == status.status_1_ActivateCamera or data == status.status_0_EndCamera:
                 replyData.append(status.status_1_ActivateCamera)
@@ -61,7 +60,6 @@ class ServerSocket:
             reply = ''
             for r in replyData:
                 reply = reply + r +"|"
-            print(reply)
             self.conn.send(reply.encode())  # Sending reply
 
         self.clientsocket.close()           # Close connections
