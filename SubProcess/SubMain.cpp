@@ -541,7 +541,7 @@ int main()
 	string indata[5];
 	if (readFile.is_open()) {
 		for (int i = 0; i < 5; i++) {
-			if (readFile.eof()) {
+			if (!readFile.eof()) {
 				getline(readFile, indata[i]);
 			}
 		}
@@ -619,7 +619,7 @@ int main()
 				buffer[0] = status.status_1_ActivateCamera[0];
 				buffer[1] = '|';
 				string imageRetrunData;
-				imageRetrunData = busTest.BusNumberRectList(1);
+				imageRetrunData = to_string(busTest.BusNumberRectList(1));
 				insertString(buffer, 2, imageRetrunData);
 
 			}
@@ -629,7 +629,7 @@ int main()
 				//  버스 번호 발견 94551 발견못한 9455 버스 정
 				// [2, (0_버스 발견못함 1_버스 발견됨 2_버스 정차함 -1_대기 시간초과(버싀나감)), 버스번호]
 				string imageRetrunData;
-				imageRetrunData = busTest.BusNumberRectList(1);
+				imageRetrunData = to_string(busTest.BusNumberRectList(1));
 
 				if (imageRetrunData.length() == 4) {
 					buffer[2] = '1';
