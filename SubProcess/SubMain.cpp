@@ -71,7 +71,7 @@ private:
 	int limitSec;
 	int boundX;
 	int boundY;
-	int limitCount
+	int limitCount;
 	TessBaseAPI* ocr;
 	String OCR(Mat test);
 	void EraseSpace(char* inStr);
