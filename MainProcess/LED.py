@@ -105,7 +105,7 @@ class LED:
     def OFF_LED(self):
         # self.device.clear()
         # self.device.hide()
-        self.cleanup()
+        self.device.cleanup()
 
 
 if __name__ == "__main__":
