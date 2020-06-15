@@ -13,25 +13,26 @@ class MyButton:
 
         self.main = obj
         print("makebutton")
+        self.count = 0
 
     def checkButton(self):
         try:
-            count =0
+            self.count = 0
             doubleClickCount = 0
             doubleClickON = False
             longlock = False
             while True:
                 if GPIO.input(22):
                     GPIO.output(17, 1)
-                    if count == 0:
-                        count = time.time_ns()
+                    if self.count == 0:
+                        self.count = time.time_ns()
                         if(doubleClickCount != 0):
                             delaytime = (time.time_ns() - doubleClickCount)/1000000000
                             if delaytime <= self.DOUBLECLICKTIME:
                                 doubleClickON = True
                     else :
                         if not longlock :
-                            delaytime = (time.time_ns() - count)/1000000000
+                            delaytime = (time.time_ns() - self.count)/1000000000
                             if delaytime >= self.LONGCLICKTIME:
                                 print(delaytime)
                                 self.longClick()
@@ -43,27 +44,27 @@ class MyButton:
                 else:
                     GPIO.output(17,0)
                     if longlock :
-                        count = 0
+                        self.count = 0
                         longlock = False
-                    if(count != 0):
-                        delaytime = (time.time_ns() - count)/1000000000
+                    if(self.count != 0):
+                        delaytime = (time.time_ns() - self.count)/1000000000
                         if delaytime > self.ONECLICKTIME:
                             if doubleClickON :
                                 print(delaytime)
                                 self.doubleClick()
-                                count = 0
+                                self.count = 0
                                 doubleClickON = False
                                 doubleClickCount = 0
                             else:
                                 doubleClickCount = time.time_ns()
-                        count = 0
+                        self.count = 0
                     else :
                         if doubleClickCount != 0:
                             delaytime = (time.time_ns() - doubleClickCount)/1000000000
                             if delaytime > self.DOUBLECLICKTIME:
                                 print(delaytime)
                                 self.oneClick()
-                                count = 0
+                                self.count = 0
                                 doubleClickCount = 0
                                 doubleClickON = False
                 if not self.main.systemState:
