@@ -22,12 +22,13 @@ class Bus:
 class StationDict:
     def __init__(self,obj,stationId,serviceKey):
         self.main = obj
+        self.kaCount = 0
         self.serviceKey = serviceKey
         self.stationId =stationId
         self.busDict = {}  # busNumber : Bus
         self.stationAPI()
 
-        self.kaCount = 0
+
 
     def stationAPI(self): #1234567890
 
