@@ -71,9 +71,9 @@ class MyButton:
                                 doubleClickON = False
                                 longlock = False
 
-                if not self.main.systemState:
-                    print("endbutton")
-                    return
+                # if not self.main.systemState:
+                #     print("endbutton")
+                #     return
         finally :
             pass #GPIO.cleanup()
 
