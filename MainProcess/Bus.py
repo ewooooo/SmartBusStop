@@ -27,7 +27,7 @@ class StationDict:
         self.busDict = {}  # busNumber : Bus
         self.stationAPI()
 
-        self.testCount = 0
+        self.kaCount = 0
 
     def stationAPI(self): #1234567890
 
@@ -39,9 +39,9 @@ class StationDict:
         text = testXMlL.testText[0]#response.text
         testXMlL.testText.append(testXMlL.testText[0])
         del testXMlL.testText[0]
-        self.testCount = self.testCount + 1
-        if self.testCount > len(testXMlL.testText):
-            self.testCount = 0
+        self.kaCount = self.kaCount + 1
+        if self.kaCount > len(testXMlL.testText):
+            self.kaCount = 0
 
         root = ET.fromstring(text)
 

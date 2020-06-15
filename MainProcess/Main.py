@@ -355,8 +355,8 @@ class LoopSystem:
         recvBuffer = None
         cycleNumer = 0
         while True:
-            if self.bus.testCount != cycleNumer:
-                cycleNumer = self.bus.testCount
+            if self.bus.kaCount != cycleNumer:
+                cycleNumer = self.bus.kaCount
                 recvBuffer = self.kySocket.Send_Recv(str(cycleNumer+3))
                 if recvBuffer[0] != status.status_reset:
                     print("통신 실패")
