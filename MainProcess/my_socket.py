@@ -16,7 +16,9 @@ class mySocket:
     def Send_Recv(self,command):
 
         #[2, (0_버스 발견못함 1_버스 발견됨 2_버스 정차함 -1_대기 시간초과(버싀나감)), 버스번호]
-        self.s.send(command.encode())
+        buffer = '_________'
+        buffer = command + buffer
+        self.s.send(buffer[0:10].encode())
 
         mode = self.s.recv(10).decode("UTF-8")
         mode = mode[0:9]
