@@ -401,6 +401,7 @@ int BusNumber::BusNumberRectList(int control) {
 		cerr << "빈 영상이 캡쳐되었습니다.\\\\n";
 		exit;
 	}
+	cout << "process" << endl;
 	imshow("inputimage", inputimage);
 	if (startTime != 0) {
 		if (((time(0) % 60) - startTime) > limitSec) {
@@ -615,7 +616,7 @@ int main()
 				}
 			}
 
-			cout << buffer << endl;
+			//cout << buffer << endl;
 
 
 			string data(buffer);
@@ -625,7 +626,7 @@ int main()
 				buffer[1] = '|';
 				string imageRetrunData;
 
-				imageRetrunData = to_string(busTest.BusNumberRectList(1));
+				imageRetrunData = to_string(busTest.BusNumberRectList(0));
 				insertString(buffer, 2, imageRetrunData);
 
 			}
