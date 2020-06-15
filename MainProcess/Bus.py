@@ -33,7 +33,7 @@ class StationDict:
         url = url + self.serviceKey + "&stationId=" # 203000165&
         url = url + self.stationId
         response = requests.get(url)
-        text = response.text
+        text = testXMlL.testText#response.text
         root = ET.fromstring(text)
 
 
@@ -77,7 +77,7 @@ class StationDict:
         url = url + self.serviceKey + "&routeId="
         url = url + routeId
         response = requests.get(url)
-        text = testXMlL.testText#response.text
+        text = response.text
         root = ET.fromstring(text)
         for top in root:
             if top.tag != 'msgBody':
