@@ -4,7 +4,7 @@ import time
 class MyButton:
     LONGCLICKTIME = 1
     DOUBLECLICKTIME = 0.5
-    ONECLICKTIME = 0.03
+    ONECLICKTIME = 0.02
 
     def __init__(self,obj):
         GPIO.setmode(GPIO.BCM)
