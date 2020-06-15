@@ -103,8 +103,9 @@ class LED:
                     text(draw, (21, 22), number[5], fill="white")
 
     def OFF_LED(self):
-        self.device.clear()
-        self.device.hide()
+        # self.device.clear()
+        # self.device.hide()
+        self.cleanup()
 
 
 if __name__ == "__main__":
