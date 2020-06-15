@@ -126,7 +126,6 @@ class StationDict:
                 if len(playLEDlist) == 1:
                     if not oneset:
                         self.main.led.SET_LED(playLEDlist[0].busNumber)
-                        print(+"LED : " + p.busNumber)
                         oneset = True
                 else:
                     for p in playLEDlist:
