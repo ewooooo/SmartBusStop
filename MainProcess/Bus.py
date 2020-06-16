@@ -16,6 +16,8 @@ class Bus:
         if self.routeId == routeId:
             self.plateNo = plateNo   # 버스 번호판
             self.location = location    # 도착정보 (가장빠른 버스 몇정거장 전인지)
+    def __str__(self):
+        return self.busNumber + "번, location: " + self.location +" state : " +self.state
 
 
 
