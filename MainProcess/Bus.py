@@ -76,10 +76,10 @@ class StationDict:
 
 
 
-        if self.kaCount < len(testXMlL.testText):
-            self.kaCount = self.kaCount + 1
-        else:
-            self.kaCount = 1
+        # if self.kaCount < len(testXMlL.testText):
+        #     self.kaCount = self.kaCount + 1
+        # else:
+        #     self.kaCount = 1
 
     def routeAPI(self,routeId):
         url = "http://openapi.gbis.go.kr/ws/rest/busrouteservice/info?serviceKey="
