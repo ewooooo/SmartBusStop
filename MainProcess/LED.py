@@ -7,19 +7,17 @@ from luma.core.interface.serial import spi, noop
 from luma.core.render import canvas
 # from luma.core.virtual import viewport
 from luma.core.legacy import text, show_message
-from luma.core.legacy.font import proportional, CP437_FONT, TINY_FONT, SINCLAIR_FONT, LCD_FONT
+from luma.core.legacy.font import proportional,TINY_FONT
 
 class LED:
-    # def __init__(self):
-
+    def __init__(self):
+    self.device = max7219(serial, width=32, height=32, block_orientation=-90, rotate=1)
+    self.device.show()
     # def reset(self):
     #     serial = spi(port=0, device=0, gpio=noop())
     #     self.device = max7219(serial, width=32, height=32, block_orientation=-90, rotate=1)
     def SET_LED(self,number):
         serial = spi(port=0, device=0, gpio=noop())
-        self.device = max7219(serial, width=32, height=32, block_orientation=-90, rotate=1)
-        # self.device.show()
-        # time.sleep(1)
         number = number.replace('-', 'l')
 
         testlen = len(number)
@@ -127,8 +125,8 @@ if __name__ == "__main__":
     time.sleep(3)
     led.OFF_LED()
 
-    # led.SET_LED("700")
-    # time.sleep(3)
-    # led.OFF_LED()
+    led.SET_LED("700")
+    time.sleep(3)
+    led.OFF_LED()
 
 
