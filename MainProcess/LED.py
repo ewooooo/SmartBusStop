@@ -54,7 +54,7 @@ class LED:
                     text(draw, (24, 4), number[2], fill="white", font=proportional(TINY_FONT))
                 else:
                     text(draw, (21, 4), number[2], fill="white")
-                if number[2] == 'l':
+                if number[3] == 'l':
                     text(draw, (24, 20), number[3], fill="white", font=proportional(TINY_FONT))
                 else:
                     text(draw, (21, 20), number[3], fill="white")
@@ -113,13 +113,23 @@ class LED:
 if __name__ == "__main__":
 
     led = LED()
-    a = 4000
-    while True:
-        a = a + 1
-        led.SET_LED(str(a)+"-1")
-        print("led on")
-        time.sleep(3)
-        led.OFF_LED()
-        print("led OFF")
-        time.sleep(1)
+    # a = 4000
+    # while True:
+    #     a = a + 1
+    #     led.SET_LED(str(a)+"-1")
+    #     print("led on")
+    #     time.sleep(3)
+    #     led.OFF_LED()
+    #     print("led OFF")
+    #     time.sleep(1)
+    #
+
+    led.SET_LED("7-1")
+    time.sleep(3)
+    led.OFF_LED()
+    time.sleep(1)
+    led.SET_LED("7-1")
+    time.sleep(3)
+    led.OFF_LED()
+    time.sleep(1)
 
