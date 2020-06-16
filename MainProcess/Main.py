@@ -401,28 +401,27 @@ class LoopSystem:
 
 
             if self.userBus.checkBus():  # 저장된 버스가 있고
-                # while True:
-                #     try:
+
                 if bool(self.userBus.userBusList):
                     keys = self.userBus.userBusList.keys()
                     if bool(keys):
-                        for bkey in keys:
-                            bus = self.userBus.userBusList.get(bkey)
-                            if bus.state != 0:
-                                if bus.location != 1:
-                                    print(bus)
-                                    bus.state = -3
-                                    self.tts.busStopInfo(bus, -3)
-                                    self.userBus.endDelete(bus)
-                                    print("Test4")
-                                    if self.userBus.checkBus():
-                                        stationState = status.status_1_ActivateCamera
-                                    else:
-                                        self.tts.ENDPROGRAM()
-                    #     break
-                    # # except:
-                    # #     print("error user bus get")
-                    # #     continue
+                        try:
+                            for bkey in keys:
+                                bus = self.userBus.userBusList.get(bkey)
+                                if bus.state != 0:
+                                    if bus.location != 1:
+                                        print(bus)
+                                        bus.state = -3
+                                        self.tts.busStopInfo(bus, -3)
+                                        self.userBus.endDelete(bus)
+                                        print("Test4")
+                                        if self.userBus.checkBus():
+                                            stationState = status.status_1_ActivateCamera
+                                        else:
+                                            self.tts.ENDPROGRAM()
+                        except:
+                            print("error user bus get")
+
 
                 checkBusList = self.userBus.getEnterUserBus()
                 if bool(checkBusList):  # 버스 상태가 진입중인 요소가 없으면
