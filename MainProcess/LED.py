@@ -34,14 +34,14 @@ class LED:
         elif testlen == 3:
             with canvas(self.device) as draw:
                 text(draw, (4, 4), number[0], fill="white")
-            if number[1] == 'l':
-                text(draw, (7, 20), number[1], fill="white", font=proportional(TINY_FONT))
-            else:
-                text(draw, (4, 20), number[1], fill="white")
-            if number[2] == 'l':
-                text(draw, (24, 4), number[2], fill="white", font=proportional(TINY_FONT))
-            else:
-                text(draw, (21, 4), number[2], fill="white")
+                if number[1] == 'l':
+                    text(draw, (7, 20), number[1], fill="white", font=proportional(TINY_FONT))
+                else:
+                    text(draw, (4, 20), number[1], fill="white")
+                if number[2] == 'l':
+                    text(draw, (24, 4), number[2], fill="white", font=proportional(TINY_FONT))
+                else:
+                    text(draw, (21, 4), number[2], fill="white")
 
         elif testlen == 4:
             with canvas(self.device) as draw:
@@ -124,7 +124,7 @@ if __name__ == "__main__":
     #     time.sleep(1)
     #
 
-    led.SET_LED("4-40")
+    led.SET_LED("400")
     time.sleep(3)
     led.OFF_LED()
     led.OFF_LED()
