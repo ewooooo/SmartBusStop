@@ -38,6 +38,7 @@ class busPlayList(TTS):
         bus_no_stop = "bus_no_stop"
         error_bus_not = "error_bus_not"
         error_inf_not = "error_inf_not"
+        end_program = "end_program"
 
     def __init__(self, obj,client_id, client_secret):
         self.main = obj
@@ -47,29 +48,45 @@ class busPlayList(TTS):
         self.busStatePlay = False
         self.busStopCommand = False
         self.StopBus =None
+        self.endState = False
         TTS.__init__(self, client_id, client_secret)
+
+
+
+        # 대기모드 해제
         self.tts_api("탑승하고자 하는 버스 번호가 들리면 버튼을 누르세요", self.status.button_1_Info)
-        self.tts_api("버스가 등록되었습니다. 등록하신 버스가 아니시면 버튼을 길게 눌러주시고 등록된 버스를 확인하려면 버튼을 두번 누르세요!", self.status.button_2_Push_Succes)
-        self.tts_api("버스가 이미등록되어있습니다.", self.status.button_2_Push_Fail)
-        self.tts_api("최근 등록한 버스가 취소되었습니다", self.status.button_3_Cancel)
-        self.tts_api("버스가 등록되어있습니다", self.status.bus_state)
-        self.tts_api("현재 등록된 버스가 없습니다.", self.status.bus_state_error)
-        self.tts_api("취소할 버스가 없습니다", self.status.button_3_Cancel_Fail)
-        self.tts_api("버스가 잠시후에 도착합니다", self.status.bus_arrive)
-        self.tts_api("버스가 정차했습니다. 다시 한번 버스정차소리와 문열림 소리를 듣고 안전에 유의하여 탑승하시기 바랍니다.", self.status.bus_stop)
-        self.tts_api("버스가  한정거장 전에 있습니다", self.status.bus_before_1_station)
-        self.tts_api("버스가  두정거장 전에 있습니다", self.status.bus_before_2_station)
-        self.tts_api("버스가  세정거장 전에 있습니다", self.status.bus_before_3_station)
-        self.tts_api("버스가  네정거장 전에 있습니다", self.status.bus_before_4_station)
-        self.tts_api("버스가  다섯정거장 전에 있습니다", self.status.bus_before_5_station)
-        self.tts_api("버스가  여섯정거장 전에 있습니다", self.status.bus_before_6_station)
-        self.tts_api("버스가  일곱정거장 전에 있습니다", self.status.bus_before_7_station)
-        self.tts_api("버스가  여덟정거장 전에 있습니다", self.status.bus_before_8_station)
-        self.tts_api("버스가  아홉정거장 전에 있습니다", self.status.bus_before_9_station)
-        self.tts_api("버스가  열정거장 전에 있습니다", self.status.bus_before_10_station)
-        self.tts_api("버스 정차를 파악할 수 없습니다. 정차하지 않았거나 식별하지 못한 경우일 수 있으니 확인후 탑승 부탁드립니다. 다시 안내를 받으려면 해당 번호가 나오는 시점에 버튼을 눌러주세요", self.status.bus_no_stop)
-        self.tts_api("현재 조회할수 있는 버스 정보가 없습니다.", self.status.error_bus_not)
+        # 버스 등록
+        self.tts_api("버스가 등록되었습니다. 등록하신 버스가 아니시면 버튼을 길게 눌러주시고 등록된 버스를 확인하려면 버튼을 두번 누르세요!", self.status.button_2_Push_Succes)    # + 버스번호
+        self.tts_api("버스가 이미등록되어있습니다.", self.status.button_2_Push_Fail)     # + 버스번호
         self.tts_api("현재 등록할수 있는 버스가 없습니다.", self.status.error_inf_not)
+        # 버스 등록 0취소
+        self.tts_api("최근 등록한 버스가 취소되었습니다", self.status.button_3_Cancel)
+        self.tts_api("취소할 버스가 없습니다", self.status.button_3_Cancel_Fail)
+        # 등록된 버스 조회
+        self.tts_api("버스가 등록되어있습니다", self.status.bus_state)     # + 버스번호
+        self.tts_api("현재 등록된 버스가 없습니다.", self.status.bus_state_error)
+        # 버스 상태 안내
+        self.tts_api("버스가  한정거장 전에 있습니다", self.status.bus_before_1_station)          # + 버스번호
+        self.tts_api("버스가  두정거장 전에 있습니다", self.status.bus_before_2_station)          # + 버스번호
+        self.tts_api("버스가  세정거장 전에 있습니다", self.status.bus_before_3_station)          # + 버스번호
+        self.tts_api("버스가  네정거장 전에 있습니다", self.status.bus_before_4_station)          # + 버스번호
+        self.tts_api("버스가  다섯정거장 전에 있습니다", self.status.bus_before_5_station)        # + 버스번호
+        self.tts_api("버스가  여섯정거장 전에 있습니다", self.status.bus_before_6_station)        # + 버스번호
+        self.tts_api("버스가  일곱정거장 전에 있습니다", self.status.bus_before_7_station)        # + 버스번호
+        self.tts_api("버스가  여덟정거장 전에 있습니다", self.status.bus_before_8_station)        # + 버스번호
+        self.tts_api("버스가  아홉정거장 전에 있습니다", self.status.bus_before_9_station)        # + 버스번호
+        self.tts_api("버스가  열정거장 전에 있습니다", self.status.bus_before_10_station)         # + 버스번호
+        # 영상으로 버스를 인식했을때
+        self.tts_api("버스가 잠시후에 도착합니다", self.status.bus_arrive)      # + 버스번호
+        # 영상으로 버스 정차를 인식했을때
+        self.tts_api("버스가 정차했습니다. 다시 한번 버스정차소리와 문열림 소리를 듣고 안전에 유의하여 탑승하시기 바랍니다.", self.status.bus_stop)     # + 버스번호
+        # 버스 정차를 인식하지 못했거나 버스가 정차하지 않았을 경우
+        self.tts_api("버스 정차를 파악할 수 없습니다. 정차하지 않았거나 식별하지 못한 경우일 수 있으니 확인후 탑승 부탁드립니다. 다시 안내를 받으려면 해당 번호가 나오는 시점에 버튼을 눌러주세요", self.status.bus_no_stop)     # + 버스번호
+
+        #대기 모드로 전환
+        self.tts_api("이후 등록된 버스가 없어 대기모드로 전환합니다.", self.status.end_program)
+
+
     def busPlay(self, bus):
         busState = int(bus.location)
         print(bus.busNumber+" : "+str(busState))
@@ -148,6 +165,9 @@ class busPlayList(TTS):
     def playLoop(self):
 
         while True: #버튼 안내메시지 출력
+            if not self.main.systemState:
+                print("endTTS")
+                return
             if bool(self.playInfo) or bool(self.playInfoBus):
                 if bool(self.playInfoBus):
                     self.play(self.playInfoBus.busNumber)
@@ -162,9 +182,10 @@ class busPlayList(TTS):
                     time.sleep(1)
 
             elif self.busStopCommand:
-
+                self.busStopPlay(self.StopBus)
                 self.busStopCommand = False
                 self.StopBus = None
+
             elif self.busStatePlay: #등록된 버스 전보 보기
                 if not self.main.userBus.userBusList:
                     self.play(self.status.bus_state_error)
@@ -189,16 +210,15 @@ class busPlayList(TTS):
                         self.busPlay(self.playlist[0])
 
 
-            if not self.main.systemState:
-                print("endTTS")
-                return
+
+
+
 
     def addBusData(self, bus):  # 버스 추가 될때 실행되야함.
         if self.tts_api(bus.busNumber + "번", bus.busNumber):
             self.playlist.append(bus)
         else:
             print("error")
-        pass
 
     def priorityBUS(self, bus):
         self.playlist.remove(bus)
@@ -270,17 +290,25 @@ class busPlayList(TTS):
             self.play(bus.busNumber)
             self.play(self.status.bus_stop)
             self.playwiat_1min()
-            bus.location = -1
+            bus.state = 0
             if self.playStop:
                 self.playStop = False
+                time.sleep(1)
         elif busState == -3:
             self.play(bus.busNumber)
             self.play(self.status.bus_no_stop)
             self.playwiat_1min()
-            bus.location = -1
+            bus.state = 0
             if self.playStop:
                 self.playStop = False
                 time.sleep(1)
+        if self.endState:
+            self.play(self.status.end_program)
+            self.main.systemState = False
+            return
+
+    def ENDPROGRAM(self):
+        self.endState = True
 
 class UserBus:
     def __init__(self):
@@ -352,7 +380,6 @@ class LoopSystem:
     def Control(self):
 
         stationState = status.status_0_EndCamera
-        recvBuffer = None
         cycleNumer = 0
         while True:
             if self.bus.kaCount != cycleNumer:
@@ -383,27 +410,29 @@ class LoopSystem:
                             bus.state = -3
                             self.tts.busStopInfo(bus, -3)
                             self.userBus.endDelete(bus)
-
+                            print("Test3")
                             if self.userBus.checkBus():
                                 stationState = status.status_1_ActivateCamera
                             else:
-                                self.systemState = False
-                                return
+                                self.tts.ENDPROGRAM()
 
                 checkBusList = self.userBus.getEnterUserBus()
                 if bool(checkBusList):  # 버스 상태가 진입중인 요소가 없으면
-
                     # 카메라가 작동하지 않는 상태라면 영상을 켜서 정보를 달라고한다.
                     if stationState == status.status_0_EndCamera or stationState == status.status_1_ActivateCamera:
                         recvBuffer = self.kySocket.Send_Recv(stationState)
-                        print(recvBuffer)
+
                         if recvBuffer[0] == status.status_1_ActivateCamera:
                             stationState = status.status_1_ActivateCamera
+
                             if recvBuffer[1] != None:
                                 for bus in checkBusList:
-                                    if bus.busNumber[len(bus.busNumber)-4:] == recvBuffer[1]:
+                                    print("Test1")
+                                    print(recvBuffer)
+                                    print(bus.plateNo[len(bus.plateNo) - 4:])
+                                    if bus.plateNo[len(bus.plateNo) - 4:] == recvBuffer[1]:
                                         # tts 진입 정보 수정
-                                        bus.state = -1 #진입중 기다리자
+                                        bus.state = -1  # 진입중 기다리자
                                         self.tts.busStopInfo(bus, -1)
                                         stationState = status.status_2_BusWaiting
                                         break
@@ -413,49 +442,47 @@ class LoopSystem:
 
                     elif stationState == status.status_2_BusWaiting:
                         recvBuffer = self.kySocket.Send_Recv(stationState)
-                        if recvBuffer[0] == status.status_2_BusWaiting:     # [2, (0_버스 발견못함 1_버스 발견됨 2_버스 정차함 -1_대기 시간초과(버싀나감)), 버스번호]
+                        if recvBuffer[
+                            0] == status.status_2_BusWaiting:  # [2, (0_버스 발견못함 1_버스 발견됨 2_버스 정차함 -1_대기 시간초과(버싀나감)), 버스번호]
                             if recvBuffer[1] == '0':
                                 continue
                             elif recvBuffer[1] == '1':
                                 for bus in checkBusList:
-                                    if bus.busNumber[len(bus.busNumber)-4:] == recvBuffer[2]:
+                                    if bus.plateNo[len(bus.plateNo) - 4:] == recvBuffer[2]:
                                         # tts 진입 정보 수정
-                                        bus.state = -1  #진입중 기다리자
+                                        bus.state = -1  # 진입중 기다리자
                                         self.tts.busStopInfo(bus, -1)
                                         stationState = status.status_2_BusWaiting
                                         break
-                            elif recvBuffer[1] =='2':
+                            elif recvBuffer[1] == '2':
                                 for bus in checkBusList:
-                                    if bus.busNumber[len(bus.busNumber)-4:] == recvBuffer[2]:
+                                    if bus.plateNo[len(bus.plateNo) - 4:] == recvBuffer[2]:
                                         bus.state = -2
                                         self.tts.busStopInfo(bus, -2)
                                         self.userBus.endDelete(bus)
-
+                                        print("Test2")
                                         if self.userBus.checkBus():
                                             stationState = status.status_1_ActivateCamera
                                         else:
-                                            self.systemState = False
-                                            return
+                                            self.tts.ENDPROGRAM()
 
-                            elif recvBuffer[1] =='-1':
+                            elif recvBuffer[1] == '-1':
                                 for bus in checkBusList:
-                                    if bus.busNumber[len(bus.busNumber)-4:] == recvBuffer[2]:
+                                    if bus.plateNo[len(bus.plateNo) - 4:] == recvBuffer[2]:
                                         bus.state = -3
                                         self.tts.busStopInfo(bus, -3)
                                         self.userBus.endDelete(bus)
-
+                                        print("Test3")
                                         if self.userBus.checkBus():
                                             stationState = status.status_1_ActivateCamera
                                         else:
-                                            self.systemState = False
-                                            return
+                                            self.tts.ENDPROGRAM()
                             else:
-                                print("통신실패")
+                                print("통신실패1")
                         else:
-                            print("통신실패")
-            if not self.systemState:
-                return
-
+                            print("통신실패1")
+                if not self.systemState:
+                    return
     def loopStart(self):
 
         while True:
