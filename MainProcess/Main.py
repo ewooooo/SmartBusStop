@@ -517,7 +517,7 @@ class LoopSystem:
             self.userBus.reset()
 
             button_Thread = Thread(target=self.button.checkButton)  # 버튼 입력 시작
-            busUpdate_Thread = Thread(target=self.bus.loopUpdate, args=(keyData.updateCycle,))  # 버스 정보 갱신 시작
+            busUpdate_Thread = Thread(target=self.bus.loopUpdate, args=(20,))  # 버스 정보 갱신 시작
             TTS_Thread = Thread(target=self.tts.playLoop)  # 음성 안내 시작
             Control_Thread = Thread(target=self.Control)  # 연산 시작
 
