@@ -124,7 +124,7 @@ if __name__ == "__main__":
     #     time.sleep(1)
     #
 
-    led.SET_LED("400")
+    led.SET_LED("7-1")
     time.sleep(3)
     led.OFF_LED()
     led.OFF_LED()
