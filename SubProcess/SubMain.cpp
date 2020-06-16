@@ -54,7 +54,7 @@ void mouse_callback(int event, int x, int y, int flags, void* userdata) {
 
 }
 
-
+TessBaseAPI* ocr = new TessBaseAPI();
 class BusNumber {
 private:
 	VideoCapture cap;
@@ -73,7 +73,7 @@ private:
 	int boundY;
 	int limitCount;
 	String fileNowName;
-	TessBaseAPI* ocr;
+
 	String OCR(Mat test);
 	void EraseSpace(char* inStr);
 	String processNumber(String text);
@@ -85,7 +85,7 @@ public:
 		boundY = by;
 		limitCount = c;
 		
-		ocr = new tesseract::TessBaseAPI();
+
 		string file = "./" + fileName + ".mp4";
 		fileNowName = file;
 		cout << file << endl;
@@ -471,7 +471,7 @@ int BusNumber::BusNumberRectList(int control) {
 				imshow("imageDebuger", imageDebuger);
 			}
 
-			Rect rectROI = Rect(Point(GroupList[i].tl().x - GroupList[i].width * 0.3, GroupList[i].tl().y - GroupList[i].height * 0.5), Point(GroupList[i].br().x + GroupList[i].width * 0.3, GroupList[i].br().y + GroupList[i].height * 0.5));
+			Rect rectROI = Rect(Point(GroupList[i].tl().x - GroupList[i].width * 0.4, GroupList[i].tl().y - GroupList[i].height * 0.55), Point(GroupList[i].br().x + GroupList[i].width * 0.4, GroupList[i].br().y + GroupList[i].height * 0.55));
 			Mat testimage = inputimage(rectROI);
 
 			String testStr = OCR(testimage);
