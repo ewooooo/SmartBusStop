@@ -14,8 +14,6 @@ class LED:
         serial = spi(port=0, device=0, gpio=noop())
         self.device = max7219(serial, width=32, height=32, block_orientation=-90, rotate=1)
 
-    def SET_LED(self, number):
-        self.SET_LED_set(number,1)
     def SET_LED_set(self,number,sel):
         self.device.show()
         number = number.replace('-', 'l')
@@ -110,17 +108,19 @@ class LED:
                     text(draw, (21, 22), number[5], fill=turnColor)
         # time.sleep(1)
         # self.device.show()
+    def SET_LED(self, number):
+        self.SET_LED_set(number,1)
     def OFF_LED(self):
         self.SET_LED_set("000000",0)
 
 if __name__ == "__main__":
 
     led = LED()
-    led.SET_LED("7-1",1)
+    led.SET_LED("7-1")
     time.sleep(3)
     led.OFF_LED()
     time.sleep(1)
-    led.SET_LED("7-1",1)
+    led.SET_LED("7-1")
     time.sleep(3)
     led.OFF_LED()
 
