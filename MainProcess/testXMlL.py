@@ -5,7 +5,7 @@ testText = [
 <msgHeader>
 <queryTime>2020-06-15 17:44:29.666</queryTime>
 <resultCode>0</resultCode>
-<resultMessage>?뺤긽?곸쑝濡?泥섎━?섏뿀?듬땲??</resultMessage>
+<resultMessage>정상적으로 처리되었습니다.</resultMessage>
 </msgHeader>
 <msgBody>
 <busArrivalList>
@@ -65,7 +65,7 @@ testText = [
 <msgHeader>
 <queryTime>2020-06-15 17:44:29.666</queryTime>
 <resultCode>0</resultCode>
-<resultMessage>?뺤긽?곸쑝濡?泥섎━?섏뿀?듬땲??</resultMessage>
+<resultMessage>정상적으로 처리되었습니다.</resultMessage>
 </msgHeader>
 <msgBody>
 <busArrivalList>
@@ -74,7 +74,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -90,7 +90,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -106,7 +106,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -122,7 +122,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -141,7 +141,7 @@ testText = [
 <msgHeader>
 <queryTime>2020-06-15 17:44:29.666</queryTime>
 <resultCode>0</resultCode>
-<resultMessage>?뺤긽?곸쑝濡?泥섎━?섏뿀?듬땲??</resultMessage>
+<resultMessage>정상적으로 처리되었습니다.</resultMessage>
 </msgHeader>
 <msgBody>
 <busArrivalList>
@@ -150,7 +150,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -166,7 +166,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -182,7 +182,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -201,7 +201,7 @@ testText = [
 <msgHeader>
 <queryTime>2020-06-15 17:44:29.666</queryTime>
 <resultCode>0</resultCode>
-<resultMessage>?뺤긽?곸쑝濡?泥섎━?섏뿀?듬땲??</resultMessage>
+<resultMessage>정상적으로 처리되었습니다.</resultMessage>
 </msgHeader>
 <msgBody>
 <busArrivalList>
@@ -210,7 +210,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -226,7 +226,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -242,7 +242,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -261,7 +261,7 @@ testText = [
 <msgHeader>
 <queryTime>2020-06-15 17:44:29.666</queryTime>
 <resultCode>0</resultCode>
-<resultMessage>?뺤긽?곸쑝濡?泥섎━?섏뿀?듬땲??</resultMessage>
+<resultMessage>정상적으로 처리되었습니다.</resultMessage>
 </msgHeader>
 <msgBody>
 <busArrivalList>
@@ -270,7 +270,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -286,7 +286,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -302,7 +302,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -321,7 +321,7 @@ testText = [
 <msgHeader>
 <queryTime>2020-06-15 17:44:29.666</queryTime>
 <resultCode>0</resultCode>
-<resultMessage>?뺤긽?곸쑝濡?泥섎━?섏뿀?듬땲??</resultMessage>
+<resultMessage>정상적으로 처리되었습니다.</resultMessage>
 </msgHeader>
 <msgBody>
 <busArrivalList>
@@ -330,7 +330,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -346,7 +346,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -362,7 +362,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -381,7 +381,7 @@ testText = [
 <msgHeader>
 <queryTime>2020-06-15 17:44:29.666</queryTime>
 <resultCode>0</resultCode>
-<resultMessage>?뺤긽?곸쑝濡?泥섎━?섏뿀?듬땲??</resultMessage>
+<resultMessage>정상적으로 처리되었습니다.</resultMessage>
 </msgHeader>
 <msgBody>
 <busArrivalList>
@@ -390,7 +390,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -406,7 +406,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -422,7 +422,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -441,7 +441,7 @@ testText = [
 <msgHeader>
 <queryTime>2020-06-15 17:44:29.666</queryTime>
 <resultCode>0</resultCode>
-<resultMessage>?뺤긽?곸쑝濡?泥섎━?섏뿀?듬땲??</resultMessage>
+<resultMessage>정상적으로 처리되었습니다.</resultMessage>
 </msgHeader>
 <msgBody>
 <busArrivalList>
@@ -450,7 +450,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -466,7 +466,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -482,7 +482,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>寃쎄린70諛?547</plateNo1>
+<plateNo1>경기70바2547</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
