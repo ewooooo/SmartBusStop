@@ -451,14 +451,14 @@ class LoopSystem:
                     # 카메라가 작동하지 않는 상태라면 영상을 켜서 정보를 달라고한다.
                     if stationState == status.status_0_EndCamera or stationState == status.status_1_ActivateCamera:
                         recvBuffer = self.kySocket.Send_Recv(stationState)
-                        print(recvBuffer)
+                        #print(recvBuffer)
                         if recvBuffer[0] == status.status_1_ActivateCamera:
                             stationState = status.status_1_ActivateCamera
 
                             if recvBuffer[1] != None:
                                 for bus in checkBusList:
                                     print("Test1")
-                                    print(recvBuffer)
+                                    #print(recvBuffer)
                                     print(bus.plateNo[len(bus.plateNo) - 4:])
                                     if bus.plateNo[len(bus.plateNo) - 4:] == recvBuffer[1]:
                                         # tts 진입 정보 수정
@@ -474,13 +474,13 @@ class LoopSystem:
                         if recvBuffer[0] == status.status_2_BusWaiting:  # [2, (0_버스 발견못함 1_버스 발견됨 2_버스 정차함 -1_대기 시간초과(버싀나감)), 버스번호]
                             if recvBuffer[1] == '0':
                                 continue
-                            elif recvBuffer[1] == '1':
-                                for bus in checkBusList:
-                                    if bus.plateNo[len(bus.plateNo) - 4:] == recvBuffer[2]:
-                                        # tts 진입 정보 수정
-                                        bus.state = -1  # 진입중 기다리자
-                                        self.tts.busStopInfo(bus, -1)
-                                        stationState = status.status_2_BusWaiting
+                            # elif recvBuffer[1] == '1':
+                            #     for bus in checkBusList:
+                            #         if bus.plateNo[len(bus.plateNo) - 4:] == recvBuffer[2]:
+                            #             # tts 진입 정보 수정
+                            #             bus.state = -1  # 진입중 기다리자
+                            #             self.tts.busStopInfo(bus, -1)
+                            #             stationState = status.status_2_BusWaiting
                             elif recvBuffer[1] == '2':
                                 for bus in checkBusList:
                                     if bus.plateNo[len(bus.plateNo) - 4:] == recvBuffer[2]:
