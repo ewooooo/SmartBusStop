@@ -109,8 +109,7 @@ class LED:
         # time.sleep(1)
         # self.device.show()
     def OFF_LED(self):
-
-        self.device.hide()
+        self.SET_LED("000000",0)
 
 if __name__ == "__main__":
 
@@ -126,10 +125,10 @@ if __name__ == "__main__":
     #     time.sleep(1)
     led.SET_LED("7-1",1)
     time.sleep(3)
-    led.SET_LED("7-1",0)
+    led.OFF_LED()
     time.sleep(1)
     led.SET_LED("7-1",1)
     time.sleep(3)
-    led.SET_LED("7-1",0)
+    led.OFF_LED()
 
 
