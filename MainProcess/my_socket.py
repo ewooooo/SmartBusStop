@@ -24,7 +24,7 @@ class mySocket:
         mode = mode[0:9]
         mode = mode.replace('_','')
         SList = mode.split('|')
-
+        print(SList)
         return SList
 
 
