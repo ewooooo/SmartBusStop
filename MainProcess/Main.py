@@ -57,7 +57,7 @@ class busPlayList(TTS):
         self.tts_api("버스가 이미등록되어있습니다.", self.status.button_2_Push_Fail)     # + 버스번호
         self.tts_api("현재 등록할수 있는 버스가 없습니다.", self.status.error_inf_not)
         # 버스 등록 0취소
-        self.tts_api("최근 등록한 버스가 취소되었습니다", self.status.button_3_Cancel)
+        self.tts_api("버스가 등록취소되었습니다", self.status.button_3_Cancel)
         self.tts_api("취소할 버스가 없습니다", self.status.button_3_Cancel_Fail)
         # 등록된 버스 조회
         self.tts_api("버스가 등록되어있습니다", self.status.bus_state)     # + 버스번호
@@ -232,6 +232,7 @@ class busPlayList(TTS):
             self.playInfo = self.status.button_2_Push_Fail
             self.setPlayStop()
         elif state == self.status.button_3_Cancel:
+            self.playInfoBus = bus
             self.playInfo = self.status.button_3_Cancel
             self.setPlayStop()
         elif state == self.status.button_3_Cancel_Fail:
@@ -307,16 +308,19 @@ class UserBus:
 
     def add(self, bus):  # userbus add
         if not bus.routeId in self.userBusList and int(bus.location) <= 10:
-            self.recentBus = bus.routeId
+            self.recentBus = bus
             self.userBusList[bus.routeId] = bus
             return True
         else:
             return False
 
-    def delete(self):  # userbus del
-        if self.recentBus in self.userBusList:
-            del self.userBusList[self.recentBus]
-            return True
+    def delete(self,bus):  # userbus del
+        if self.recentBus != None:
+            if self.recentBus in self.userBusList:
+                del self.userBusList[bus.routeId]
+                return True
+            else:
+                return False
         else:
             return False
     def endDelete(self, bus):

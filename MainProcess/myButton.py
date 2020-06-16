@@ -97,8 +97,9 @@ class MyButton:
 
     def longClick(self):
         print("longClick")
-        if self.main.userBus.delete():
-            self.main.tts.playButtonInfo(self.main.tts.status.button_3_Cancel)
+        bus = self.main.userBus.recentBus
+        if self.main.userBus.delete(bus):
+            self.main.tts.playButtonInfo(self.main.tts.status.button_3_Cancel,bus)
         else:
             self.main.tts.playButtonInfo(self.main.tts.status.button_3_Cancel_Fail)
 
