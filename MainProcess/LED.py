@@ -18,6 +18,7 @@ class LED:
         self.device = max7219(serial, width=32, height=32, block_orientation=-90, rotate=1)
     def SET_LED(self,number):
         self.device.show()
+        time.sleep(1)
         number = number.replace('-', 'l')
 
         testlen = len(number)
@@ -104,9 +105,12 @@ class LED:
                     text(draw, (24, 22), number[5], fill="white", font=proportional(TINY_FONT))
                 else:
                     text(draw, (21, 22), number[5], fill="white")
-
+        # time.sleep(1)
+        # self.device.show()
     def OFF_LED(self):
-        self.device.clear()
+        # self.device.clear()
+        self.device.hide()
+
 
 
 
