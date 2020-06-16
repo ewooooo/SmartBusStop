@@ -24,7 +24,6 @@ class Bus:
 class StationDict:
     def __init__(self,obj,stationId,serviceKey):
         self.main = obj
-        self.kaCount = 0
         self.serviceKey = serviceKey
         self.stationId =stationId
         self.busDict = {}  # busNumber : Bus
@@ -38,11 +37,7 @@ class StationDict:
         url = url + self.serviceKey + "&stationId=" # 203000165&
         url = url + self.stationId
         response = requests.get(url)
-
-        text = testXMlL.testText[0]#response.text
-        testXMlL.testText.append(testXMlL.testText[0])
-        del testXMlL.testText[0]
-
+        text = response.text
         root = ET.fromstring(text)
 
         bufferBusCode = []

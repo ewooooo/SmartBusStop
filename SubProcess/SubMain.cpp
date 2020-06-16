@@ -86,11 +86,11 @@ public:
 		limitCount = c;
 		
 
-		string file = "./" + fileName + ".mp4";
-		fileNowName = file;
-		cout << file << endl;
-		cap = VideoCapture(file);
-		//cap = VideoCapture(0);
+		//string file = "./" + fileName + ".mp4";
+		//fileNowName = file;
+		//cout << file << endl;
+		//cap = VideoCapture(file);
+		cap = VideoCapture(0);
 		if (!cap.isOpened()) {
 			cerr << "에러 - 카메라를 열 수 없습니다.\\\\n";
 			exit;
@@ -401,18 +401,20 @@ bool BusNumber::checkDim(Rect rect, Rect test) {
 int BusNumber::BusNumberRectList(int control) {
 	cap.read(inputimage);
 	if (inputimage.empty()) {
-		cout << fileNowName << endl;
-		cap = VideoCapture(fileNowName);
-		//cap = VideoCapture(0);
-		if (!cap.isOpened()) {
-			cerr << "에러 - 카메라를 열 수 없습니다.\\\\n";
-			exit;
-		}
-		cap.read(inputimage);
-		if (inputimage.empty()) {
-			cerr << "빈 영상이 캡쳐되었습니다.\\\\n";
-			exit;
-		}
+		//cout << fileNowName << endl;
+		//cap = VideoCapture(fileNowName);
+		////cap = VideoCapture(0);
+		//if (!cap.isOpened()) {
+		//	cerr << "에러 - 카메라를 열 수 없습니다.\\\\n";
+		//	exit;
+		//}
+		//cap.read(inputimage);
+		//if (inputimage.empty()) {
+		//	cerr << "빈 영상이 캡쳐되었습니다.\\\\n";
+		//	exit;
+		//}
+		cerr << "빈 영상이 캡쳐되었습니다.\\\\n";
+		exit;
 	}
 	cout << "process" << endl;
 	imshow("inputimage", inputimage);
@@ -685,11 +687,11 @@ int main()
 				buffer[0] = status.status_reset[0];
 				buffer[1] = status.status_reset[1];
 			}
-			else if (stoi(data)>2) {
-				buffer[0] = status.status_reset[0];
-				buffer[1] = status.status_reset[1];
-				busTest = BusNumber(data,limitTime, boundX, boundY, count);
-			}
+			//else if (stoi(data)>2) {
+			//	buffer[0] = status.status_reset[0];
+			//	buffer[1] = status.status_reset[1];
+			//	busTest = BusNumber(data,limitTime, boundX, boundY, count);
+			//}
 
 			cout << buffer << endl;
 			cout << sizeof(buffer) << endl;

@@ -403,11 +403,6 @@ class LoopSystem:
         stationState = status.status_0_EndCamera
         cycleNumer = 0
         while True:
-            if self.bus.kaCount != cycleNumer:
-                cycleNumer = self.bus.kaCount
-                recvBuffer = self.kySocket.Send_Recv(str(cycleNumer+3))
-                if recvBuffer[0] != status.status_reset:
-                    print("통신 실패")
 
             EndTest = True
             if bool(self.bus.busDict):
@@ -474,7 +469,8 @@ class LoopSystem:
                         if recvBuffer[0] == status.status_2_BusWaiting:  # [2, (0_버스 발견못함 1_버스 발견됨 2_버스 정차함 -1_대기 시간초과(버싀나감)), 버스번호]
                             if recvBuffer[1] == '0':
                                 continue
-                            # elif recvBuffer[1] == '1':
+                            elif recvBuffer[1] == '1':
+                                pass
                             #     for bus in checkBusList:
                             #         if bus.plateNo[len(bus.plateNo) - 4:] == recvBuffer[2]:
                             #             # tts 진입 정보 수정
@@ -520,13 +516,10 @@ class LoopSystem:
             self.tts.reset()
             self.userBus.reset()
 
-
-
             button_Thread = Thread(target=self.button.checkButton)  # 버튼 입력 시작
             busUpdate_Thread = Thread(target=self.bus.loopUpdate, args=(keyData.updateCycle,))  # 버스 정보 갱신 시작
             TTS_Thread = Thread(target=self.tts.playLoop)  # 음성 안내 시작
             Control_Thread = Thread(target=self.Control)  # 연산 시작
-
 
             button_Thread.start()
             busUpdate_Thread.start()
