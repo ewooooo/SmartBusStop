@@ -208,9 +208,6 @@ class busPlayList(TTS):
 
 
 
-
-
-
     def addBusData(self, bus):  # 버스 추가 될때 실행되야함.
         if self.tts_api(bus.busNumber + "번", bus.busNumber):
             self.playlist.append(bus)
@@ -252,8 +249,6 @@ class busPlayList(TTS):
     def playStartInfo(self):
         self.play(self.status.button_1_Info)
     def errorNotBusInfo(self):
-        self.main.systemState = False
-        self.setPlayStop()
         self.play(self.status.error_bus_not)
 
     def busStopInfo(self,bus,state):
@@ -262,13 +257,11 @@ class busPlayList(TTS):
             self.StopBus = bus
             self.setPlayStop()
         elif state == -2: #정차했다
-            bus.state = 0
             self.busStopCommand = True
             self.StopBus = bus
             self.setPlayStop()
 
         elif state == -3: #지나갔다
-            bus.state = 0
             self.busStopCommand = True
             self.StopBus = bus
             self.setPlayStop()
@@ -424,7 +417,7 @@ class LoopSystem:
                                                 self.tts.ENDPROGRAM()
                         break
                     except:
-                        print("errortest")
+                        print("error user bus get")
                         continue
 
                 checkBusList = self.userBus.getEnterUserBus()
