@@ -197,7 +197,8 @@ class busPlayList(TTS):
                 if not self.main.userBus.userBusList:
                     self.play(self.status.bus_state_error)
                 else:
-                    for key in self.main.userBus.userBusList.keys():
+                    keys =  self.main.userBus.userBusList.keys()
+                    for key in keys:
                         bus = self.main.userBus.userBusList.get(key)
                         self.play(bus.busNumber)
                     self.play(self.status.bus_state)
