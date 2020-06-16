@@ -408,22 +408,23 @@ class LoopSystem:
                 if bool(self.userBus.userBusList):
                     keys = self.userBus.userBusList.keys()
                     if bool(keys):
-                        try:
-                            for bkey in keys:
-                                bus = self.userBus.userBusList.get(bkey)
-                                if bus.state < 0:
-                                    if bus.location != '1':
-                                        print(bus)
-                                        bus.state = -3
-                                        self.tts.busStopInfo(bus, -3)
-                                        self.userBus.endDelete(bus)
-                                        print("Test4")
-                                        if self.userBus.checkBus():
-                                            stationState = status.status_1_ActivateCamera
-                                        else:
-                                            self.tts.ENDPROGRAM()
-                        except:
-                            print("error user bus get")
+                        # try:
+                        for bkey in keys:
+                            bus = self.userBus.userBusList.get(bkey)
+                            print(bus)
+                            if bus.state < 0:
+                                if bus.location != '1':
+                                    print(bus)
+                                    bus.state = -3
+                                    self.tts.busStopInfo(bus, -3)
+                                    self.userBus.endDelete(bus)
+                                    print("Test4")
+                                    if self.userBus.checkBus():
+                                        stationState = status.status_1_ActivateCamera
+                                    else:
+                                        self.tts.ENDPROGRAM()
+                        # except:
+                        #     print("error user bus get")
 
 
                 checkBusList = self.userBus.getEnterUserBus()
@@ -438,8 +439,8 @@ class LoopSystem:
                             if recvBuffer[1] != None:
                                 for bus in checkBusList:
                                     print("Test1")
-                                    print(recvBuffer)
-                                    print(bus.plateNo[len(bus.plateNo) - 4:])
+                                    #print(recvBuffer)
+                                    #print(bus.plateNo[len(bus.plateNo) - 4:])
                                     if bus.plateNo[len(bus.plateNo) - 4:] == recvBuffer[1]:
                                         # tts 진입 정보 수정
                                         bus.state = -1  # 진입중 기다리자
