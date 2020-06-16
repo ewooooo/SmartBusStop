@@ -391,13 +391,8 @@ class LoopSystem:
                                 return
 
                 checkBusList = self.userBus.getEnterUserBus()
-                if not checkBusList:  # 버스 상태가 진입중인 요소가 없으면
-                    # #영상처리 프로세서 초기화 및 연결상태점검
-                    # recvBuffer = self.kySocket.Send_Recv(status.status_reset)
-                    # if recvBuffer[0] != status.status_reset:
-                    #     print("통신 실패")
-                    continue
-                else:
+                if bool(checkBusList):  # 버스 상태가 진입중인 요소가 없으면
+
                     # 카메라가 작동하지 않는 상태라면 영상을 켜서 정보를 달라고한다.
                     if stationState == status.status_0_EndCamera or stationState == status.status_1_ActivateCamera:
                         recvBuffer = self.kySocket.Send_Recv(stationState)
