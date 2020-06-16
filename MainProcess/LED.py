@@ -15,8 +15,8 @@ class LED:
         self.device = max7219(serial, width=32, height=32, block_orientation=-90, rotate=1)
 
     def SET_LED(self, number):
-        self.SET_LED(number,1)
-    def SET_LED(self,number,sel):
+        self.SET_LED_set(number,1)
+    def SET_LED_set(self,number,sel):
         self.device.show()
         number = number.replace('-', 'l')
 
@@ -111,7 +111,7 @@ class LED:
         # time.sleep(1)
         # self.device.show()
     def OFF_LED(self):
-        self.SET_LED("000000",0)
+        self.SET_LED_set("000000",0)
 
 if __name__ == "__main__":
 
