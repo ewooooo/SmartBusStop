@@ -413,7 +413,7 @@ class LoopSystem:
                         # try:
                         for bkey in keys:
                             bus = self.userBus.userBusList.get(bkey)
-                            if bus.state == 0:
+                            if bus.state != 0:
                                 if bus.location != '1':
                                     print(bus)
                                     bus.state = -3
