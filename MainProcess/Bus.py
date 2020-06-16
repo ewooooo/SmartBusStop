@@ -130,9 +130,9 @@ class StationDict:
             else:
                 ledState = True
                 if len(playLEDlist) == 1:
-                    if not oneset:
-                        self.main.led.SET_LED(playLEDlist[0].busNumber)
-                        oneset = True
+                    #if not oneset:
+                    self.main.led.SET_LED(playLEDlist[0].busNumber)
+                     #   oneset = True
                 else:
                     for p in playLEDlist:
                         self.main.led.SET_LED(p.busNumber)
