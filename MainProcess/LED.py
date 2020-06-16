@@ -126,9 +126,9 @@ if __name__ == "__main__":
     led.SET_LED("7-1")
     time.sleep(3)
     led.OFF_LED()
-    time.sleep(3)
+
     led.SET_LED("700")
     time.sleep(3)
     led.OFF_LED()
-    time.sleep(3)
+
 
