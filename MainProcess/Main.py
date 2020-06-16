@@ -189,9 +189,11 @@ class busPlayList(TTS):
                     time.sleep(1)
 
             elif self.busStopCommand:
-                self.busStopPlay(self.StopBus)
                 self.busStopCommand = False
+                sbus = self.StopBus
+                self.busStopPlay(sbus)
                 self.StopBus = None
+
 
             elif self.busStatePlay: #등록된 버스 전보 보기
                 if not self.main.userBus.userBusList:
