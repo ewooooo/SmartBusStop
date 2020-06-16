@@ -83,6 +83,8 @@ class busPlayList(TTS):
         #대기 모드로 전환
         self.tts_api("이후 등록된 버스가 없어 대기모드로 전환합니다.", self.status.end_program)
 
+        #안내 버스 없음
+        self.tts_api("현재 안내중인 버스가 없습니다.", self.status.error_bus_not)
 
     def busPlay(self, bus):
         busState = int(bus.location)
@@ -441,8 +443,8 @@ class LoopSystem:
                             if recvBuffer[1] != None:
                                 for bus in checkBusList:
                                     print("Test1")
-                                    #print(recvBuffer)
-                                    #print(bus.plateNo[len(bus.plateNo) - 4:])
+                                    print(recvBuffer)
+                                    print(bus.plateNo[len(bus.plateNo) - 4:])
                                     if bus.plateNo[len(bus.plateNo) - 4:] == recvBuffer[1]:
                                         # tts 진입 정보 수정
                                         bus.state = -1  # 진입중 기다리자
