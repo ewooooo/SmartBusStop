@@ -313,6 +313,7 @@ class UserBus:
         if not bus.routeId in self.userBusList and int(bus.location) <= 10:
             self.recentBus = bus
             self.userBusList[bus.routeId] = bus
+            bus.state = 1
             return True
         else:
             return False
@@ -321,6 +322,7 @@ class UserBus:
         if self.recentBus != None:
             if self.recentBus.routeId in self.userBusList:
                 del self.userBusList[bus.routeId]
+                bus.state = 0
                 return True
             else:
                 return False
@@ -411,8 +413,7 @@ class LoopSystem:
                         # try:
                         for bkey in keys:
                             bus = self.userBus.userBusList.get(bkey)
-                            print(bus)
-                            if bus.state < 0:
+                            if bus.state == 0:
                                 if bus.location != '1':
                                     print(bus)
                                     bus.state = -3
