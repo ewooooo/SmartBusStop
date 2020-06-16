@@ -313,7 +313,6 @@ class UserBus:
         if not bus.routeId in self.userBusList and int(bus.location) <= 10:
             self.recentBus = bus
             self.userBusList[bus.routeId] = bus
-            bus.state = 1
             return True
         else:
             return False
@@ -343,6 +342,8 @@ class UserBus:
                         if bool(bus):
                             if int(bus.location) == 1:
                                 userbusEnter.append(bus)
+                                if bus.state == 0:
+                                    bus.state = 1
                     return userbusEnter
                 else:
                     return None
