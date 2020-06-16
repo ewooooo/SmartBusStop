@@ -401,8 +401,8 @@ class LoopSystem:
 
 
             if self.userBus.checkBus():  # 저장된 버스가 있고
-                while True:
-                    try:
+                # while True:
+                #     try:
                         if bool(self.userBus.userBusList):
                             keys = self.userBus.userBusList.keys()
                             if bool(keys):
@@ -420,9 +420,9 @@ class LoopSystem:
                                             else:
                                                 self.tts.ENDPROGRAM()
                         break
-                    except:
-                        print("error user bus get")
-                        continue
+                    # except:
+                    #     print("error user bus get")
+                    #     continue
 
                 checkBusList = self.userBus.getEnterUserBus()
                 if bool(checkBusList):  # 버스 상태가 진입중인 요소가 없으면
