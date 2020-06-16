@@ -428,7 +428,7 @@ class LoopSystem:
                     # 카메라가 작동하지 않는 상태라면 영상을 켜서 정보를 달라고한다.
                     if stationState == status.status_0_EndCamera or stationState == status.status_1_ActivateCamera:
                         recvBuffer = self.kySocket.Send_Recv(stationState)
-
+                        print(recvBuffer)
                         if recvBuffer[0] == status.status_1_ActivateCamera:
                             stationState = status.status_1_ActivateCamera
 
@@ -442,7 +442,6 @@ class LoopSystem:
                                         bus.state = -1  # 진입중 기다리자
                                         self.tts.busStopInfo(bus, -1)
                                         stationState = status.status_2_BusWaiting
-                                        break
                         else:
                             print("통신실패")
 
@@ -460,7 +459,6 @@ class LoopSystem:
                                         bus.state = -1  # 진입중 기다리자
                                         self.tts.busStopInfo(bus, -1)
                                         stationState = status.status_2_BusWaiting
-                                        break
                             elif recvBuffer[1] == '2':
                                 for bus in checkBusList:
                                     if bus.plateNo[len(bus.plateNo) - 4:] == recvBuffer[2]:
