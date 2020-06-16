@@ -8,9 +8,6 @@ from TTS import *
 from LED import *
 import keyData
 
-#===========test=======
-from OpenCV_Socket import ServerSocket
-#========================
 
 class busPlayList(TTS):
     class status:

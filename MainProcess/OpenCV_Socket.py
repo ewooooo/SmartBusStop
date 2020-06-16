@@ -22,7 +22,7 @@ class ServerSocket:
         while True:
             data = self.conn.recv(1024).decode()
             data = data.replace('_','')
-
+            print(data)
             replyData = []
             if data == status.status_1_ActivateCamera or data == status.status_0_EndCamera:
                 replyData.append(status.status_1_ActivateCamera)
