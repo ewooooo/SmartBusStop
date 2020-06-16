@@ -9,7 +9,7 @@ testText = ['''
 <msgBody>
 <busArrivalList>
 <flag>PASS</flag>
-<locationNo1>5</locationNo1>
+<locationNo1>2</locationNo1>
 <locationNo2></locationNo2>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
@@ -149,7 +149,7 @@ testText = ['''
 <msgBody>
 <busArrivalList>
 <flag>PASS</flag>
-<locationNo1>4</locationNo1>
+<locationNo1>1</locationNo1>
 <locationNo2></locationNo2>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
