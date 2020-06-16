@@ -410,22 +410,22 @@ class LoopSystem:
                 if bool(self.userBus.userBusList):
                     keys = self.userBus.userBusList.keys()
                     if bool(keys):
-                        # try:
-                        for bkey in keys:
-                            bus = self.userBus.userBusList.get(bkey)
-                            if bus.state != 0:
-                                if bus.location != '1':
-                                    print(bus)
-                                    bus.state = -3
-                                    self.tts.busStopInfo(bus, -3)
-                                    self.userBus.endDelete(bus)
-                                    print("Test4")
-                                    if self.userBus.checkBus():
-                                        stationState = status.status_1_ActivateCamera
-                                    else:
-                                        self.tts.ENDPROGRAM()
-                        # except:
-                        #     print("error user bus get")
+                        try:
+                            for bkey in keys:
+                                bus = self.userBus.userBusList.get(bkey)
+                                if bus.state != 0:
+                                    if bus.location != '1':
+                                        print(bus)
+                                        bus.state = -3
+                                        self.tts.busStopInfo(bus, -3)
+                                        self.userBus.endDelete(bus)
+                                        print("Test4")
+                                        if self.userBus.checkBus():
+                                            stationState = status.status_1_ActivateCamera
+                                        else:
+                                            self.tts.ENDPROGRAM()
+                        except:
+                            print("error user bus get")
 
 
                 checkBusList = self.userBus.getEnterUserBus()
