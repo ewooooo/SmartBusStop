@@ -110,7 +110,6 @@ class LED:
         # self.device.show()
     def OFF_LED(self):
         self.device.clear()
-        self.device.cleanup()
 
 if __name__ == "__main__":
 
@@ -124,13 +123,11 @@ if __name__ == "__main__":
     #     led.OFF_LED()
     #     print("led OFF")
     #     time.sleep(1)
-    #
-
     led.SET_LED("7-1")
     time.sleep(3)
     led.OFF_LED()
     time.sleep(3)
-    led.SET_LED("7-1")
+    led.SET_LED("700")
     time.sleep(3)
     led.OFF_LED()
     time.sleep(3)
