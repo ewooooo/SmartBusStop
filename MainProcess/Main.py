@@ -316,7 +316,7 @@ class UserBus:
 
     def delete(self,bus):  # userbus del
         if self.recentBus != None:
-            if self.recentBus in self.userBusList:
+            if self.recentBus.routeId in self.userBusList:
                 del self.userBusList[bus.routeId]
                 return True
             else:
