@@ -15,7 +15,6 @@ class LED:
         self.device = max7219(serial, width=32, height=32, block_orientation=-90, rotate=1)
 
     def SET_LED_set(self,number,sel):
-        self.device.show()
         number = number.replace('-', 'l')
 
         if sel == 1:
