@@ -72,10 +72,12 @@ private:
 	int boundX;
 	int boundY;
 	int limitCount;
+	String fileNowName;
 	TessBaseAPI* ocr;
 	String OCR(Mat test);
 	void EraseSpace(char* inStr);
 	String processNumber(String text);
+
 public:
 	BusNumber(string fileName,int lsec, int bx, int by,int c) {
 		limitSec = lsec;
@@ -85,6 +87,7 @@ public:
 		
 		ocr = new tesseract::TessBaseAPI();
 		string file = "./" + fileName + ".mp4";
+		fileNowName = file;
 		cout << file << endl;
 		cap = VideoCapture(file);
 		//cap = VideoCapture(0);
@@ -398,8 +401,18 @@ bool BusNumber::checkDim(Rect rect, Rect test) {
 int BusNumber::BusNumberRectList(int control) {
 	cap.read(inputimage);
 	if (inputimage.empty()) {
-		cerr << "빈 영상이 캡쳐되었습니다.\\\\n";
-		exit;
+		cout << fileNowName << endl;
+		cap = VideoCapture(fileNowName);
+		//cap = VideoCapture(0);
+		if (!cap.isOpened()) {
+			cerr << "에러 - 카메라를 열 수 없습니다.\\\\n";
+			exit;
+		}
+		cap.read(inputimage);
+		if (inputimage.empty()) {
+			cerr << "빈 영상이 캡쳐되었습니다.\\\\n";
+			exit;
+		}
 	}
 	cout << "process" << endl;
 	imshow("inputimage", inputimage);
