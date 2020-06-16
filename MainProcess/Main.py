@@ -254,15 +254,18 @@ class busPlayList(TTS):
 
     def busStopInfo(self,bus,state):
         if state == -1: #진입중이다
+            bus.state = -1
             self.busStopCommand = True
             self.StopBus = bus
             self.setPlayStop()
         elif state == -2: #정차했다
+            bus.state = -2
             self.busStopCommand = True
             self.StopBus = bus
             self.setPlayStop()
 
         elif state == -3: #지나갔다
+            bus.state = -3
             self.busStopCommand = True
             self.StopBus = bus
             self.setPlayStop()
@@ -285,6 +288,7 @@ class busPlayList(TTS):
                 self.playStop = False
                 time.sleep(1)
         elif busState == -3:
+            print("bus pass tts")
             self.play(bus.busNumber)
             self.play(self.status.bus_no_stop)
             self.playwiat_1min()
