@@ -42,9 +42,6 @@ class StationDict:
         text = testXMlL.testText[0]#response.text
         testXMlL.testText.append(testXMlL.testText[0])
         del testXMlL.testText[0]
-        self.kaCount = self.kaCount + 1
-        if self.kaCount > len(testXMlL.testText):
-            self.kaCount = 0
 
         root = ET.fromstring(text)
 
@@ -82,6 +79,12 @@ class StationDict:
                 bus = self.busDict.get(busCode)
                 bus.modifyBus(busCode, '-1', '-1')
 
+
+
+        if self.kaCount < len(testXMlL.testText):
+            self.kaCount = self.kaCount + 1
+        else:
+            self.kaCount = 1
 
     def routeAPI(self,routeId):
         url = "http://openapi.gbis.go.kr/ws/rest/busrouteservice/info?serviceKey="
