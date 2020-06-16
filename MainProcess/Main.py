@@ -334,25 +334,29 @@ class UserBus:
 
     def getEnterUserBus(self):
         # carNumber in userBusList 요소가 있는지 확인 T/F
-        try:
-            userbusEnter = []
-            if bool(self.userBusList):
-                keys = self.userBusList.keys()
-                for key in keys:
-                    bus = self.userBusList.get(key)
-                    if bool(bus):
-                        if int(bus.location) == 1:
-                            userbusEnter.append(bus)
-                return userbusEnter
-            else:
-                return None
-        except:
-            return None
+        while True:
+            try:
+                userbusEnter = []
+                if bool(self.userBusList):
+                    keys = self.userBusList.keys()
+                    for key in keys:
+                        bus = self.userBusList.get(key)
+                        if bool(bus):
+                            if int(bus.location) == 1:
+                                userbusEnter.append(bus)
+                    return userbusEnter
+                else:
+                    return None
+            except:
+                print("errortest")
+                continue
+
     def checkBus(self):
         if not self.userBusList:
             return False  # 비어있으면
         else:
             return True
+
 
 
 class status:
@@ -403,18 +407,26 @@ class LoopSystem:
 
 
             if self.userBus.checkBus():  # 저장된 버스가 있고
-                for bkey in self.userBus.userBusList.keys():
-                    bus =self.userBus.userBusList.get(bkey)
-                    if bus.state != 0:
-                        if bus.location != 1:
-                            bus.state = -3
-                            self.tts.busStopInfo(bus, -3)
-                            self.userBus.endDelete(bus)
-                            print("Test3")
-                            if self.userBus.checkBus():
-                                stationState = status.status_1_ActivateCamera
-                            else:
-                                self.tts.ENDPROGRAM()
+                while True:
+                    try:
+                        if bool(self.userBus.userBusList):
+                            keys = self.userBus.userBusList.keys()
+                            for bkey in keys:
+                                bus =self.userBus.userBusList.get(bkey)
+                                if bus.state != 0:
+                                    if bus.location != 1:
+                                        bus.state = -3
+                                        self.tts.busStopInfo(bus, -3)
+                                        self.userBus.endDelete(bus)
+                                        print("Test3")
+                                        if self.userBus.checkBus():
+                                            stationState = status.status_1_ActivateCamera
+                                        else:
+                                            self.tts.ENDPROGRAM()
+                        break
+                    except:
+                        print("errortest")
+                        continue
 
                 checkBusList = self.userBus.getEnterUserBus()
                 if bool(checkBusList):  # 버스 상태가 진입중인 요소가 없으면
