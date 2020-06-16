@@ -27,20 +27,19 @@ class ServerSocket:
             if data == status.status_1_ActivateCamera or data == status.status_0_EndCamera:
                 replyData.append(status.status_1_ActivateCamera)
 
-                imageRetrunData = input("입력 :") # 카메라 정보에서 리턴
+                imageRetrunData = input("입력1 :") # 카메라 정보에서 리턴
                 replyData.append(imageRetrunData)
 
             elif data == status.status_2_BusWaiting:
-                replyData.append(status.status_1_ActivateCamera)
+                replyData.append(status.status_2_BusWaiting)
                 # 카운팅 시작
-                imageRetrunData = str(input("입력 :")) # 버스 번호 발견 94551 발견못한 9455 버스 정
+                imageRetrunData = str(input("입력2 :")) # 버스 번호 발견 94551 발견못한 9455 버스 정
 
                 # [2, (0_버스 발견못함 1_버스 발견됨 2_버스 정차함 -1_대기 시간초과(버싀나감)), 버스번호]
 
                 if len(imageRetrunData) == 4:
                     replyData.append('1')
                     replyData.append(imageRetrunData)
-
                 elif len(imageRetrunData) == 5:
                     if imageRetrunData[0] == '-':
                         replyData.append('-1')

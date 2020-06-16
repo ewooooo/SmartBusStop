@@ -485,8 +485,8 @@ class LoopSystem:
                                 print("통신실패1")
                         else:
                             print("통신실패1")
-                if not self.systemState:
-                    return
+            if not self.systemState:
+                return
     def loopStart(self):
 
         while True:
