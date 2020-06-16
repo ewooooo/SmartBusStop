@@ -13,6 +13,9 @@ class LED:
     def __init__(self):
         serial = spi(port=0, device=0, gpio=noop())
         self.device = max7219(serial, width=32, height=32, block_orientation=-90, rotate=1)
+    def reset(self):
+        serial = spi(port=0, device=0, gpio=noop())
+        self.device = max7219(serial, width=32, height=32, block_orientation=-90, rotate=1)
     def SET_LED(self,number):
         self.device.show()
         number = number.replace('-', 'l')

@@ -86,6 +86,14 @@ class busPlayList(TTS):
         #안내 버스 없음
         self.tts_api("현재 안내중인 버스가 없습니다.", self.status.error_bus_not)
 
+    def reset(self):
+        self.nowPlay = None
+        self.playInfo = None
+        self.playInfoBus = None
+        self.busStatePlay = False
+        self.busStopCommand = False
+        self.StopBus = None
+        self.endState = False
     def busPlay(self, bus):
         busState = int(bus.location)
         print(bus.busNumber+" : "+str(busState))
@@ -311,6 +319,10 @@ class UserBus:
         self.userBusList = {}
         self.recentBus = None
 
+    def reset(self):
+        self.userBusList = {}
+        self.recentBus = None
+
     def add(self, bus):  # userbus add
         if not bus.routeId in self.userBusList and int(bus.location) <= 10:
             self.recentBus = bus
@@ -502,6 +514,10 @@ class LoopSystem:
             while not self.systemState:
                 self.systemState = self.button.wakeUpTest()
             self.tts.playStartInfo()
+            self.tts.reset()
+            self.userBus.reset()
+
+
 
             button_Thread = Thread(target=self.button.checkButton)  # 버튼 입력 시작
             busUpdate_Thread = Thread(target=self.bus.loopUpdate, args=(keyData.updateCycle,))  # 버스 정보 갱신 시작
@@ -518,6 +534,7 @@ class LoopSystem:
             busUpdate_Thread.join()
             TTS_Thread.join()
             Control_Thread.join()
+
 
 
             self.systemState = False
