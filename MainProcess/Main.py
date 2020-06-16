@@ -266,7 +266,6 @@ class busPlayList(TTS):
             self.busStopCommand = True
             self.StopBus = bus
             self.setPlayStop()
-            bus.state = 0
 
     def busStopPlay(self,bus):
         busState = bus.state
