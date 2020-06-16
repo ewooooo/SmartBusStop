@@ -14,7 +14,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>?</plateNo1>
+<plateNo1>경기70바1139</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -30,7 +30,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>?</plateNo1>
+<plateNo1>경기70바1864</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -46,7 +46,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>?</plateNo1>
+<plateNo1>경기70바5232</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -74,7 +74,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바1139</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -90,7 +90,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바1864</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -106,7 +106,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바5232</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -122,7 +122,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바1862</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -150,7 +150,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바1864</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -166,7 +166,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바5232</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -182,7 +182,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바1862</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -210,7 +210,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바1864</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -226,7 +226,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바5232</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -242,7 +242,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바1862</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -270,7 +270,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바1139</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -286,7 +286,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바5232</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -302,7 +302,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바1862</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -330,7 +330,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바1139</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -346,7 +346,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바5232</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -362,7 +362,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바1862</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -390,7 +390,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바1139</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -406,7 +406,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바1864</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -422,7 +422,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바1862</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -450,7 +450,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바1139</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
@@ -482,7 +482,7 @@ testText = [
 <locationNo2/>
 <lowPlate1>0</lowPlate1>
 <lowPlate2>0</lowPlate2>
-<plateNo1>경기70바2547</plateNo1>
+<plateNo1>경기70바1862</plateNo1>
 <plateNo2/>
 <predictTime1>4</predictTime1>
 <predictTime2/>
