@@ -1,8 +1,7 @@
-from Main import LoopSystem
 import RPi.GPIO as GPIO
 import time
 class MyButton:
-    LONGCLICKTIME = 1
+    LONGCLICKTIME = 0.8
     DOUBLECLICKTIME = 0.7
     ONECLICKTIME = 0.02
 
@@ -12,7 +11,6 @@ class MyButton:
         GPIO.setup(17, GPIO.OUT)   # set GPIO24 as an output (LED)  
 
         self.main = obj
-        print("makebutton")
         self.count = 0
 
     def checkButton(self):
@@ -40,7 +38,6 @@ class MyButton:
                                 doubleClickON = False
                                 longlock = True
                                 self.count = 0
-                            
 
                 else:
                     GPIO.output(17,0)
@@ -50,7 +47,6 @@ class MyButton:
                     if(self.count != 0):
                         delaytime = (time.time_ns() - self.count)/1000000000
                         if delaytime > self.ONECLICKTIME:
-                            # print("one" + str(delaytime))
                             if doubleClickON :
 
                                 self.doubleClick()
@@ -65,7 +61,6 @@ class MyButton:
                         if doubleClickCount != 0:
                             delaytime = (time.time_ns() - doubleClickCount)/1000000000
                             if delaytime > self.DOUBLECLICKTIME:
-                                # print("dou" + str(delaytime))
                                 self.oneClick()
                                 self.count = 0
                                 doubleClickCount = 0
@@ -73,23 +68,21 @@ class MyButton:
                                 longlock = False
 
                 if not self.main.systemState:
-                    print("endbutton")
                     return
-        finally :
+        finally:
             pass #GPIO.cleanup()
-
+1
     def oneClick(self):
         print("oneClick")
         nowbus = self.main.tts.getNowPlayBus()
         if not nowbus:
             self.main.tts.playButtonInfo(self.main.tts.status.error_inf_not)
         else:
-
             if self.main.userBus.add(nowbus):
                 self.main.tts.playButtonInfo(self.main.tts.status.button_2_Push_Succes,nowbus)
             else:
                 self.main.tts.playButtonInfo(self.main.tts.status.button_2_Push_Fail,nowbus)
-
+1
     def doubleClick(self):
         print("double")
         self.main.tts.busStateInfo()

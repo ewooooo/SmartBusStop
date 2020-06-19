@@ -2,13 +2,11 @@ import os
 import sys
 import pygame
 import urllib.request
-import time
 import keyData
 class TTS() :
     def __init__(self, client_id, client_secret):
         self.playlist = []
         pygame.mixer.init()
-
         url = "https://naveropenapi.apigw.ntruss.com/voice/v1/tts"
         self.request = urllib.request.Request(url)
         self.request.add_header("X-NCP-APIGW-API-KEY-ID", client_id)

@@ -1,11 +1,7 @@
-
-# import re
 import time
-
 from luma.led_matrix.device import max7219
 from luma.core.interface.serial import spi, noop
 from luma.core.render import canvas
-# from luma.core.virtual import viewport
 from luma.core.legacy import text, show_message
 from luma.core.legacy.font import proportional,TINY_FONT
 
@@ -83,9 +79,7 @@ class LED:
         elif testlen == 6:
             with canvas(self.device) as draw:
                 text(draw, (4, 2), number[0], fill=turnColor)
-
                 if number[1] == "l":
-
                     text(draw, (7, 12), number[1], fill=turnColor, font=proportional(TINY_FONT))
                 else:
                     text(draw, (4, 12), number[1], fill=turnColor)
@@ -105,8 +99,7 @@ class LED:
                     text(draw, (24, 22), number[5], fill=turnColor, font=proportional(TINY_FONT))
                 else:
                     text(draw, (21, 22), number[5], fill=turnColor)
-        # time.sleep(1)
-        # self.device.show()
+
     def SET_LED(self, number):
         self.SET_LED_set(number,1)
     def OFF_LED(self):

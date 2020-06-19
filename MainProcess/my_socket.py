@@ -13,8 +13,8 @@ class mySocket:
                 print("re test socket")
                 time.sleep(1)
                 continue
-    def Send_Recv(self,command):
 
+    def Send_Recv(self,command):
         #[2, (0_버스 발견못함 1_버스 발견됨 2_버스 정차함 -1_대기 시간초과(버싀나감)), 버스번호]
         buffer = '_________'
         buffer = command + buffer

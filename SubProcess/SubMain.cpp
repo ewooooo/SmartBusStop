@@ -79,24 +79,19 @@ private:
 	String processNumber(String text);
 
 public:
-	BusNumber(string fileName,int lsec, int bx, int by,int c) {
+	BusNumber(int lsec, int bx, int by,int c) {
 		limitSec = lsec;
 		boundX = bx;
 		boundY = by;
 		limitCount = c;
-		
 
-		//string file = "./" + fileName + ".mp4";
-		//fileNowName = file;
-		//cout << file << endl;
-		//cap = VideoCapture(file);
 		cap = VideoCapture(0);
 		if (!cap.isOpened()) {
 			cerr << "에러 - 카메라를 열 수 없습니다.\\\\n";
 			exit;
 		}
 
-		mask = imread("./mask"+fileName+".jpg", IMREAD_GRAYSCALE);
+		mask = imread("./mask.jpg", IMREAD_GRAYSCALE);
 		if ((mask.empty()) || mask.cols != cap.get(CAP_PROP_FRAME_WIDTH) || mask.rows != cap.get(CAP_PROP_FRAME_HEIGHT)) {
 			mask.release();
 		}
@@ -141,10 +136,8 @@ vector<vector<Rect>>  BusNumber::oneCarNumber(vector<vector<Point>> contours) {
 
 		if ((ratio >= minratio) && (ratio <= maxratio) && (rect.height >= alpha) && (rect.height <= beta)) {
 			Rect newrect(rect);
-			//momoRect newrect(rect);
 			rect_list[rectindex] = newrect;
 			rectindex++;
-			//rectangle(imagedebuger, Point(rect.br().x - rect.width, rect.br().y - rect.height), rect.br(), Scalar(0, 255, 0), 1);
 		}
 
 	}
@@ -180,10 +173,6 @@ vector<vector<Rect>>  BusNumber::oneCarNumber(vector<vector<Point>> contours) {
 					double Bgap = rect_list[idx].br().y - rect_list[idx2].br().y;
 
 					if (!(Rgap >= 0 && Lgap >= 0 && Tgap >= 0 && Bgap >= 0)) {
-
-						/*	Scalar color = Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255));
-							line(imagedebuger, Point(rect_list[idx].x + rect_list[idx].width / 2, rect_list[idx].y + rect_list[idx].height / 2),
-								Point(rect_list[idx2].x + rect_list[idx2].width / 2, rect_list[idx2].y + rect_list[idx2].height / 2), color, 2);*/
 
 						if (opRectList.empty()) {
 							opRectList.push_back(rect_list[idx]);
@@ -238,7 +227,6 @@ vector<vector<Rect>>  BusNumber::oneCarNumber(vector<vector<Point>> contours) {
 	resultGroupList.push_back(fiartGroup);
 
 	for (int idx = 0; idx < opRectList.size(); idx++) {
-		//rectangle(imagedebuger, opRectList[idx].tl(), opRectList[idx].br(), Scalar(idx * 3, 0, idx * 5), 1);
 		int test = 0;
 		for (int i = 0; i < resultGroupList.size(); i++) {
 
@@ -320,11 +308,6 @@ vector<Rect> BusNumber::doubleCarNumber(vector<vector<Rect>> resultGroupList) {
 	return GroupList;
 }
 
-
-
-
-
-
 String BusNumber::OCR(Mat image) {
 	Mat test = image.clone();
 	resize(test, test, Size(), 2, 2, INTER_NEAREST);
@@ -342,7 +325,6 @@ String BusNumber::OCR(Mat image) {
 
 void BusNumber::EraseSpace(char* inStr)
 {
-
 	char* p_dest = inStr; // p_dest 포인터도 ap_string 포인터와 동일한 메모리를 가리킨다.
 
 	// 문자열의 끝을 만날때까지 반복한다.
@@ -401,22 +383,9 @@ bool BusNumber::checkDim(Rect rect, Rect test) {
 int BusNumber::BusNumberRectList(int control) {
 	cap.read(inputimage);
 	if (inputimage.empty()) {
-		//cout << fileNowName << endl;
-		//cap = VideoCapture(fileNowName);
-		////cap = VideoCapture(0);
-		//if (!cap.isOpened()) {
-		//	cerr << "에러 - 카메라를 열 수 없습니다.\\\\n";
-		//	exit;
-		//}
-		//cap.read(inputimage);
-		//if (inputimage.empty()) {
-		//	cerr << "빈 영상이 캡쳐되었습니다.\\\\n";
-		//	exit;
-		//}
 		cerr << "빈 영상이 캡쳐되었습니다.\\\\n";
 		exit;
 	}
-	cout << "process" << endl;
 	imshow("inputimage", inputimage);
 	if (startTime != 0) {
 		if (((time(0) % 60) - startTime) > limitSec) {
@@ -441,7 +410,6 @@ int BusNumber::BusNumberRectList(int control) {
 		Mat mouseImage = inputimage.clone();
 		while (1) {
 			imshow("imagefirst", mouseImage);
-			//imshow("mask", mask);
 			vector<Point> pointList;
 			setMouseCallback("imagefirst", mouse_callback, reinterpret_cast<void*>(&mouseImage));
 			if (cv::waitKey(3) == 27)
@@ -484,8 +452,6 @@ int BusNumber::BusNumberRectList(int control) {
 			else {
 				resultNumber = 0;
 			}
-
-
 			if (control == 0) {	//차량번호만 원할시 0
 				beforeNumber = 0;
 				count = 0;
@@ -509,18 +475,15 @@ int BusNumber::BusNumberRectList(int control) {
 
 							if (checkDim(beforeRect, GroupList[i])) { // 이전 번호와 같고 거리를 만족한다면 카운드 ++
 								count++;
-								cout << "count" << count << endl;
 								if (count > limitCount) { //kyonsin a i gu bagguer
 									startTime = 0;
 									beforeNumber = 0;
 									count = 0;
-
 									return std::stoi(result.substr(result.length() - 4) + "1");
 								}
 								return resultNumber;
 							}
 							else {
-								cout << "recount" << count << endl;
 								count++;
 								beforeRect = GroupList[i];
 								continue;
@@ -575,19 +538,14 @@ int main()
 	int boundY = stoi(indata[3]);
 	int count = stoi(indata[4]);
 
-
-
 	Status status = Status();
-	BusNumber busTest = BusNumber("1",limitTime, boundX, boundY, count);
-
-	
+	BusNumber busTest = BusNumber(limitTime, boundX, boundY, count);
 
 	int sock = socket(AF_INET, SOCK_STREAM, 0);
 	int conn;
 
 	SA addr, clientAddr;
 	socklen_t len = sizeof(clientAddr);
-
 
 	int send_len;
 	int recv_len;
@@ -630,9 +588,6 @@ int main()
 					buffer[i] = '\0';
 				}
 			}
-
-			//cout << buffer << endl;
-
 
 			string data(buffer);
 			strcpy(buffer, "_________");
@@ -687,14 +642,6 @@ int main()
 				buffer[0] = status.status_reset[0];
 				buffer[1] = status.status_reset[1];
 			}
-			//else if (stoi(data)>2) {
-			//	buffer[0] = status.status_reset[0];
-			//	buffer[1] = status.status_reset[1];
-			//	busTest = BusNumber(data,limitTime, boundX, boundY, count);
-			//}
-
-			cout << buffer << endl;
-			cout << sizeof(buffer) << endl;
 			///////////////////////// Send ///////////////////////////////////
 			while (send_len = send(conn, buffer, sizeof(buffer), 0) == -1) {
 				if (errno == EINTR) {
@@ -710,31 +657,3 @@ int main()
 		close(conn);
 	}
 }
-
-
-//
-//int main()
-//{
-//	BusNumber busTest = BusNumber(30, 100, 100); //limitTime boundX boundY
-//
-//
-//	while (1) {
-//		try {
-//			cout << busTest.BusNumberRectList(1) << endl;
-//
-//		}
-//		catch (int exception) {
-//			cout << "error" << endl;
-//		}
-//		if (debug)
-//			imshow("imagedebuger", imageDebuger);
-//
-//		int key = waitKey(1);
-//		if (key == 97) // 소문자 a 누르면 mask 설정 모드
-//			mask.release();
-//		else if (key > 0)
-//			break;
-//	}
-//
-//	return 0;
-//}

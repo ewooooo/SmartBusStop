@@ -1,8 +1,6 @@
-from urllib.request import urlopen
 import xml.etree.ElementTree as ET
 import requests
 import time
-import testXMlL
 
 class Bus:
     def __init__(self, busNumber, routeId, plateNo, location):
@@ -16,9 +14,9 @@ class Bus:
         if self.routeId == routeId:
             self.plateNo = plateNo   # 버스 번호판
             self.location = location    # 도착정보 (가장빠른 버스 몇정거장 전인지)
+
     def __str__(self):
         return self.busNumber + "번, location: " + self.location +" state : " + str(self.state)
-
 
 
 class StationDict:
@@ -29,12 +27,10 @@ class StationDict:
         self.busDict = {}  # busNumber : Bus
         self.stationAPI()
 
-
-
     def stationAPI(self): #1234567890
 
         url = "http://openapi.gbis.go.kr/ws/rest/busarrivalservice/station?serviceKey="
-        url = url + self.serviceKey + "&stationId=" # 203000165&
+        url = url + self.serviceKey + "&stationId="
         url = url + self.stationId
         response = requests.get(url)
         text = response.text
@@ -61,9 +57,7 @@ class StationDict:
                     busNumber = self.routeAPI(routeId)
                     bus = Bus(busNumber, routeId, plateNo, location)
                     self.busDict[routeId] = bus
-                    self.addBusAction()
-                    # tts 추가해야함
-                    self.main.tts.addBusData(bus)
+                    self.addBusAction(bus)
 
                 else:
                     bus = self.busDict.get(routeId)
@@ -73,13 +67,6 @@ class StationDict:
             if not busCode in bufferBusCode:
                 bus = self.busDict.get(busCode)
                 bus.modifyBus(busCode, '-1', '-1')
-
-
-
-        # if self.kaCount < len(testXMlL.testText):
-        #     self.kaCount = self.kaCount + 1
-        # else:
-        #     self.kaCount = 1
 
     def routeAPI(self,routeId):
         url = "http://openapi.gbis.go.kr/ws/rest/busrouteservice/info?serviceKey="
@@ -96,31 +83,26 @@ class StationDict:
                     if bot.tag == "routeName":  # 노선번호
                         return bot.text
 
-    def addBusAction(self):
-        pass    # 버스가 추가 될때 액션
-            # play 리스트 추가 등
+    def addBusAction(self,bus):
+        self.main.tts.addBusData(bus)
 
     def loopUpdate(self, t):  # busDict update LOOP
         ledState = False
-        oneset = False
         startTime = time.time()
         while True:
             if not self.main.systemState:
                 print("endBusUpdate")
                 return
             if time.time()-startTime > t:
-
                 print("update bus")
                 self.stationAPI()
-
                 for bkey in self.busDict.keys():
                     bus = self.busDict.get(bkey)
                     print(bus.busNumber + " : " + bus.plateNo + "  " + bus.location)
                 print("=================")
 
                 startTime = time.time()
-
-
+            ################# LED Loop ########################
             playLEDlist = self.main.userBus.getEnterUserBus()
             if not playLEDlist:
                 if ledState:
@@ -130,17 +112,13 @@ class StationDict:
             else:
                 ledState = True
                 if len(playLEDlist) == 1:
-                    #if not oneset:
                     self.main.led.SET_LED(playLEDlist[0].busNumber)
-                     #   oneset = True
                 else:
                     for p in playLEDlist:
                         self.main.led.SET_LED(p.busNumber)
                         print("LED : " + p.busNumber)
                         time.sleep(3)
-
-
-
+            ###################################################
 
     def getBus(self,bus):
         return self.busDict.get(bus)
@@ -150,8 +128,6 @@ class StationDict:
             return True
         else :
             return False
-
-
 
 # if __name__ == "__main__":
 #     #b=StationDict("203000165","1234567890")

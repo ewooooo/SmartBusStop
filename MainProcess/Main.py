@@ -1,4 +1,3 @@
-import time
 from threading import Thread
 
 from my_socket import *
@@ -7,7 +6,6 @@ from Bus import *
 from TTS import *
 from LED import *
 import keyData
-
 
 class busPlayList(TTS):
     class status:
@@ -94,6 +92,7 @@ class busPlayList(TTS):
         self.busStopCommand = False
         self.StopBus = None
         self.endState = False
+
     def busPlay(self, bus):
         busState = int(bus.location)
         print(bus.busNumber+" : "+str(busState))
@@ -173,7 +172,6 @@ class busPlayList(TTS):
 
         while True: #버튼 안내메시지 출력
             if not self.main.systemState:
-                print("endTTS")
                 return
             if bool(self.playInfo) or bool(self.playInfoBus):
                 if bool(self.playInfoBus):
@@ -193,7 +191,6 @@ class busPlayList(TTS):
                 sbus = self.StopBus
                 self.busStopPlay(sbus)
                 self.StopBus = None
-
 
             elif self.busStatePlay: #등록된 버스 전보 보기
                 if not self.main.userBus.userBusList:
@@ -301,7 +298,6 @@ class busPlayList(TTS):
                 self.playStop = False
                 time.sleep(1)
         elif busState == -3:
-            print("bus pass tts")
             self.play(bus.busNumber)
             self.play(self.status.bus_no_stop)
             self.playwiat_1min()
@@ -375,7 +371,6 @@ class UserBus:
             return True
 
 
-
 class status:
     status_1_ActivateCamera = '1'
     status_0_EndCamera = '0'
@@ -401,9 +396,7 @@ class LoopSystem:
     def Control(self):
 
         stationState = status.status_0_EndCamera
-        cycleNumer = 0
         while True:
-
             EndTest = True
             if bool(self.bus.busDict):
                 for bkey in self.bus.busDict.keys():
@@ -417,7 +410,6 @@ class LoopSystem:
                 self.tts.errorNotBusInfo()
                 return
 
-
             if self.userBus.checkBus():  # 저장된 버스가 있고
 
                 if bool(self.userBus.userBusList):
@@ -428,11 +420,9 @@ class LoopSystem:
                                 bus = self.userBus.userBusList.get(bkey)
                                 if bus.state != 0:
                                     if bus.location != '1':
-                                        print(bus)
                                         bus.state = -3
                                         self.tts.busStopInfo(bus, -3)
                                         self.userBus.endDelete(bus)
-                                        print("Test4")
                                         if self.userBus.checkBus():
                                             stationState = status.status_1_ActivateCamera
                                         else:
@@ -440,21 +430,16 @@ class LoopSystem:
                         except:
                             print("error user bus get")
 
-
                 checkBusList = self.userBus.getEnterUserBus()
                 if bool(checkBusList):  # 버스 상태가 진입중인 요소가 없으면
                     # 카메라가 작동하지 않는 상태라면 영상을 켜서 정보를 달라고한다.
                     if stationState == status.status_0_EndCamera or stationState == status.status_1_ActivateCamera:
                         recvBuffer = self.kySocket.Send_Recv(stationState)
-                        #print(recvBuffer)
                         if recvBuffer[0] == status.status_1_ActivateCamera:
                             stationState = status.status_1_ActivateCamera
 
                             if recvBuffer[1] != None:
                                 for bus in checkBusList:
-                                    print("Test1")
-                                    #print(recvBuffer)
-                                    print(bus.plateNo[len(bus.plateNo) - 4:])
                                     if bus.plateNo[len(bus.plateNo) - 4:] == recvBuffer[1]:
                                         # tts 진입 정보 수정
                                         bus.state = -1  # 진입중 기다리자
@@ -463,27 +448,20 @@ class LoopSystem:
                         else:
                             print("통신실패")
 
-
                     elif stationState == status.status_2_BusWaiting:
                         recvBuffer = self.kySocket.Send_Recv(stationState)
-                        if recvBuffer[0] == status.status_2_BusWaiting:  # [2, (0_버스 발견못함 1_버스 발견됨 2_버스 정차함 -1_대기 시간초과(버싀나감)), 버스번호]
+                        if recvBuffer[0] == status.status_2_BusWaiting:
+                            # [2, (0_버스 발견못함 1_버스 발견됨 2_버스 정차함 -1_대기 시간초과(버싀나감)), 버스번호]
                             if recvBuffer[1] == '0':
                                 continue
                             elif recvBuffer[1] == '1':
                                 pass
-                            #     for bus in checkBusList:
-                            #         if bus.plateNo[len(bus.plateNo) - 4:] == recvBuffer[2]:
-                            #             # tts 진입 정보 수정
-                            #             bus.state = -1  # 진입중 기다리자
-                            #             self.tts.busStopInfo(bus, -1)
-                            #             stationState = status.status_2_BusWaiting
                             elif recvBuffer[1] == '2':
                                 for bus in checkBusList:
                                     if bus.plateNo[len(bus.plateNo) - 4:] == recvBuffer[2]:
                                         bus.state = -2
                                         self.tts.busStopInfo(bus, -2)
                                         self.userBus.endDelete(bus)
-                                        print("Test2")
                                         if self.userBus.checkBus():
                                             stationState = status.status_1_ActivateCamera
                                         else:
@@ -495,7 +473,6 @@ class LoopSystem:
                                         bus.state = -3
                                         self.tts.busStopInfo(bus, -3)
                                         self.userBus.endDelete(bus)
-                                        print("Test3")
                                         if self.userBus.checkBus():
                                             stationState = status.status_1_ActivateCamera
                                         else:
@@ -506,6 +483,7 @@ class LoopSystem:
                             print("통신실패1")
             if not self.systemState:
                 return
+
     def loopStart(self):
 
         while True:
@@ -531,14 +509,9 @@ class LoopSystem:
             TTS_Thread.join()
             Control_Thread.join()
 
-
-
             self.systemState = False
-            print("endProcess")
 
 
 if __name__ == "__main__":
-    print("Start")
-
     loop = LoopSystem()
     loop.loopStart()
