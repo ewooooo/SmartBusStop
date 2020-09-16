@@ -97,75 +97,25 @@ class busPlayList(TTS):
         busState = int(bus.location)
         print(bus.busNumber+" : "+str(busState))
         if busState == 1:
-            self.play(bus.busNumber)
-            self.play(self.status.bus_before_1_station)
-            self.playwiat_1min()
-            if self.playStop:
-                self.playStop = False
-                time.sleep(1)
+            self.playVoice(bus.busNumber,self.status.bus_before_1_station)
         elif busState == 2:
-            self.play(bus.busNumber)
-            self.play(self.status.bus_before_2_station)
-            self.playwiat_1min()
-            if self.playStop:
-                self.playStop = False
-                time.sleep(1)
+            self.playVoice(bus.busNumber,self.status.bus_before_2_station)
         elif busState == 3:
-            self.play(bus.busNumber)
-            self.play(self.status.bus_before_3_station)
-            self.playwiat_1min()
-            if self.playStop:
-                self.playStop = False
-                time.sleep(1)
+            self.playVoice(bus.busNumber,self.status.bus_before_3_station)
         elif busState == 4:
-            self.play(bus.busNumber)
-            self.play(self.status.bus_before_4_station)
-            self.playwiat_1min()
-            if self.playStop:
-                self.playStop = False
-                time.sleep(1)
+            self.playVoice(bus.busNumber,self.status.bus_before_4_station)
         elif busState == 5:
-            self.play(bus.busNumber)
-            self.play(self.status.bus_before_5_station)
-            self.playwiat_1min()
-            if self.playStop:
-                self.playStop = False
-                time.sleep(1)
+            self.playVoice(bus.busNumber,self.status.bus_before_5_station)
         elif busState == 6:
-            self.play(bus.busNumber)
-            self.play(self.status.bus_before_6_station)
-            self.playwiat_1min()
-            if self.playStop:
-                self.playStop = False
-                time.sleep(1)
+            self.playVoice(bus.busNumber,self.status.bus_before_6_station)
         elif busState == 7:
-            self.play(bus.busNumber)
-            self.play(self.status.bus_before_7_station)
-            self.playwiat_1min()
-            if self.playStop:
-                self.playStop = False
-                time.sleep(1)
+            self.playVoice(bus.busNumber,self.status.bus_before_7_station)
         elif busState == 8:
-            self.play(bus.busNumber)
-            self.play(self.status.bus_before_8_station)
-            self.playwiat_1min()
-            if self.playStop:
-                self.playStop = False
-                time.sleep(1)
+            self.playVoice(bus.busNumber,self.status.bus_before_8_station)
         elif busState == 9:
-            self.play(bus.busNumber)
-            self.play(self.status.bus_before_9_station)
-            self.playwiat_1min()
-            if self.playStop:
-                self.playStop = False
-                time.sleep(1)
+            self.playVoice(bus.busNumber,self.status.bus_before_9_station)
         elif busState == 10:
-            self.play(bus.busNumber)
-            self.play(self.status.bus_before_10_station)
-            self.playwiat_1min()
-            if self.playStop:
-                self.playStop = False
-                time.sleep(1)
+            self.playVoice(bus.busNumber,self.status.bus_before_10_station)
 
 
     def playLoop(self):
@@ -179,12 +129,8 @@ class busPlayList(TTS):
                 playInfo = self.playInfo
                 self.playInfo = None
                 self.playInfoBus = None
-                self.play(playInfo)
-                self.playwiat_1min()
+                self.playVoice(playInfo)
 
-                if self.playStop:
-                    self.playStop = False
-                    time.sleep(1)
 
             elif self.busStopCommand:
                 self.busStopCommand = False
@@ -194,19 +140,14 @@ class busPlayList(TTS):
 
             elif self.busStatePlay: #등록된 버스 전보 보기
                 if not self.main.userBus.userBusList:
-                    self.play(self.status.bus_state_error)
+                    self.playVoice(self.status.bus_state_error)
                 else:
                     keys =  self.main.userBus.userBusList.keys()
                     for key in keys:
                         bus = self.main.userBus.userBusList.get(key)
-                        self.play(bus.busNumber)
-                    self.play(self.status.bus_state)
-                    self.playwiat_1min()
+                        self.playVoice(bus.busNumber,self.status.bus_state)
                 self.busStatePlay = False
-                if self.playStop:
-                    self.playStop = False
-                    time.sleep(1)
-
+    
             else:
                 if bool(self.playlist):
 
@@ -258,9 +199,9 @@ class busPlayList(TTS):
         self.setPlayStop()
 
     def playStartInfo(self):
-        self.play(self.status.button_1_Info)
+        self.playVoice(self.status.button_1_Info)
     def errorNotBusInfo(self):
-        self.play(self.status.error_bus_not)
+        self.playVoice(self.status.error_bus_not)
 
     def busStopInfo(self,bus,state):
         if state == -1: #진입중이다
@@ -283,30 +224,16 @@ class busPlayList(TTS):
     def busStopPlay(self,bus):
         busState = bus.state
         if busState == -1:
-            self.play(bus.busNumber)
-            self.play(self.status.bus_arrive)
-            self.playwiat_1min()
-            if self.playStop:
-                self.playStop = False
-                time.sleep(1)
+            self.playVoice(bus.busNumber,self.status.bus_arrive)
+
         elif busState == -2: # 여기 수정하면 control 도 수정해야함
-            self.play(bus.busNumber)
-            self.play(self.status.bus_stop)
-            self.playwiat_1min()
+            self.playVoice(bus.busNumber,self.status.bus_stop)
             bus.state = 0
-            if self.playStop:
-                self.playStop = False
-                time.sleep(1)
         elif busState == -3:
-            self.play(bus.busNumber)
-            self.play(self.status.bus_no_stop)
-            self.playwiat_1min()
+            self.playVoice(bus.busNumber,self.status.bus_no_stop)
             bus.state = 0
-            if self.playStop:
-                self.playStop = False
-                time.sleep(1)
         if self.endState:
-            self.play(self.status.end_program)
+            self.playVoice(self.status.end_program)
             self.main.systemState = False
             return
 
