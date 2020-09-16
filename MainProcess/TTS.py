@@ -7,6 +7,9 @@ class TTS() :
     def __init__(self, client_id, client_secret):
         self.playlist = []
         pygame.mixer.init()
+        self.channel1 = pygame.mixer.Channel(0) # argument must be int
+        self.channel2 = pygame.mixer.Channel(1) # argument must be int
+
         url = "https://naveropenapi.apigw.ntruss.com/voice/v1/tts"
         self.request = urllib.request.Request(url)
         self.request.add_header("X-NCP-APIGW-API-KEY-ID", client_id)
@@ -15,8 +18,8 @@ class TTS() :
         self.playStop = False
     def tts_api(self, textdata, mp3FileName):   # mp3 받아오는 파일
 
-        fileName = "sound/" + mp3FileName + ".mp3"
-        data = "speaker=mijin&speed=2&text=" + textdata
+        fileName = "sound/" + mp3FileName + ".wav"
+        data = "speaker=mijin&format=wav&speed=2&text=" + textdata
 
         response = urllib.request.urlopen(self.request, data=data.encode('utf-8'))
 
@@ -32,26 +35,40 @@ class TTS() :
             print("Error Code:" + rescode)
             return False
 
-    def play(self,playName):
-        fileName = "sound/"+playName + ".mp3"
+    def play(self,playName,soundChannel=0):
 
-        pygame.mixer.music.load(fileName)
-        pygame.mixer.music.play()
+        if soundChannel==0:
+            sChannel = self.channel1
+        else :
+            sChannel = self.channel2
+
+        fileName = "sound/"+playName + ".wav"
+
+        playSound=pygame.mixer.Sound(fileName)
+        sChannel.play(playSound)
+
         if self.playStop:
             return
-        while pygame.mixer.music.get_busy() == True:
+        while sChannel.get_busy() == True:
             if self.playStop:
                 return
             continue
 
-    def playwiat_1min(self):
-        fileName = "./wait_1min.mp3"
+    def playwiat_1min(self,soundChannel=0):
 
-        pygame.mixer.music.load(fileName)
-        pygame.mixer.music.play()
+        if soundChannel==0:
+            sChannel = self.channel1
+        else :
+            sChannel = self.channel2
+
+        fileName = "./wait_1min.wav"
+
+        playSound=pygame.mixer.Sound(fileName)
+        sChannel.play(playSound)
+
         if self.playStop:
             return
-        while pygame.mixer.music.get_busy() == True:
+        while sChannel.get_busy() == True:
             if self.playStop:
                 return
             continue
@@ -88,10 +105,11 @@ if __name__ == "__main__":
     tts.addPlayData("버스가 정차하였습니다. 사고예방을 위해 차량 정차 소리와 문 열림 소리를 반드시 듣고 탑승해주세요", "stop")
 
 #
+    tts.play("4000",1)
+
+    tts.play("arrive",0)
     tts.play("4000")
 
     tts.play("arrive")
-    tts.play("4000")
-
-    tts.play("arrive")
-#     tts.play("pushbutton")
+    tts.playwiat_1min()
+    tts.play("pushbutton")
