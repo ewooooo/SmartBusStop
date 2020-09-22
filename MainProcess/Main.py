@@ -3,7 +3,7 @@ from threading import Thread
 from my_socket import *
 from myButton import *
 from Bus import *
-from TTS import *
+from baseModule.TTSModule import *
 from LED import *
 import keyData
 
