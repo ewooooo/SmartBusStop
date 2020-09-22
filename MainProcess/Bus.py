@@ -19,9 +19,8 @@ class Bus:
         return self.busNumber + "번, location: " + self.location +" state : " + str(self.state)
 
 
-class StationDict:
-    def __init__(self,obj,stationId,serviceKey):
-        self.main = obj
+class BaseStationDict:
+    def __init__(self,stationId,serviceKey):
         self.serviceKey = serviceKey
         self.stationId =stationId
         self.busDict = {}  # busNumber : Bus
@@ -84,22 +83,66 @@ class StationDict:
                         return bot.text
 
     def addBusAction(self,bus):
-        self.main.tts.addBusData(bus)
+        print("add bus"+bus)
+
+    def updateDataCheck(self):
+        for bkey in self.busDict.keys():
+            bus = self.busDict.get(bkey)
+            print(bus.busNumber + " : " + bus.plateNo + "  " + bus.location)
+        print("update Complate")
+
+    def EndCondition(self):
+        return False
 
     def loopUpdate(self, t):  # busDict update LOOP
         ledState = False
         startTime = time.time()
         while True:
-            if not self.main.systemState:
-                print("endBusUpdate")
+            if self.EndCondition():
                 return
+
             if time.time()-startTime > t:
                 print("update bus")
                 self.stationAPI()
-                for bkey in self.busDict.keys():
-                    bus = self.busDict.get(bkey)
-                    print(bus.busNumber + " : " + bus.plateNo + "  " + bus.location)
-                print("=================")
+                self.updateDataCheck()
+
+                startTime = time.time()
+
+    def getBus(self,bus):
+        return self.busDict.get(bus)
+
+    def checkBus(self,bus):
+        if bus in self.busDict:
+            return True
+        else :
+            return False
+
+
+class StationDict(BaseStationDict):
+    def __init__(self,obj,stationId,serviceKey):
+        self.main = obj
+        super(stationId,serviceKey)
+
+    def addBusAction(self,bus):
+        self.main.tts.addBusData(bus)
+    
+    def EndCondition(self):
+        if not self.main.systemState:
+            print("endBusUpdate")
+            return True
+        return False
+    
+    def loopUpdate(self, t):  # busDict update LOOP
+        ledState = False
+        startTime = time.time()
+        while True:
+            if self.EndCondition():
+                return
+
+            if time.time()-startTime > t:
+                print("update bus")
+                self.stationAPI()
+                self.updateDataCheck()
 
                 startTime = time.time()
             ################# LED Loop ########################
@@ -119,15 +162,6 @@ class StationDict:
                         print("LED : " + p.busNumber)
                         time.sleep(3)
             ###################################################
-
-    def getBus(self,bus):
-        return self.busDict.get(bus)
-
-    def checkBus(self,bus):
-        if bus in self.busDict:
-            return True
-        else :
-            return False
 
 # if __name__ == "__main__":
 #     #b=StationDict("203000165","1234567890")
