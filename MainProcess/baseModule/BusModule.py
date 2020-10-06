@@ -82,17 +82,20 @@ class BaseStationDict:
                     if bot.tag == "routeName":  # 노선번호
                         return bot.text
 
-    def addBusAction(self,bus):
-        print("add bus"+bus)
+    def addBusAction(self,bus): #기존에 없던 버스가 추가되었을때 실행할 액션
+        print("add bus : "+bus.busNumber)
 
-    def updateDataCheck(self):
+    def updateDataCheck(self):  #한 업데이트 사이클이 끝난후 업데이트된 데이터를 가지고 할 액션
+        self.printBusList()
+        print("update Complate")
+
+    def EndCondition(self):     #loopUpdate를 종료할 조건
+        return False
+
+    def printBusList(self):
         for bkey in self.busDict.keys():
             bus = self.busDict.get(bkey)
             print(bus.busNumber + " : " + bus.plateNo + "  " + bus.location)
-        print("update Complate")
-
-    def EndCondition(self):
-        return False
 
     def loopUpdate(self, t):  # busDict update LOOP
         ledState = False
@@ -108,11 +111,16 @@ class BaseStationDict:
 
                 startTime = time.time()
 
-    def getBus(self,bus):
+    def getBus(self,bus):   # busDict return
         return self.busDict.get(bus)
 
-    def checkBus(self,bus):
+    def checkBus(self,bus): # 해당 버스 routeID를 받아 버스가 있는지 확인
         if bus in self.busDict:
             return True
         else :
             return False
+
+
+if __name__ == "__main__":
+    b = BaseStationDict("203000165","1234567890")
+    b.loopUpdate(3)

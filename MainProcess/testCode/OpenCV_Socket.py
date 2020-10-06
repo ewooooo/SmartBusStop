@@ -1,5 +1,5 @@
 import socket
-import keyData
+
 class status:
     status_0_EndCamera ='0'
     status_1_ActivateCamera = '1'
