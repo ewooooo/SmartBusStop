@@ -1,31 +1,12 @@
 
 import time
-#from baseModule.ButtonModule import BaseButton
+from baseModule.ButtonModule import BaseButton
 
 
-# class MyButton(BaseButton):
-    # def __init__(self,obj):
-    #     BaseButton.__init__()
-    #     self.main = obj
-
-######################test#############
-class MyButton:
+class MyButton(BaseButton):
     def __init__(self,obj):
+        BaseButton.__init__(self)
         self.main = obj
-    def checkButton(self):
-        while True:
-            if self.EndCondition():
-                return
-            
-            time.sleep(10)
-            self.oneClick()
-            time.sleep(10)
-            self.longClick()
-    def wakeUpTest(self):
-        return True
-#########################################
-
-
 
     def EndCondition(self):
         if not self.main.systemState:
@@ -40,7 +21,11 @@ class MyButton:
         print("longClick")
         self.main.control.CancelBus()
        
-
+    def rotaryAction(self,value):
+        if value == 1:
+            self.main.control.nextBus()
+        elif value == -1:
+            self.main.control.beforeBus()
 
 
 

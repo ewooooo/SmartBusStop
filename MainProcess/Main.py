@@ -66,7 +66,7 @@ class Control:
         self.userBus = main.userBus
         self.main = main
         self.__playListSemaphore = Semaphore(1)       #멀티쓰레드로 인해 playlist 동시접근 에러를 방지하기 위한 세마포어
-        self.__playlist = []    #세마포어로 충돌 해결
+        self.playlist = []    #세마포어로 충돌 해결
         self.LEDPlayList = []
     
     def reset(self):
@@ -74,46 +74,52 @@ class Control:
 
     def addBusData(self, bus): 
         self.__playListSemaphore.acquire()
-        self.__playlist.append(bus)
+        self.playlist.append(bus)
         self.__playListSemaphore.release()
 
     def nextBus(self):
         self.__playListSemaphore.acquire()
-        if bool(self.__playlist):
-            self.__playlist.append(self.__playlist[0])
-            del self.__playlist[0]
-            self.TTS.playVoice(self.__playlist[0].busNumber,soundChannel=1)
+        if bool(self.playlist):
+            self.playlist.append(self.playlist[0])
+            del self.playlist[0]
+            self.TTS.playVoice(self.playlist[0].busNumber,soundChannel=1)
+            print(self.playlist[0].busNumber)
         else:
             self.TTS.playVoice(self.TTS.status.error_station_info,soundChannel=1)
         self.__playListSemaphore.release()
 
     def beforeBus(self):
         self.__playListSemaphore.acquire()
-        if bool(self.__playlist):
-            self.__playlist.insert(0,self.__playlist[-1])
-            del self.__playlist[-1]
-            self.TTS.playVoice(self.__playlist[0].busNumber,soundChannel=1)
+        if bool(self.playlist):
+            self.playlist.insert(0,self.playlist[-1])
+            del self.playlist[-1]
+            self.TTS.playVoice(self.playlist[0].busNumber,soundChannel=1)
+            print(self.playlist[0].busNumber)
         else:
             self.TTS.playVoice(self.TTS.status.error_station_info,soundChannel=1)
         self.__playListSemaphore.release()
 
     def SelectBus(self):
         self.__playListSemaphore.acquire()
-        if bool(self.__playlist):
-            if self.userBus.add(self.__playlist[0]):
-                self.TTS.playVoice(self.__playList[0].busNumber,self.TTS.status.button_2_Push_Succes,"현재",self.__playlist[0].location,self.TTS.status.bus_before_station,soundChannel=1)
+        if bool(self.playlist):
+            if self.userBus.add(self.playlist[0]):
+                self.TTS.playVoice(self.playlist[0].busNumber,self.TTS.status.button_2_Push_Succes,"현재",self.playlist[0].location,self.TTS.status.bus_before_station,soundChannel=1)
+                print("버스 등록 : " +str(self.playlist[0].busNumber))
             else:
-                self.TTS.playVoice(self.TTS.status.button_2_Push_Fail,"현재",self.__playlist[0].location,self.TTS.status.bus_before_station,soundChannel=1)
+                self.TTS.playVoice(self.TTS.status.button_2_Push_Fail,"현재",self.playlist[0].location,self.TTS.status.bus_before_station,soundChannel=1)
         else :
             self.main.tts.playVoice(self.main.tts.status.error_station_info,soundChannel=1)
+            print("이미 등록 : " +str(self.playlist[0].busNumber))
         self.__playListSemaphore.release()
 
     def CancelBus(self):
         bus = self.userBus.cancel()
         if not bus:
             self.TTS.playVoice(self.TTS.status.button_3_Cancel_Fail,soundChannel=1)
+            print("삭제 실패")
         else:
             self.TTS.playVoice(bus.busNumber,self.TTS.status.button_3_Cancel,soundChannel=1)
+            print("버스 삭제 : " + bus.busNumber)
 
 
     def SystemEnd(self,voice=None):
@@ -125,8 +131,10 @@ class Control:
 
     def CamCheckBus(self,busCarNumber):
         if busCarNumber != None:
-            if self.main.bus.CampareCarNumber(busCarNumber):
+            b=self.main.bus.CampareCarNumber(busCarNumber)
+            if bool(b):
                 self.TTS.playVoice(self.TTS.status.bus_stop,b.busNumber,"입니다")
+                print("버스 도칙" +str(b.busNumber))
 
     def LEDLoop(self):
         while True:
@@ -161,10 +169,12 @@ class LoopSystem:
         self.kySocket = mySocket(self,keyData.HOST,keyData.PORT)
         self.button = MyButton(self)
         self.tts = busPlayList(keyData.TTS_client_id, keyData.TTS_client_secret)
-        self.bus = StationDict(self, keyData.stationNumber, keyData.serviceKey)  # 순서 중요 tts -> bus
-        self.led = LED()
         self.userBus = UserBus()
         self.control = Control(self)
+        self.bus = StationDict(self, keyData.stationNumber, keyData.serviceKey)  # 순서 중요 tts -> userBus-> control -> bus
+        self.led = LED()
+        
+        
 
         self.systemState = False  # 시스템 상태(default : 대기)
 

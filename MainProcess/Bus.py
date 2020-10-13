@@ -23,16 +23,18 @@ class StationDict(BaseStationDict):
 
     def CampareCarNumber(self,CarNumber):
         for b in self.busDict.keys():
-            if b.plateNo[len(b.plateNo) - 4:] == CarNumber:
-                return True
-        return False
+            bus = self.busDict.get(b)
+            if bus.plateNo[len(bus.plateNo) - 4:] == CarNumber:
+                return bus
+        return None
    
     def checkState(self):
         result = True
         if not self.busDict :
             return result
-        for b in self.busDict.keys():
-            if b.location != -1:
+        for bus in self.busDict.keys():
+            b = self.busDict.get(bus)
+            if b.location != '-1':
                 result = False
         return result
 

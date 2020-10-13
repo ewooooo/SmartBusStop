@@ -18,7 +18,7 @@ class LED:
     def __init__(self):
         self.nowplay = None
     def SET_LED(self, number):
-        if nowplay != number:
+        if self.nowplay != number:
             self.nowplay = number
             print("LED pirnt : "+number)
     def OFF_LED(self):
