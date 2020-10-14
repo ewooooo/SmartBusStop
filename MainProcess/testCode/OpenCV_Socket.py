@@ -1,5 +1,5 @@
 import socket
-import keyData
+
 class status:
     status_0_EndCamera ='0'
     status_1_ActivateCamera = '1'
@@ -69,5 +69,5 @@ class ServerSocket:
 
 
 if __name__ == "__main__":
-    server = ServerSocket('192.168.0.5',12345)
+    server = ServerSocket('192.168.0.2',12345)
     server.Send_Recv()

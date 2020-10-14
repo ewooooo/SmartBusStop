@@ -1,42 +1,46 @@
-import socket
-import time
+from baseModule.SocketMoudule import baseSocket
 
-class mySocket:
-    def __init__(self,HOST,PORT):
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        while True:
-            try:
-                self.s.connect((HOST,PORT))
-                print("Connected")
-                break
-            except:
-                print("re test socket")
-                time.sleep(1)
-                continue
-
+class mySocket(baseSocket):
+    def __init__(self,main,h,p):
+        self.host = h
+        self.port = p
+        baseSocket.__init__(self,self.host,self.port)
+        self.main = main
     def Send_Recv(self,command):
-        #[2, (0_버스 발견못함 1_버스 발견됨 2_버스 정차함 -1_대기 시간초과(버싀나감)), 버스번호]
         buffer = '_________'
         buffer = command + buffer
-        self.s.send(buffer[0:10].encode())
-
-        mode = self.s.recv(10).decode("UTF-8")
+        mode = super().Send_Recv(buffer[0:10])
         mode = mode[0:9]
         mode = mode.replace('_','')
         SList = mode.split('|')
         print(SList)
+
         return SList
 
+    def loopSocket(self):
+        while True:
+            try:   
+                while True:
+                    if not self.main.systemState:
+                        print("endSocket")
+                        return
+                    recvBuffer=self.Send_Recv('0')
+                    if recvBuffer[0] == '1':
+                        self.main.control.CamCheckBus(recvBuffer[1])
+                        print(recvBuffer)
+                    else :
+                        print("통신에러")
+            except:
+                baseSocket.__init__(self,self.host,self.port)
+            
 
 
 
 
 if __name__ == "__main__":
     print("start")
+    st= mySocket(None,"127.0.0.1",12345)
+    st.loopSocket()
 
-    st= mySocket("192.168.0.32",12345)
-    while True:
-        a = input("입력 : ")
-        print(st.Send_Recv(a))
 
 
