@@ -1,118 +1,119 @@
+from rgbmatrix import graphics,RGBMatrix, RGBMatrixOptions
 import time
-from luma.led_matrix.device import max7219
-from luma.core.interface.serial import spi, noop
-from luma.core.render import canvas
-from luma.core.legacy import text, show_message
-from luma.core.legacy.font import proportional,TINY_FONT
 
-class baseLED:
+class baseLED():
     def __init__(self):
-        serial = spi(port=0, device=0, gpio=noop())
-        self.device = max7219(serial, width=32, height=32, block_orientation=-90, rotate=1)
+        
+        options = RGBMatrixOptions()
+        options.rows = 32
+        options.cols = 64
+        options.gpio_slowdown = 2
+        self.matrix = RGBMatrix(options = options)
+        self.offscreen_canvas = None
+              
 
-    def SET_LED_set(self,number,sel):
-        number = number.replace('-', 'l')
-
-        if sel == 1:
-            turnColor = "white"
-        else :
-            turnColor = "black"
-        testlen = len(number)
-
+    def SET_LED_set(self,my_text):
+        self.offscreen_canvas = self.matrix.CreateFrameCanvas()
+        font1 = graphics.Font()
+        font1.LoadFont("./5x7.bdf")
+        font = graphics.Font()
+        font.LoadFont("./10x20.bdf")
+        textColor = graphics.Color(255, 255, 0)
+        testlen = len(my_text)
+        
         if testlen == 1:
-            with canvas(self.device) as draw:
-                text(draw, (4, 4), number[0], fill=turnColor)
+            col=24
+            col2=34
+        elif testlen ==2:
+            col=16
+            col2=36
+        elif testlen ==3:
+            col=8
+            col2=38
+        elif testlen ==4:
+            col=4
+            col2=44
+        elif testlen ==5:
+            col=0
+            col2=50
+        elif testlen ==6:
+            col=1
+            col2=50
+            font = graphics.Font()
+            font.LoadFont("./8x13B.bdf")       
 
-        elif testlen == 2:
-            with canvas(self.device) as draw:
-                text(draw, (4, 4), number[0], fill=turnColor)
-                text(draw, (4, 20), number[1], fill=turnColor)
-
-        elif testlen == 3:
-            with canvas(self.device) as draw:
-                text(draw, (4, 4), number[0], fill=turnColor)
-                if number[1] == 'l':
-                    text(draw, (7, 20), number[1], fill=turnColor, font=proportional(TINY_FONT))
-                else:
-                    text(draw, (4, 20), number[1], fill=turnColor)
-                if number[2] == 'l':
-                    text(draw, (24, 4), number[2], fill=turnColor, font=proportional(TINY_FONT))
-                else:
-                    text(draw, (21, 4), number[2], fill=turnColor)
-
-        elif testlen == 4:
-            with canvas(self.device) as draw:
-                text(draw, (4, 4), number[0], fill=turnColor)
-                if number[1] == 'l':
-                    text(draw, (7, 20), number[1], fill=turnColor, font=proportional(TINY_FONT))
-                else:
-                    text(draw, (4, 20), number[1], fill=turnColor)
-                if number[2] == 'l':
-                    text(draw, (24, 4), number[2], fill=turnColor, font=proportional(TINY_FONT))
-                else:
-                    text(draw, (21, 4), number[2], fill=turnColor)
-                if number[3] == 'l':
-                    text(draw, (24, 20), number[3], fill=turnColor, font=proportional(TINY_FONT))
-                else:
-                    text(draw, (21, 20), number[3], fill=turnColor)
-
-        elif testlen == 5:
-            with canvas(self.device) as draw:
-                text(draw, (4, 2), number[0], fill=turnColor)
-                if number[1] == 'l':
-                    text(draw, (7, 12), number[1], fill=turnColor, font=proportional(TINY_FONT))
-                else:
-                    text(draw, (4, 12), number[1], fill=turnColor)
-                if number[2] == 'l':
-                    text(draw, (7, 22), number[2], fill=turnColor, font=proportional(TINY_FONT))
-                else:
-                    text(draw, (4, 22), number[2], fill=turnColor)
-                if number[3] == 'l':
-                    text(draw, (24, 3), number[3], fill=turnColor, font=proportional(TINY_FONT))
-                else:
-                    text(draw, (21, 3), number[3], fill=turnColor)
-                if number[4] == 'l':
-                    text(draw, (24, 12), number[4], fill=turnColor, font=proportional(TINY_FONT))
-                else:
-                    text(draw, (21, 12), number[4], fill=turnColor)
-
-        elif testlen == 6:
-            with canvas(self.device) as draw:
-                text(draw, (4, 2), number[0], fill=turnColor)
-                if number[1] == "l":
-                    text(draw, (7, 12), number[1], fill=turnColor, font=proportional(TINY_FONT))
-                else:
-                    text(draw, (4, 12), number[1], fill=turnColor)
-                if number[2] == 'l':
-                    text(draw, (7, 22), number[2], fill=turnColor, font=proportional(TINY_FONT))
-                else:
-                    text(draw, (4, 22), number[2], fill=turnColor)
-                if number[3] == 'l':
-                    text(draw, (24, 3), number[3], fill=turnColor, font=proportional(TINY_FONT))
-                else:
-                    text(draw, (21, 3), number[3], fill=turnColor)
-                if number[4] == 'l':
-                    text(draw, (24, 12), number[4], fill=turnColor, font=proportional(TINY_FONT))
-                else:
-                    text(draw, (21, 12), number[4], fill=turnColor)
-                if number[5] == 'l':
-                    text(draw, (24, 22), number[5], fill=turnColor, font=proportional(TINY_FONT))
-                else:
-                    text(draw, (21, 22), number[5], fill=turnColor)
-
-    def SET_LED(self, number):
-        self.SET_LED_set(number,1)
+        
+        graphics.DrawText(self.offscreen_canvas, font, col, 21, textColor, my_text)
+        
+        
+        graphics.DrawText(self.offscreen_canvas, font1, col2+6, 9, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+7, 9, textColor, ".")
+        
+        graphics.DrawText(self.offscreen_canvas, font1, col2+5, 10, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+7, 10, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+8, 10, textColor, ".")
+        
+        graphics.DrawText(self.offscreen_canvas, font1, col2+5, 11, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+7, 11, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+8, 11, textColor, ".")
+        
+        graphics.DrawText(self.offscreen_canvas, font1, col2+5, 12, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+7, 12, textColor, ".")
+        
+        graphics.DrawText(self.offscreen_canvas, font1, col2+5, 13, textColor, ".")
+    
+        graphics.DrawText(self.offscreen_canvas, font1, col2+2, 14, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+4, 14, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+5, 14, textColor, ".")
+        
+        graphics.DrawText(self.offscreen_canvas, font1, col2+1, 15, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+5, 15, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+7, 15, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+9, 15, textColor, ".")
+        
+        graphics.DrawText(self.offscreen_canvas, font1, col2, 16, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+5, 16, textColor, ".")
+        
+        graphics.DrawText(self.offscreen_canvas, font1, col2, 17, textColor, ".")
+        
+        graphics.DrawText(self.offscreen_canvas, font1, col2, 18, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+5, 18, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+7, 18, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+9, 18, textColor, ".")
+        
+        graphics.DrawText(self.offscreen_canvas, font1, col2, 19, textColor, ".")
+        
+        graphics.DrawText(self.offscreen_canvas, font1, col2+1, 20, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+6, 20, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+9, 20, textColor, ".")
+        
+        graphics.DrawText(self.offscreen_canvas, font1, col2+2, 21, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+4, 21, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+5, 21, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+9, 21, textColor, ".")
+        graphics.DrawText(self.offscreen_canvas, font1, col2+11, 21, textColor, ".")
+        
+        
+    def OFF_LED_set(self):
+        self.offscreen_canvas.Clear()
+        self.displaying = self.matrix.SwapOnVSync(self.offscreen_canvas)
+    
+    
+    def SET_LED(self,my_text):
+        self.SET_LED_set(my_text)
+        self.displaying = self.matrix.SwapOnVSync(self.offscreen_canvas)
+        
+        
     def OFF_LED(self):
-        self.SET_LED_set("000000",0)
+        self.OFF_LED_set()
 
 if __name__ == "__main__":
 
-    led = baseLED()
-    led.SET_LED("7-1")
-    time.sleep(3)
-    led.OFF_LED()
-    time.sleep(1)
-    led.SET_LED("7-1")
-    time.sleep(3)
-    led.OFF_LED()
-    led.device.cleanup()
+    run_text = baseLED()
+    while(True):
+        run_text.SET_LED("70000")
+        time.sleep(2)
+        run_text.OFF_LED()
+        time.sleep(2)
+    
+
