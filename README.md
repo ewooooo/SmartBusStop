@@ -307,6 +307,7 @@ Extraction Module Based on Raspberry Pi", Journal of Korea Multimedia Society Vo
 
 - #3 : LED 64x32 매트릭스 교체 (기존 64x16)
 - #10 : 필수폴더 및 보안파일 등록(MainProcess/sound 폴더생성, 보안파일 등록안함 readme 기재)
+- add readme.md
 
 ---
 
@@ -316,13 +317,13 @@ Extraction Module Based on Raspberry Pi", Journal of Korea Multimedia Society Vo
 
 - Main 알고리즘, 멀티 쓰레드, Socket, 모듈화, 버튼&로터리엔코더 모듈 개발, 번호판인식 알고리즘(OpenCV), 버튼 구조 설계(3D 프린팅), 음성동시재생
 
-이재빈(경기대학교)    [leejb8777@gmail.com](mailto:leejb8777@gmail.com)
+이재빈(경기대학교)    leejb8777@gmail.com
 
-- 버스정보 모듈 개발, Tesseract-OCR, 라즈비안 개발환경 구축(OpenCV, Tesseract-OCR), 전체 외관 설계, 테스트 시나리오, yolo DNN(진행중)
+- 버스정보 모듈 개발, Tesseract-OCR, 라즈비안 개발환경 구축(OpenCV, Tesseract-OCR), 전체 외관 설계, 테스트 시나리오
 
-이경신(경기대학교)    [amablove1126@naver.com](mailto:amablove1126@naver.com)
+이경신(경기대학교)    amablove1126@naver.com
 
-- LED 모듈 개발, Socket, 번호판인식 알고리즘(OpenCV), 번호판 Dataset 생성(OpenCV)(진행중)
+- LED 모듈 개발, Socket, 번호판인식 알고리즘(OpenCV)
 
 서유빈(경기대학교)    dbqls0246@gmail.com
 
