@@ -44,61 +44,35 @@
 ### SubProcess/
 
 - RaspberryPi 4 (OS : Raspbian)
-- C++
-- OpenCV 4.3.0 / Tesseract-OCR
+- python
+- OpenCV 4.3.0 / Tesseract-OCR / DNN(YOLOv4)
 - TCP Socket Commuication (Wifi)
 
 ```powershell
 # OpenCV
-  # cmake를 이용한 설치 필요 4.3.0 (생략)
+pip3 install opencv-python
 # Tesseract-OCR
-sudo apt-get install tesseract-ocr
-sudo apt-get install tesseract-ocr-eng
-sudo apt-get install tesseract-ocr-kor
-sudo apt-get install tesseract-ocr-script-hang
+sudo apt install tesseract-ocr tesseract-ocr-script-hang tesseract-ocr-script-hang-vert
+sudo pip3 install pytesseract
 
-# Compile
-g++ SubMain.cpp -o substart $(pkg-config opencv4 tesseract --libs --cflags)
 # Start SubProcess
-./substart
+python3 SubMain.py
 
 ```
 
-- 파라메타 수정 - dat 파일
-
-### 1. 번호판 검출 OpenCV
 
 ![README1.png](README/3.png)
 
-번호판 검출은 Sub RaspberryPi에 연결된 웹캠으로 촬영된 버스 정면 영상에서 번호판 위치 및 크기 비율 특성을 이용하여 OpenCV 기반 영상처리로 검출
+번호판 검출은 Sub RaspberryPi에 연결된 웹캠으로 촬영된 버스 정면 영상에서 DNN 딥러닝을 이용하여 검출
+
+  참조 : https://github.com/SumanSudhir/Vehicle-and-Its-License-Plate-detection.git
 
 ![README1.png](README/4.png)
+검출된 번호판 이미지는 Tesseract-OCR 입력으로 사용됨
 
-[http://law.go.kr/행정규칙/자동차 등록번호판 등의 기준에 관한 고](http://law.go.kr/%ED%96%89%EC%A0%95%EA%B7%9C%EC%B9%99/%EC%9E%90%EB%8F%99%EC%B0%A8%20%EB%93%B1%EB%A1%9D%EB%B2%88%ED%98%B8%ED%8C%90%20%EB%93%B1%EC%9D%98%20%EA%B8%B0%EC%A4%80%EC%97%90%20%EA%B4%80%ED%95%9C%20%EA%B3%A0%EC%8B%9C)
+이미지 기울기에 따라 OCR 성능 차이나므로 기울기 보정 필요
 
-[[별표 6] 자동차 운수 사업용 대형 등록 번호판(440-220)](https://law.go.kr/LSW//admRulInfoP.do?chrClsCd=010201&admRulSeq=2100000188560#AJAX)
-
-자동차 운수 사업용 대형 등록 번호판(노란색) 규칙에  따라 번호판의 글자간 위치 및 크기 비율 조건으로 번호판 글자들이 줄 단위로 그룹화 한 후 2줄에 대한 그룹화를 진행하여 번호판을 검출
-
-![README1.png](README/5.png)
-
-- 전처리→ 윤곽검출→위치, 크기비율특성→1줄 그룹화→2줄그룹화 →OCR
-
-### 2. 글자검출 Tesseract-OCR
-
-![README1.png](README/6.png)
-
- 번호판 검출로 얻은 이미지에 번호판영역은 Tesseract-OCR 입력으로 전달
-
- 검출된 번호판 글자는 정확도 개선을 위해 불필요한 글자 및 공백을 제거
-
- 최종 검출된 문자는 공공데이터 포털에서 제공하는 정류장 버스도착정보(XML) 데이터와 비교
-
-- 현재 DNN을 이용한 방법으로 번호판 검출을 개선 중
-
-    [https://github.com/ewooooo/BusLicensePlate_Detection](https://github.com/ewooooo/BusLicensePlate_Detection)
-
-    [https://lab.hanium.or.kr/20_pf008/buslicenseplate_detection](https://lab.hanium.or.kr/20_pf008/buslicenseplate_detection)
+번호판 직선 검출 -> 직선 각도 계산 -> 이미지 회전(수평)
 
 ---
 
