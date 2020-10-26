@@ -68,6 +68,7 @@ python3 SubMain.py
   참조 : https://github.com/SumanSudhir/Vehicle-and-Its-License-Plate-detection.git
 
 ![README1.png](README/4.png)
+
 검출된 번호판 이미지는 Tesseract-OCR 입력으로 사용됨
 
 이미지 기울기에 따라 OCR 성능 차이나므로 기울기 보정 필요
