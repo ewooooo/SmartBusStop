@@ -13,7 +13,7 @@ class ServerSocket:
         print('Socket awaiting messages')
         (self.conn, self.addr) = s.accept()
         print('Connected')
-        self.__busSystem = self.busCarNumberDetect(0)
+        self.__busSystem = busCarNumberDetect('test.mp4')
 
     def Send_Recv(self):
         while True:
@@ -22,11 +22,12 @@ class ServerSocket:
             print(data)
             replyData = []
             if data == '0':
-                replyData.append(status.status_1_ActivateCamera)
+                replyData.append('1')
 
                 #imageRetrunData = input("입력1 :") # 카메라 정보에서 리턴
-                imageRetrunData = self.__busSystem.detect()
-                replyData.append(imageRetrunData)
+                imageReturnData = (self.__busSystem.detect())
+                for data in imageReturnData:
+                    replyData.append(data)
 
             reply = ''
             for r in replyData:
@@ -37,5 +38,5 @@ class ServerSocket:
 
 
 if __name__ == "__main__":
-    server = ServerSocket('192.168.0.2',12345)
+    server = ServerSocket('192.168.86.128',12345)
     server.Send_Recv()
