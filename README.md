@@ -335,7 +335,7 @@ Extraction Module Based on Raspberry Pi", Journal of Korea Multimedia Society Vo
 
 서유빈(경기대학교)    dbqls0246@gmail.com
 
-- TTS(음성 생성&재생) 모듈 개발, Tesseract-OCR, 글자필터링, python-c 바인딩, yolo DNN(진행중)
+- TTS(음성 생성&재생) 모듈 개발, Tesseract-OCR, 글자필터링, python-c 바인딩, yolo DNN
 
 ---
 
