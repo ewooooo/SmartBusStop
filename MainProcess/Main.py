@@ -140,9 +140,12 @@ class Control:
     def CamCheckBus(self,busCarNumber):
         if busCarNumber != None:
             b=self.main.bus.CampareCarNumber(busCarNumber)
+            
             if bool(b):
                 self.TTS.playVoice(self.TTS.status.bus_stop,b.busNumber,"입니다")
+            
                 print("버스 도칙" +str(b.busNumber))
+
                 if self.userBus.checkBus(b):
                     busDel_Thread = Thread(target=self.__enterBusDelete,args=(b))  # LED를 위해 조금 기다렸다가 삭제
                     busDel_Thread.start()
@@ -212,7 +215,7 @@ class LoopSystem:
             
             self.userBus.reset()
             self.control.reset()
-            
+            self.bus.reset()
 
             button_Thread = Thread(target=self.button.checkButton)  # 버튼 입력 시작
             busUpdate_Thread = Thread(target=self.bus.loopUpdate, args=(20,))  # 버스 정보 갱신 시작
