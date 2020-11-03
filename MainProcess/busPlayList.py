@@ -40,7 +40,7 @@ class busPlayList(TTS):
         self.tts_api( "버스가 등록되었습니다. 등록하신 버스가 아니시면 버튼을 길게 눌러주세요",self.status.button_2_Push_Succes)
         self.tts_api("버스가 이미등록되어있습니다.",self.status.button_2_Push_Fail)
         self.tts_api("버스가 등록취소되었습니다",self.status.button_3_Cancel)
-        self.tts_api( "취소할 버스가 없습니다",self.status.button_3_Cancel_Fail)
+        self.tts_api( "취소할 버스가 없습니다. 손잡이를 돌려 버스를 선택하고 버튼을 눌러 등록해주세요.",self.status.button_3_Cancel_Fail)
         self.tts_api("정거장 전에 있습니다",self.status.bus_before_station)
         self.tts_api("버스가 잠시후에 도착합니다",self.status.bus_arrive)
         self.tts_api("현재 정류장에 진입하는 버스는 ",self.status.bus_stop)

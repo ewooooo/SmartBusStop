@@ -12,6 +12,7 @@ class UserBus:
 
     def __init__(self):
         self.userBusList = []
+        self.userBusList_play = []
         self.recentBus = None
         self.userSemaphore = Semaphore(1)
     def reset(self):
@@ -23,6 +24,7 @@ class UserBus:
             self.recentBus = bus
             self.userSemaphore.acquire()
             self.userBusList.append(bus)
+            self.userBusList_play.append(bus)
             self.userSemaphore.release()
             return True
         else:
@@ -30,12 +32,12 @@ class UserBus:
 
     def cancel(self):  # userbus del
         self.userSemaphore.acquire()
-        if self.recentBus != None:
-            returnData = self.recentBus
-            self.userBusList.remove(self.recentBus)
-            self.recentBus = None
+        if bool(self.userBusList):
+            bus = self.userBusList[-1]
+            self.userBusList.remove(bus)
+            self.userBusList_play.remove(bus)
             self.userSemaphore.release()
-            return returnData
+            return bus
         else:
             self.userSemaphore.release()
             return None
@@ -43,6 +45,7 @@ class UserBus:
     def endDelete(self, bus):
         self.userSemaphore.acquire()
         if self.userBusList.remove(bus):
+            self.userBusList_play.remove(bus)
             self.userSemaphore.release()
             return True
         else:
@@ -52,13 +55,18 @@ class UserBus:
     def nextBus(self):
         self.userSemaphore.acquire()
         nextbus = None
-        if bool(self.userBusList):
-            if int(self.userBusList[0].location) <= 1:
-                nextbus = self.userBusList[0]
-            self.userBusList.append(self.userBusList[0])
-            del self.userBusList[0]
+        if bool(self.userBusList_play):
+            if int(self.userBusList_play[0].location) <= 1:
+                nextbus = self.userBusList_play[0]
+            self.userBusList_play.append(self.userBusList_play[0])
+            del self.userBusList_play[0]
         self.userSemaphore.release()
         return nextbus
+    def checkBus(self, bus):
+        if bus in self.userBusList:
+            return True
+        else :
+            return False
             
 class Control:
     def __init__(self,main):
@@ -123,11 +131,11 @@ class Control:
 
 
     def SystemEnd(self,voice=None):
-        self.main.systemState = False
-        self.TTS.setPlayStop(0)
-        self.TTS.setPlayStop(1)
-        self.TTS.playVoice(voice,self.TTS.status.end_program)
-        return
+        if self.main.systemState :
+            self.main.systemState = False
+            self.TTS.setPlayStop(0)
+            self.TTS.setPlayStop(1)
+            self.TTS.playVoice(voice,self.TTS.status.end_program)
 
     def CamCheckBus(self,busCarNumber):
         if busCarNumber != None:
@@ -135,6 +143,20 @@ class Control:
             if bool(b):
                 self.TTS.playVoice(self.TTS.status.bus_stop,b.busNumber,"입니다")
                 print("버스 도칙" +str(b.busNumber))
+                if self.userBus.checkBus(b):
+                    busDel_Thread = Thread(target=self.__enterBusDelete,args=(b))  # LED를 위해 조금 기다렸다가 삭제
+                    busDel_Thread.start()
+
+                
+    def __enterBusDelete(self,bus):
+        time.sleep(10)
+        if self.userBus.endDelete(bus) : 
+            print("버스 진입 음성출력 성공")
+
+            if not self.userBus.nextBus():
+                self.SystemEnd(self.TTS.status.error_bus_not)
+                
+
 
     def LEDLoop(self):
         while True:
@@ -184,10 +206,13 @@ class LoopSystem:
             # 시스템 자고 있으면 깨우기(버튼 체크)_버튼 눌리면일어남
             while not self.systemState:
                 self.systemState = self.button.wakeUpTest()
-            self.tts.playVoice(self.tts.status.button_1_Info)
 
+            self.tts.playVoice(self.tts.status.button_1_Info,soundChannel=0)
+            self.TTS.setPlayStop(1)
+            
             self.userBus.reset()
             self.control.reset()
+            
 
             button_Thread = Thread(target=self.button.checkButton)  # 버튼 입력 시작
             busUpdate_Thread = Thread(target=self.bus.loopUpdate, args=(20,))  # 버스 정보 갱신 시작
