@@ -4,9 +4,19 @@
 
 ### 작품명 : Visual Station
 
+
+
 ---
 
-![README/1.png](README/1.png)
+### YouTube 영상 
+
+
+[![Video Label](https://img.youtube.com/vi/a2DLfB-0HCw/0.jpg)](https://www.youtube.com/watch?v=a2DLfB-0HCw) 
+    <- Click 
+  
+---
+
+
 
   시각장애인에 버스 이용 실태를 분석하여 문제점을 찾고 버스편의를 개선하는 프로젝트로 신호등에 있는 버튼을 버스정류장에 적용하여 탑승 버스를 등록받고 버스기사에게 LED 전광판으로 정차를 대신 유도해주며, 버스가 집입할 때 시각장애이인의 눈을 대신하여 버스를 영상을 식별하고 음성으로 안내하는 프로젝트.
 
@@ -26,7 +36,7 @@
 ---
 
 ## 프로젝트 내용
-
+![README/1.png](README/1.png)
 ![README1.png](README/2.png)
 
 ### 영상인식 정류장 진입 버스 안내
