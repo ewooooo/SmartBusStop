@@ -9,7 +9,9 @@ class MyButton:
                     return
             time.sleep(10)
             self.oneClick()
-            time.sleep(3)
+            time.sleep(5)
+            self.oneClick()
+            time.sleep(5)
             self.longClick()
             time.sleep(3)
             self.rotaryAction(1)

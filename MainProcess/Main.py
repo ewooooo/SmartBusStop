@@ -24,7 +24,7 @@ class UserBus:
         self.recentBus = None
 
     def add(self, bus):  # userbus add
-        if not bus.routeId in self.userBusList :
+        if not bus in self.userBusList :
             self.recentBus = bus
             self.userSemaphore.acquire()
             self.userBusList.append(bus)
@@ -48,19 +48,19 @@ class UserBus:
 
     def endDelete(self, bus):
         self.userSemaphore.acquire()
-        if self.userBusList.remove(bus):
-            self.userBusList_play.remove(bus)
-            self.userSemaphore.release()
-            return True
-        else:
-            self.userSemaphore.release()
-            return False
+        if bus in self.userBusList:
+            if self.userBusList.remove(bus):
+                self.userBusList_play.remove(bus)
+                self.userSemaphore.release()
+                return True
+        self.userSemaphore.release()
+        return False
 
     def nextBus(self):
         self.userSemaphore.acquire()
         nextbus = None
         if bool(self.userBusList_play):
-            if int(self.userBusList_play[0].location) <= 1:
+            if int(self.userBusList_play[0].location) == 1:
                 nextbus = self.userBusList_play[0]
             self.userBusList_play.append(self.userBusList_play[0])
             del self.userBusList_play[0]
@@ -79,11 +79,7 @@ class Control:
         self.main = main
         self.__playListSemaphore = Semaphore(1)       #멀티쓰레드로 인해 playlist 동시접근 에러를 방지하기 위한 세마포어
         self.playlist = []    #세마포어로 충돌 해결
-        self.LEDPlayList = []
-    
-    def reset(self):
-        self.LEDPlayList = []
-
+   
     def addBusData(self, bus): 
         self.__playListSemaphore.acquire()
         self.playlist.append(bus)
@@ -160,8 +156,8 @@ class Control:
         if self.userBus.endDelete(bus) : 
             print("버스 진입 음성출력 성공")
 
-            if not self.userBus.nextBus():
-                self.SystemEnd(self.TTS.status.error_bus_not)
+        if not self.userBus.nextBus():
+            self.SystemEnd(self.TTS.status.error_bus_not)
                 
 
 
@@ -171,9 +167,8 @@ class Control:
                 print("EndLEDLoop")
                 return
             bus = self.userBus.nextBus()
+            
             if bus :
-                if bus not in self.LEDPlayList:
-                    self.LEDPlayList.append(bus)
                 self.main.led.SET_LED(bus.busNumber)
                 time.sleep(3)
             else :
@@ -181,14 +176,7 @@ class Control:
             
             if self.main.bus.checkState():
                 self.SystemEnd(self.TTS.status.error_bus_not)
-
-
-    def checkdel(self):
-        if bool(self.LEDPlayList) :
-            for b in self.LEDPlayList:
-                if int(b.location) > 1:
-                    if self.userBus.endDelete(b):
-                        self.LEDPlayList.remove(b)
+         
 
 
 
@@ -222,7 +210,6 @@ class LoopSystem:
                 self.tts.setPlayStop(1)
                 
                 self.userBus.reset()
-                self.control.reset()
                 self.bus.reset()
 
                 button_Thread = Thread(target=self.button.checkButton)  # 버튼 입력 시작

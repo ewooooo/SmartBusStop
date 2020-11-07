@@ -25,7 +25,6 @@ class StationDict(BaseStationDict):
     
     def updateDataCheck(self):  
         self.printBusList()
-        self.main.control.checkdel()
         print("update Complate")
 
     def CampareCarNumber(self,CarNumber):
