@@ -36,13 +36,20 @@ class UserBus:
 
     def cancel(self):  # userbus del
         self.userSemaphore.acquire()
-        if bool(self.userBusList):
-            bus = self.userBusList[-1]
-            self.userBusList.remove(bus)
-            self.userBusList_play.remove(bus)
+        if bool(self.userBusList) and bool(self.recentBus):
+            bus = None
+            if self.recentBus in self.userBusList:
+                bus = self.recentBus
+                self.userBusList.remove(self.recentBus)
+                self.userBusList_play.remove(self.recentBus)
+            if bool(self.userBusList):
+                self.recentBus = self.userBusList[-1]
+            else:
+                self.recentBus = None
             self.userSemaphore.release()
             return bus
         else:
+            self.recentBus = None
             self.userSemaphore.release()
             return None
 
@@ -147,15 +154,15 @@ class Control:
                 print("버스 도칙" +str(b.busNumber))
 
                 if self.userBus.checkBus(b):
-                    busDel_Thread = Thread(target=self.__enterBusDelete,args=(b))  # LED를 위해 조금 기다렸다가 삭제
+                    busDel_Thread = Thread(target=self.__enterBusDelete,args=(b,))  # LED를 위해 조금 기다렸다가 삭제
                     busDel_Thread.start()
 
                 
     def __enterBusDelete(self,bus):
+        print("버스 진입 음성출력 성공")
         time.sleep(10)
-        if self.userBus.endDelete(bus) : 
-            print("버스 진입 음성출력 성공")
-
+        self.userBus.endDelete(bus)
+            
         if not self.userBus.nextBus():
             self.SystemEnd(self.TTS.status.error_bus_not)
                 
@@ -226,7 +233,7 @@ class LoopSystem:
                 busUpdate_Thread.join()
                 LED_Thread.join()
                 Socket_Thread.join()
-                
+                print("sleepSystem")
                 self.systemState = False
 
         except(KeyboardInterrupt, SystemExit):
