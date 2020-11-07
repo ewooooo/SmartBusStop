@@ -27,7 +27,7 @@ class TTS() :
     def tts_api(self, textdata, mp3FileName):   # mp3 받아오는 파일
 
         fileName =project_dir+ "/sound/" + mp3FileName + ".wav"
-        data = "speaker=mijin&format=wav&speed=2&text=" + textdata
+        data = "speaker=mijin&format=wav&speed=-3&text=" + textdata
 
         response = urllib.request.urlopen(self.request, data=data.encode('utf-8'))
 
@@ -111,7 +111,10 @@ class TTS() :
     def getChannelState(self):
         return self.play_state
 
-
+    def SetChannelVolume(self,value,soundChannel=0):
+        sChannel = pygame.mixer.Channel(soundChannel)
+        print(sChannel.get_volume())
+        sChannel.set_volume(sChannel.get_volume()+value)
 
 
 if __name__ == "__main__":

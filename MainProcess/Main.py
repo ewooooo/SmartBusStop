@@ -86,6 +86,7 @@ class Control:
         self.main = main
         self.__playListSemaphore = Semaphore(1)       #멀티쓰레드로 인해 playlist 동시접근 에러를 방지하기 위한 세마포어
         self.playlist = []    #세마포어로 충돌 해결
+        self.TTS.SetChannelVolume(-0.5,soundChannel=1)
    
     def addBusData(self, bus): 
         self.__playListSemaphore.acquire()
