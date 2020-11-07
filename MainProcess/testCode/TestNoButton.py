@@ -7,7 +7,7 @@ class MyButton:
         while True:
             if not self.main.systemState:
                     return
-            time.sleep(10)
+            #time.sleep(10)
             self.oneClick()
             time.sleep(5)
             self.oneClick()

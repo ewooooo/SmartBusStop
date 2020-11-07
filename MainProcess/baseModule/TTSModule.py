@@ -108,7 +108,8 @@ class TTS() :
         self.playStop = (False,-1)
  
 
-
+    def getChannelState(self):
+        return self.play_state
 
 
 

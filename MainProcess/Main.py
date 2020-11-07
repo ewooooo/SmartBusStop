@@ -216,6 +216,9 @@ class LoopSystem:
                 self.tts.playVoice(self.tts.status.button_1_Info,soundChannel=0)
                 self.tts.setPlayStop(1)
                 
+                while self.tts.getChannelState()[0] or self.tts.getChannelState()[1]:
+                    pass
+
                 self.userBus.reset()
                 self.bus.reset()
 
