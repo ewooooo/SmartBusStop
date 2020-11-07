@@ -1,3 +1,5 @@
+import argparse
+
 from threading import Thread, Semaphore
 
 from my_socket import mySocket
@@ -6,6 +8,8 @@ from Bus import StationDict
 
 from myButton import MyButton
 from LED import LED
+# from testCode.TestNoButton import MyButton
+# from testCode.TestNoLED import LED
 import keyData
 
 class UserBus:
@@ -187,54 +191,73 @@ class Control:
                         self.LEDPlayList.remove(b)
 
 
+
+
+
 class LoopSystem:
 
-    def __init__(self):
+    def __init__(self,args):
         
-        self.kySocket = mySocket(self,keyData.HOST,keyData.PORT)
+        self.kySocket = mySocket(self,args.socket_ip,args.socket_port) #arg port 넣기
         self.button = MyButton(self)
         self.tts = busPlayList(keyData.TTS_client_id, keyData.TTS_client_secret)
         self.userBus = UserBus()
         self.control = Control(self)
-        self.bus = StationDict(self, keyData.stationNumber, keyData.serviceKey)  # 순서 중요 tts -> userBus-> control -> bus
+        if not args.bus_url :
+            self.bus = StationDict(self, args.stationID, keyData.serviceKey)  # 순서 중요 tts -> userBus-> control -> bus
+        else:
+            self.bus = StationDict(self, args.stationID, keyData.serviceKey, args.bus_url)  # url 변경 필요시
         self.led = LED()
         
-        
-
+        self.updateCycle = args.updateCycle
+    
         self.systemState = False  # 시스템 상태(default : 대기)
 
     def loopStart(self):
+        try :
 
-        while True:
-            # 시스템 자고 있으면 깨우기(버튼 체크)_버튼 눌리면일어남
-            while not self.systemState:
-                self.systemState = self.button.wakeUpTest()
+            while True:
+                # 시스템 자고 있으면 깨우기(버튼 체크)_버튼 눌리면일어남
+                while not self.systemState:
+                    self.systemState = self.button.wakeUpTest()
 
-            self.tts.playVoice(self.tts.status.button_1_Info,soundChannel=0)
-            self.TTS.setPlayStop(1)
-            
-            self.userBus.reset()
-            self.control.reset()
-            self.bus.reset()
+                self.tts.playVoice(self.tts.status.button_1_Info,soundChannel=0)
+                self.TTS.setPlayStop(1)
+                
+                self.userBus.reset()
+                self.control.reset()
+                self.bus.reset()
 
-            button_Thread = Thread(target=self.button.checkButton)  # 버튼 입력 시작
-            busUpdate_Thread = Thread(target=self.bus.loopUpdate, args=(20,))  # 버스 정보 갱신 시작
-            LED_Thread = Thread(target=self.control.LEDLoop)  # 음성 안내 시작
-            Socket_Thread = Thread(target=self.kySocket.loopSocket)  # 연산 시작
-            print("System Start")
-            button_Thread.start()
-            busUpdate_Thread.start()
-            LED_Thread.start()
-            Socket_Thread.start()
+                button_Thread = Thread(target=self.button.checkButton)  # 버튼 입력 시작
+                busUpdate_Thread = Thread(target=self.bus.loopUpdate, args=(self.updateCycle,))  # 버스 정보 갱신 시작
+                LED_Thread = Thread(target=self.control.LEDLoop)  # 음성 안내 시작
+                Socket_Thread = Thread(target=self.kySocket.loopSocket)  # 연산 시작
+                print("System Start")
+                button_Thread.start()
+                busUpdate_Thread.start()
+                LED_Thread.start()
+                Socket_Thread.start()
 
-            button_Thread.join()
-            busUpdate_Thread.join()
-            LED_Thread.join()
-            Socket_Thread.join()
-            
+                button_Thread.join()
+                busUpdate_Thread.join()
+                LED_Thread.join()
+                Socket_Thread.join()
+                
+                self.systemState = False
+
+        except(KeyboardInterrupt, SystemExit):
+            print("keyboardInterrupt")
             self.systemState = False
 
-
 if __name__ == "__main__":
-    loop = LoopSystem()
-    loop.loopStart()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('socket_ip', help='sub process ip',default="123")
+    parser.add_argument('socket_port', help='sub process port',default="123")
+    parser.add_argument('--bus_url', help='bus info api url')
+    parser.add_argument('--stationID', help='stationID, default=> keDate.py', default='203000165')
+    parser.add_argument('--updateCycle', help='bus info update cycle time', default=10)
+    args = parser.parse_args()
+    
+    
+    loop = LoopSystem(args)
+    loop.loopStart(args.updateCycle)

@@ -20,15 +20,16 @@ class Bus:
 
 
 class BaseStationDict:
-    def __init__(self,stationId,serviceKey):
+    def __init__(self,stationId,serviceKey,url='http://openapi.gbis.go.kr/ws/rest'):
         self.serviceKey = serviceKey
         self.stationId =stationId
+        self.urls = url
         self.busDict = {}  # busNumber : Bus
         self.stationAPI()
 
     def stationAPI(self): #1234567890
 
-        url = "http://openapi.gbis.go.kr/ws/rest/busarrivalservice/station?serviceKey="
+        url = self.urls + "/busarrivalservice/station?serviceKey="
         url = url + self.serviceKey + "&stationId="
         url = url + self.stationId
         response = requests.get(url)
@@ -68,7 +69,7 @@ class BaseStationDict:
                 bus.modifyBus(busCode, '-1', '-1')
 
     def routeAPI(self,routeId):
-        url = "http://openapi.gbis.go.kr/ws/rest/busrouteservice/info?serviceKey="
+        url = self.urls + "/busrouteservice/info?serviceKey="
         url = url + self.serviceKey + "&routeId="
         url = url + routeId
         response = requests.get(url)
@@ -122,5 +123,5 @@ class BaseStationDict:
 
 
 if __name__ == "__main__":
-    b = BaseStationDict("203000165","1234567890")
+    b = BaseStationDict("203000165","1234567890",'http://127.0.0.1')
     b.loopUpdate(3)

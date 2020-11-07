@@ -20,3 +20,6 @@ class baseSocket:
         mode = self.s.recv(10).decode("UTF-8")
 
         return mode
+    
+    def End_Socket(self):
+        self.s.close()
