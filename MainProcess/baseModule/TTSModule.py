@@ -18,8 +18,9 @@ class TTS() :
         self.request.add_header("X-NCP-APIGW-API-KEY-ID", client_id)
         self.request.add_header("X-NCP-APIGW-API-KEY", client_secret)
 
-        self.playStop = (False, -1)
-
+        self.playStop = (False, -1)         #Stop 또한 한개 메소드로 두채널 관리하기 위함
+        self.play_state = [False, False]    #채널 상태 체크
+     
         pygame.mixer.init()
        
 
@@ -75,12 +76,19 @@ class TTS() :
 
 
     def __playSet(self, pList, soundChannel=0):
+        self.setPlayStop(soundChannel)
+        
+        while self.play_state[soundChannel] :   # 다음꺼를 실행하기전에 이전 음성 완전히 종료되길 기다림
+            pass
+        self.play_state[soundChannel] = True    # 실행 상태 전이
+
         for p in pList:
             if p != None:
                 self.__play(p,soundChannel=soundChannel)
-            if self.playStop[0] and self.playStop[1] == soundChannel:
-                return
-        self.__playwiat_1min(soundChannel=soundChannel)
+
+            if self.playStop[0] and self.playStop[1] == soundChannel:   # 중지요청에 따른 종료
+                break
+        self.play_state[soundChannel] = False   # 종료되면 상태 해제
 
     
     def playVoice(self, play1, play2=None, play3=None, play4=None, play5=None,play6=None,play7=None,play8=None,play9=None,play10=None, soundChannel=0):
@@ -90,10 +98,13 @@ class TTS() :
 
 
     def setPlayStop(self,soundChannel=0):
-        while self.playStop[0]:
+        while self.playStop[0]:     #두 채널를 한개에 매소드로 동시에 처리하기 위함 세마포어같은거
             pass
-        self.playStop = (True, soundChannel)
-        pygame.mixer.Channel(soundChannel).stop()
+        self.playStop = (True, soundChannel)        # 재생 정지 요청
+        pygame.mixer.Channel(soundChannel).stop()   # pygame 재생 정지
+
+        while self.play_state[soundChannel] :       # 완전히 재생이 정지되면 변수 초기화
+            pass
         self.playStop = (False,-1)
  
 
