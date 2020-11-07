@@ -47,12 +47,12 @@ class busPlayList(TTS):
         self.tts_api("현재 정류장 정보가 없습니다. 관리자에게 문의해주세요.",self.status.error_station_info)
         self.tts_api("현재 운행중인 버스가 없습니다.",self.status.error_bus_not)
         self.tts_api("대기모드로 전환합니다.",self.status.end_program)
-        c = 1
+        c = 0
         for n in self.status.bus_before_number: #10까지 숫자
-            self.tts_api(n,str(c))
+            self.tts_api(n,'c'+str(c))
             c = c+1
         for n in range(20):
-            self.tts_api(str(c),str(c)) #11~30 숫자
+            self.tts_api(str(c),'c'+str(c)) #11~30 숫자
             c = c+1
         for n in self.status.tts_conneter: #추가접미사
             self.tts_api(n,n)

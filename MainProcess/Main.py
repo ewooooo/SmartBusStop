@@ -119,10 +119,10 @@ class Control:
         self.__playListSemaphore.acquire()
         if bool(self.playlist):
             if self.userBus.add(self.playlist[0]):
-                self.TTS.playVoice(self.playlist[0].busNumber,self.TTS.status.button_2_Push_Succes,"현재",self.playlist[0].location,self.TTS.status.bus_before_station,soundChannel=1)
+                self.TTS.playVoice(self.playlist[0].busNumber,self.TTS.status.button_2_Push_Succes,"현재",'c'+self.playlist[0].location,self.TTS.status.bus_before_station,soundChannel=1)
                 print("버스 등록 : " +str(self.playlist[0].busNumber))
             else:
-                self.TTS.playVoice(self.TTS.status.button_2_Push_Fail,"현재",self.playlist[0].location,self.TTS.status.bus_before_station,soundChannel=1)
+                self.TTS.playVoice(self.TTS.status.button_2_Push_Fail,"현재",'c'+self.playlist[0].location,self.TTS.status.bus_before_station,soundChannel=1)
         else :
             self.main.tts.playVoice(self.main.tts.status.error_station_info,soundChannel=1)
             print("이미 등록 : " +str(self.playlist[0].busNumber))
