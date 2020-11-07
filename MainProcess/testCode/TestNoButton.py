@@ -1,3 +1,4 @@
+import time
 class MyButton:
     def __init__(self,obj):
         self.main = obj
@@ -6,6 +7,16 @@ class MyButton:
         while True:
             if not self.main.systemState:
                     return
+            time.sleep(10)
+            self.oneClick()
+            time.sleep(3)
+            self.longClick()
+            time.sleep(3)
+            self.rotaryAction(1)
+            time.sleep(3)
+            self.oneClick()
+            time.sleep(30)
+
     def oneClick(self):
         print("oneClick")
         self.main.control.SelectBus()

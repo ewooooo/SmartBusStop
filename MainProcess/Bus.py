@@ -2,9 +2,12 @@ import time
 from baseModule.BusModule import BaseStationDict
 
 class StationDict(BaseStationDict):
-    def __init__(self,obj,stationId,serviceKey):
+    def __init__(self,obj,stationId,serviceKey,urls):
         self.main = obj
-        BaseStationDict.__init__(self,stationId,serviceKey)
+        if not urls:
+            BaseStationDict.__init__(self,stationId,serviceKey)
+        else:
+            BaseStationDict.__init__(self,stationId,serviceKey,urls)
         self.nowBusLP = ""
 
     def reset(self):

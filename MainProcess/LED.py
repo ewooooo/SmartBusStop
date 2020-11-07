@@ -4,7 +4,7 @@ class LED(baseLED):
     def __init__(self):
         self.nowplay = None
     def SET_LED(self, number):
-        if nowplay != number:
+        if self.nowplay != number:
             super().SET_LED(number)
             self.nowplay = number
             print("LED pirnt : "+number)
@@ -12,4 +12,4 @@ class LED(baseLED):
         if not self.nowplay:
             super().OFF_LED()
             self.nowplay = None
-            print("LED off")
+            #print("LED off")

@@ -1,15 +1,15 @@
 import argparse
-
+import time
 from threading import Thread, Semaphore
 
 from my_socket import mySocket
 from busPlayList import busPlayList
 from Bus import StationDict
 
-from myButton import MyButton
-from LED import LED
-# from testCode.TestNoButton import MyButton
-# from testCode.TestNoLED import LED
+# from myButton import MyButton
+# from LED import LED
+from testCode.TestNoButton import MyButton
+from testCode.TestNoLED import LED
 import keyData
 
 class UserBus:
@@ -186,7 +186,7 @@ class Control:
     def checkdel(self):
         if bool(self.LEDPlayList) :
             for b in self.LEDPlayList:
-                if b.location > 1:
+                if int(b.location) > 1:
                     if self.userBus.endDelete(b):
                         self.LEDPlayList.remove(b)
 
@@ -203,10 +203,7 @@ class LoopSystem:
         self.tts = busPlayList(keyData.TTS_client_id, keyData.TTS_client_secret)
         self.userBus = UserBus()
         self.control = Control(self)
-        if not args.bus_url :
-            self.bus = StationDict(self, args.stationID, keyData.serviceKey)  # 순서 중요 tts -> userBus-> control -> bus
-        else:
-            self.bus = StationDict(self, args.stationID, keyData.serviceKey, args.bus_url)  # url 변경 필요시
+        self.bus = StationDict(self, args.stationID, keyData.serviceKey, args.url)  # 순서 중요 tts -> userBus-> control -> bus
         self.led = LED()
         
         self.updateCycle = args.updateCycle
@@ -222,7 +219,7 @@ class LoopSystem:
                     self.systemState = self.button.wakeUpTest()
 
                 self.tts.playVoice(self.tts.status.button_1_Info,soundChannel=0)
-                self.TTS.setPlayStop(1)
+                self.tts.setPlayStop(1)
                 
                 self.userBus.reset()
                 self.control.reset()
@@ -251,13 +248,13 @@ class LoopSystem:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('socket_ip', help='sub process ip',default="123")
-    parser.add_argument('socket_port', help='sub process port',default="123")
-    parser.add_argument('--bus_url', help='bus info api url')
+    parser.add_argument('socket_ip', help='sub process ip')
+    parser.add_argument('socket_port', help='sub process port',type=int)
+    parser.add_argument('--url', help='bus info api url')
     parser.add_argument('--stationID', help='stationID, default=> keDate.py', default='203000165')
     parser.add_argument('--updateCycle', help='bus info update cycle time', default=10)
     args = parser.parse_args()
     
     
     loop = LoopSystem(args)
-    loop.loopStart(args.updateCycle)
+    loop.loopStart()
