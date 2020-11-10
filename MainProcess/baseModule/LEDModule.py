@@ -9,9 +9,10 @@ class baseLED():
         options.cols = 64
         options.gpio_slowdown = 2
         self.matrix = RGBMatrix(options = options)
-        self.offscreen_canvas = self.matrix.CreateFrameCanvas()
+
 
     def SET_LED_set(self,my_text):
+        self.offscreen_canvas = self.matrix.CreateFrameCanvas()
         font1 = graphics.Font()
         font1.LoadFont("./5x7.bdf")
         font = graphics.Font()
@@ -93,7 +94,7 @@ class baseLED():
         
         
     def OFF_LED_set(self):
-        self.offscreen_canvas.Clear()
+        self.offscreen_canvas = self.matrix.CreateFrameCanvas()
         self.displaying = self.matrix.SwapOnVSync(self.offscreen_canvas)
     
     
