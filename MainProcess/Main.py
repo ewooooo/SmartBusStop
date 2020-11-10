@@ -6,10 +6,10 @@ from my_socket import mySocket
 from busPlayList import busPlayList
 from Bus import StationDict
 
-# from myButton import MyButton
-# from LED import LED
-from testCode.TestNoButton import MyButton
-from testCode.TestNoLED import LED
+from myButton import MyButton
+from LED import LED
+# from testCode.TestNoButton import MyButton
+# from testCode.TestNoLED import LED
 import keyData
 
 class UserBus:
