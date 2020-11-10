@@ -27,7 +27,7 @@ class TTS() :
     def tts_api(self, textdata, mp3FileName):   # mp3 받아오는 파일
 
         fileName =project_dir+ "/sound/" + mp3FileName + ".wav"
-        data = "speaker=mijin&format=wav&speed=-3&text=" + textdata
+        data = "speaker=mijin&format=wav&speed=-1&text=" + textdata
 
         response = urllib.request.urlopen(self.request, data=data.encode('utf-8'))
 
