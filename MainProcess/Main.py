@@ -6,7 +6,7 @@ from my_socket import mySocket
 from busPlayList import busPlayList
 from Bus import StationDict
 
-from myButton import MyButton
+from myButton import MyButton3
 from LED import LED
 # from testCode.TestNoButton import MyButton
 # from testCode.TestNoLED import LED
