@@ -2,6 +2,7 @@ from baseModule.LEDModule import baseLED
 
 class LED(baseLED):
     def __init__(self):
+        baseLED.__init__(self)
         self.nowplay = None
     def SET_LED(self, number):
         if self.nowplay != number:
