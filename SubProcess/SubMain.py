@@ -13,7 +13,7 @@ class ServerSocket:
         print('Socket awaiting messages')
         (self.conn, self.addr) = s.accept()
         print('Connected')
-        self.__busSystem = busCarNumberDetect('test.mp4')
+        self.__busSystem = busCarNumberDetect(0)
 
     def Send_Recv(self):
         while True:
