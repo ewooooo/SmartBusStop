@@ -4,13 +4,13 @@ class BaseButton:
     LONGCLICKTIME = 0.6
     ONECLICKTIME = 0.3
 
-    ButtonPin = 17
+    ButtonPin = 26 # SW Button pin
 
-    DT = 22         #// 로터리 엔코더의 DT를 연결한 핀
-    CLK = 27        #// 로터리 엔코더의 CLK를 연결한 핀 A
-   
-    oldCLK = 0  #// CLK 핀의 값을 저장하는 변수
-    oldDT = 0  # // DT 핀의 값을 저장하는 변수
+    DT = 6         # 로터리 엔코더 DT
+    CLK = 5        # 로터리 엔코더 CLK
+
+    oldCLK = 0 
+    oldDT = 0  
   
     outTime = 0.1
 
@@ -106,6 +106,8 @@ class BaseButton:
                     delaytime = (time.time_ns() - count) / 1000000000
                     if delaytime > self.ONECLICKTIME:
                         return True
+            else :
+                count = 0
 
 
 

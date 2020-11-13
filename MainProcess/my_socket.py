@@ -13,8 +13,6 @@ class mySocket(baseSocket):
         mode = mode[0:9]
         mode = mode.replace('_','')
         SList = mode.split('|')
-        print(SList)
-
         return SList
 
     def loopSocket(self):
@@ -27,7 +25,6 @@ class mySocket(baseSocket):
                     recvBuffer=self.Send_Recv('0')
                     if recvBuffer[0] == '1':
                         self.main.control.CamCheckBus(recvBuffer[1])
-                        print(recvBuffer)
                     else :
                         print("통신에러")
             except:

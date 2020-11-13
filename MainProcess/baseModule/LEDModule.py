@@ -2,22 +2,21 @@ from rgbmatrix import graphics,RGBMatrix, RGBMatrixOptions
 import time
 
 class baseLED():
-    def __init__(self):
-        
+    def __init__(self,dir="./"):
+        self.dir = dir
         options = RGBMatrixOptions()
         options.rows = 32
         options.cols = 64
         options.gpio_slowdown = 2
         self.matrix = RGBMatrix(options = options)
-        self.offscreen_canvas = None
-              
-
-    def SET_LED_set(self,my_text):
         self.offscreen_canvas = self.matrix.CreateFrameCanvas()
+        
+    def SET_LED_set(self,my_text):
+        self.offscreen_canvas.Clear()
         font1 = graphics.Font()
-        font1.LoadFont("./5x7.bdf")
+        font1.LoadFont(self.dir+"5x7.bdf")
         font = graphics.Font()
-        font.LoadFont("./10x20.bdf")
+        font.LoadFont(self.dir+"10x20.bdf")
         textColor = graphics.Color(255, 255, 0)
         testlen = len(my_text)
         
