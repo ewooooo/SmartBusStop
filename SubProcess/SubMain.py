@@ -25,7 +25,7 @@ class ServerSocket:
                 replyData.append('1')
 
                 #imageRetrunData = input("입력1 :") # 카메라 정보에서 리턴
-                imageReturnData = (self.__busSystem.detect(0))
+                imageReturnData = (self.__busSystem.detect())
                 for data in imageReturnData:
                     replyData.append(data)
 
