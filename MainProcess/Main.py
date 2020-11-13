@@ -21,6 +21,7 @@ class UserBus:
         self.userSemaphore = Semaphore(1)
     def reset(self):
         self.userBusList = []
+        self.userBusList_play = []
         self.recentBus = None
 
     def add(self, bus):  # userbus add
@@ -30,8 +31,10 @@ class UserBus:
             self.userBusList.append(bus)
             self.userBusList_play.append(bus)
             self.userSemaphore.release()
+            self.checkupdate()
             return True
         else:
+            self.checkupdate()
             return False
 
     def cancel(self):  # userbus del
@@ -47,10 +50,12 @@ class UserBus:
             else:
                 self.recentBus = None
             self.userSemaphore.release()
+            self.checkupdate()
             return bus
         else:
             self.recentBus = None
             self.userSemaphore.release()
+            self.checkupdate()
             return None
 
     def endDelete(self, bus):
@@ -59,8 +64,10 @@ class UserBus:
             if self.userBusList.remove(bus):
                 self.userBusList_play.remove(bus)
                 self.userSemaphore.release()
+                self.checkupdate()
                 return True
         self.userSemaphore.release()
+        self.checkupdate()
         return False
 
     def nextBus(self):
@@ -72,13 +79,20 @@ class UserBus:
             self.userBusList_play.append(self.userBusList_play[0])
             del self.userBusList_play[0]
         self.userSemaphore.release()
+        self.checkupdate()
         return nextbus
     def checkBus(self, bus):
         if bus in self.userBusList:
+            self.checkupdate()
             return True
         else :
+            self.checkupdate()
             return False
-            
+    def checkupdate(self):
+        self.userSemaphore.acquire()
+        print(self.userBusList_play)
+        self.userSemaphore.release()
+    
 class Control:
     def __init__(self,main):
         self.TTS = main.tts
