@@ -63,7 +63,7 @@ class UserBus:
         print("endDelete : " + bus.busNumber)
         self.userSemaphore.acquire()
         if bus in self.userBusList:
-            self.userBusList.remove(bus):
+            self.userBusList.remove(bus)
             self.userBusList_play.remove(bus)
             self.userSemaphore.release()
             self.checkupdate()
