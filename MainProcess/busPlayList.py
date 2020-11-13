@@ -40,19 +40,19 @@ class busPlayList(TTS):
         self.tts_api( "버스가 등록되었습니다. 등록하신 버스가 아니시면 버튼을 길게 눌러주세요",self.status.button_2_Push_Succes)
         self.tts_api("버스가 이미등록되어있습니다.",self.status.button_2_Push_Fail)
         self.tts_api("버스가 등록취소되었습니다",self.status.button_3_Cancel)
-        self.tts_api( "취소할 버스가 없습니다",self.status.button_3_Cancel_Fail)
+        self.tts_api( "취소할 버스가 없습니다. 손잡이를 돌려 버스를 선택하고 버튼을 눌러 등록해주세요.",self.status.button_3_Cancel_Fail)
         self.tts_api("정거장 전에 있습니다",self.status.bus_before_station)
         self.tts_api("버스가 잠시후에 도착합니다",self.status.bus_arrive)
         self.tts_api("현재 정류장에 진입하는 버스는 ",self.status.bus_stop)
         self.tts_api("현재 정류장 정보가 없습니다. 관리자에게 문의해주세요.",self.status.error_station_info)
         self.tts_api("현재 운행중인 버스가 없습니다.",self.status.error_bus_not)
         self.tts_api("대기모드로 전환합니다.",self.status.end_program)
-        c = 1
+        c = 0
         for n in self.status.bus_before_number: #10까지 숫자
-            self.tts_api(n,str(c))
+            self.tts_api(n,'c'+str(c))
             c = c+1
         for n in range(20):
-            self.tts_api(str(c),str(c)) #11~30 숫자
+            self.tts_api(str(c),'c'+str(c)) #11~30 숫자
             c = c+1
         for n in self.status.tts_conneter: #추가접미사
             self.tts_api(n,n)

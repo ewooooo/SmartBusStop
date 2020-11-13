@@ -16,8 +16,8 @@ class busCarNumberDetect:
         w = int(self.__cap.get(3))
         h = int(self.__cap.get(4))
         f = int(self.__cap.get(5))
-        fourcc = cv2.VideoWriter_fourcc(*'DIVX')
-        self.__outVideo = cv2.VideoWriter('output.avi', fourcc, f, (w,h))
+        #fourcc = cv2.VideoWriter_fourcc(*'DIVX')
+        #self.__outVideo = cv2.VideoWriter('output.avi', fourcc, f, (w,h))
 
 
         self.__net = cv2.dnn.readNet("obj_60000.weights", "obj.cfg")
@@ -66,9 +66,9 @@ class busCarNumberDetect:
     def __OCR(self,inputImg):
         
         gray = cv2.cvtColor(inputImg, cv2.COLOR_BGR2GRAY)
-        canny = cv2.Canny(gray, 5000, 1500, apertureSize = 5, L2gradient = True)
+        canny = cv2.Canny(gray, 700, 350, apertureSize = 5, L2gradient = True)
         cv2.imshow("canny",canny)
-        lines = cv2.HoughLinesP(canny, 1, np.pi / 180, 50, minLineLength = 5, maxLineGap = 15)
+        lines = cv2.HoughLinesP(canny, 1, np.pi / 180, 50, minLineLength = 3, maxLineGap = 150)
         angle = 0
         maxdim = 0
         if not (lines is None):
@@ -84,7 +84,7 @@ class busCarNumberDetect:
         roih, roiw, roic = inputImg.shape
         matrix = cv2.getRotationMatrix2D((roiw/2, roih/2), angle, 1)
         roi = cv2.warpAffine(inputImg, matrix, (roiw, roih))
-                    
+        cv2.imshow("tessroi",roi)     
         r = pytesseract.image_to_string(roi, lang='Hangul')
         return r
         
@@ -111,9 +111,9 @@ class busCarNumberDetect:
                 label = str(self.__classes[class_ids[i]])
 
                     
-                paddingx = int(w * 0.3)
-                paddingy = int(h * 0.05)
-                px1 = x - paddingx if x-paddingx >= 0 else 0
+                paddingx = -int(w * 0.05)
+                paddingy = int(h * 0.1)
+                px1 = x - paddingx*2 if x-paddingx >= 0 else 0
                 px2 = x + w + paddingx if x + w + paddingx <= width else width
                 py1 = y - paddingy if y-paddingy >= 0 else 0
                 py2 = y + h + paddingy if y+h+paddingy <= height else height
@@ -135,7 +135,7 @@ class busCarNumberDetect:
                 cv2.putText(img, label+"  "+carnum, (x, y + 30), font, 3, (0,0,255), 3)
 
         cv2.imshow("Image", img)
-        self.__outVideo.write(img)
+        #self.__outVideo.write(img)
         print(resultNumberList)
         return resultNumberList
     def End(self):
@@ -143,7 +143,7 @@ class busCarNumberDetect:
         cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    s=busCarNumberDetect('test.mp4')
+    s=busCarNumberDetect(0)
     while True:
         print(s.detect())
 

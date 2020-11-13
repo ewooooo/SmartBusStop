@@ -56,7 +56,7 @@
 - RaspberryPi 4 (OS : Raspbian)
 - python
 - OpenCV 4.3.0 / Tesseract-OCR / DNN(YOLOv4)
-- TCP Socket Commuication (Wifi)
+- TCP Socket Commuication
 
 ```powershell
 # OpenCV
@@ -95,7 +95,7 @@ python3 SubMain.py
 
 - RaspberryPi 4 (OS : Raspbian)
 - python 3.8
-- TCP Socket Commuication (LAN)
+- TCP Socket Commuication
 - Multi Thread
 - 모듈화(각 모듈 개별 동작 가능, 기능별 분리) _baseModule
 
@@ -104,7 +104,7 @@ python3 SubMain.py
 # pygame 설치 필요
 # LED 라이브설치 필요
 # Start System
-python3 ./MainProcess/Main.py
+python3 ./MainProcess/Main.py SubProcess_IP Port
 ```
 
 ```python
@@ -114,8 +114,6 @@ TTS_client_secret= '************************'
 stationNumber = '203000165' #정류장 ID
 serviceKey = '****************'
 updateCycle = 10
-HOST = '127.0.0.1'
-PORT = 12345
 ```
 
 ### 1) 버튼 & 로터리엔코더 (버스입력)
@@ -306,19 +304,19 @@ Extraction Module Based on Raspberry Pi", Journal of Korea Multimedia Society Vo
 
 ## Developer:
 
-남은우(경기대학교)    201512285@kyonggi.ac.kr
+남은우   201512285@kyonggi.ac.kr
 
 - Main 알고리즘, 멀티 쓰레드, Socket, 모듈화, 버튼&로터리엔코더 모듈 개발, 번호판인식 알고리즘(OpenCV), 버튼 구조 설계(3D 프린팅), 음성동시재생
 
-이재빈(경기대학교)    leejb8777@gmail.com
+이재빈   leejb8777@gmail.com
 
 - 버스정보 모듈 개발, Tesseract-OCR, 라즈비안 개발환경 구축(OpenCV, Tesseract-OCR), 전체 외관 설계, 테스트 시나리오
 
-이경신(경기대학교)    amablove1126@naver.com
+이경신   amablove1126@naver.com
 
 - LED 모듈 개발, Socket, 번호판인식 알고리즘(OpenCV)
 
-서유빈(경기대학교)    dbqls0246@gmail.com
+서유빈   dbqls0246@gmail.com
 
 - TTS(음성 생성&재생) 모듈 개발, Tesseract-OCR, 글자필터링, python-c 바인딩, yolo DNN
 
@@ -335,6 +333,7 @@ Extraction Module Based on Raspberry Pi", Journal of Korea Multimedia Society Vo
 
 - Main : [https://lab.hanium.or.kr/20_pf008/main](https://lab.hanium.or.kr/20_pf008/main)
 - Sub(DNN) : [https://lab.hanium.or.kr/20_pf008/buslicenseplate_detection](https://lab.hanium.or.kr/20_pf008/buslicenseplate_detection)
+- 시연용 가상 bus 도착정보 xml 서버 : [https://lab.hanium.or.kr/20_pf008/bus_xml_-virtual_server](https://lab.hanium.or.kr/20_pf008/bus_xml_-virtual_server)
 
 ## Youtube
 

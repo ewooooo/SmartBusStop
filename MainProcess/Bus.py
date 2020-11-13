@@ -2,9 +2,16 @@ import time
 from baseModule.BusModule import BaseStationDict
 
 class StationDict(BaseStationDict):
-    def __init__(self,obj,stationId,serviceKey):
+    def __init__(self,obj,stationId,serviceKey,urls):
         self.main = obj
-        BaseStationDict.__init__(self,stationId,serviceKey)
+        if not urls:
+            BaseStationDict.__init__(self,stationId,serviceKey)
+        else:
+            BaseStationDict.__init__(self,stationId,serviceKey,urls)
+        self.nowBusLP = ""
+
+    def reset(self):
+        self.nowBusLP = ""
 
     def addBusAction(self,bus):
         self.main.tts.addBusData(bus)
@@ -18,14 +25,15 @@ class StationDict(BaseStationDict):
     
     def updateDataCheck(self):  
         self.printBusList()
-        self.main.control.checkdel()
         print("update Complate")
 
     def CampareCarNumber(self,CarNumber):
         for b in self.busDict.keys():
             bus = self.busDict.get(b)
-            if bus.plateNo[len(bus.plateNo) - 4:] == CarNumber:
+            if self.nowBusLP != bus.plateNo and bus.plateNo[len(bus.plateNo) - 4:] == CarNumber:
+                self.nowBusLP = bus.plateNo #방금 인식한 버스를 중복으로 음성안내하지 않기 위해서!
                 return bus
+
         return None
    
     def checkState(self):
