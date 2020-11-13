@@ -104,7 +104,7 @@ python3 SubMain.py
 # pygame 설치 필요
 # LED 라이브설치 필요
 # Start System
-python3 ./MainProcess/Main.py
+python3 ./MainProcess/Main.py SubProcess_IP Port
 ```
 
 ```python
@@ -114,8 +114,6 @@ TTS_client_secret= '************************'
 stationNumber = '203000165' #정류장 ID
 serviceKey = '****************'
 updateCycle = 10
-HOST = '127.0.0.1'
-PORT = 12345
 ```
 
 ### 1) 버튼 & 로터리엔코더 (버스입력)
