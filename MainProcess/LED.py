@@ -10,7 +10,7 @@ class LED(baseLED):
             self.nowplay = number
             print("LED pirnt : "+number)
     def OFF_LED(self):
-        if not self.nowplay:
+        if bool(self.nowplay):
             super().OFF_LED()
             self.nowplay = None
             #print("LED off")
