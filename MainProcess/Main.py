@@ -180,7 +180,7 @@ class Control:
                 
     def enterBusDelete(self,b):
         print("버스 진입 음성출력 성공 : "+b.busNumber)
-        time.sleep(3)
+        time.sleep(5)
         self.userBus.endDelete(b)
 
         #if not self.userBus.nextBus():
@@ -256,6 +256,8 @@ class LoopSystem:
                 busUpdate_Thread.join()
                 LED_Thread.join()
                 Socket_Thread.join()
+                
+                self.led.OFF_LED()
                 print("sleepSystem")
                 self.systemState = False
 
