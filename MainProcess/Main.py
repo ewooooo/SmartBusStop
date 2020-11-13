@@ -38,6 +38,7 @@ class UserBus:
             return False
 
     def cancel(self):  # userbus del
+        
         self.userSemaphore.acquire()
         if bool(self.userBusList) and bool(self.recentBus):
             bus = None
@@ -59,6 +60,7 @@ class UserBus:
             return None
 
     def endDelete(self, bus):
+        print("endDelete : " + bus.busNumber)
         self.userSemaphore.acquire()
         if bus in self.userBusList:
             if self.userBusList.remove(bus):
@@ -89,7 +91,10 @@ class UserBus:
     def checkupdate(self):
         self.userSemaphore.acquire()
         print("="*25)
-        print(self.userBusList_play)
+        count = 1
+        for bus in self.userBusList_play:
+            print(str(count) + bus.busNumber)
+            count = count + 1
         print("="*25)
         self.userSemaphore.release()
     
@@ -102,7 +107,7 @@ class Control:
         self.playlist = []    #세마포어로 충돌 해결
         self.TTS.SetChannelVolume(-0.5,soundChannel=1)
    
-    def addBusData(self, bus): 
+    def addBusData(self, bus):
         self.__playListSemaphore.acquire()
         self.playlist.append(bus)
         self.__playListSemaphore.release()
@@ -169,18 +174,18 @@ class Control:
                 print("버스 도칙" +str(b.busNumber))
 
                 if self.userBus.checkBus(b):
-                    busDel_Thread = Thread(target=self.__enterBusDelete,args=(b,))  # LED를 위해 조금 기다렸다가 삭제
+                    busDel_Thread = Thread(target=self.enterBusDelete,args=(b,))  # LED를 위해 조금 기다렸다가 삭제
                     busDel_Thread.start()
 
                 
-    def __enterBusDelete(self,bus):
-        print("버스 진입 음성출력 성공 : "+bus.busNumber)
+    def enterBusDelete(self,b):
+        print("버스 진입 음성출력 성공 : "+b.busNumber)
         time.sleep(3)
-        self.userBus.endDelete(bus)
-            
+        self.userBus.endDelete(b)
+
         if not self.userBus.nextBus():
             self.SystemEnd(self.TTS.status.error_bus_not)
-                
+
 
 
     def LEDLoop(self):
