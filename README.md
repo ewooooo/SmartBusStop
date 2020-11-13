@@ -333,6 +333,7 @@ Extraction Module Based on Raspberry Pi", Journal of Korea Multimedia Society Vo
 
 - Main : [https://lab.hanium.or.kr/20_pf008/main](https://lab.hanium.or.kr/20_pf008/main)
 - Sub(DNN) : [https://lab.hanium.or.kr/20_pf008/buslicenseplate_detection](https://lab.hanium.or.kr/20_pf008/buslicenseplate_detection)
+- 시연용 가상 bus 도착정보 xml 서버 : [https://lab.hanium.or.kr/20_pf008/bus_xml_-virtual_server](https://lab.hanium.or.kr/20_pf008/bus_xml_-virtual_server)
 
 ## Youtube
 
