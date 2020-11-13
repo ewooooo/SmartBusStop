@@ -25,7 +25,7 @@ class ServerSocket:
                 replyData.append('1')
 
                 #imageRetrunData = input("입력1 :") # 카메라 정보에서 리턴
-                imageReturnData = (self.__busSystem.detect())
+                imageReturnData = (self.__busSystem.detect(0))
                 for data in imageReturnData:
                     replyData.append(data)
 
@@ -38,5 +38,5 @@ class ServerSocket:
 
 
 if __name__ == "__main__":
-    server = ServerSocket('192.168.86.128',12345)
+    server = ServerSocket('192.168.8.11',12345)
     server.Send_Recv()
