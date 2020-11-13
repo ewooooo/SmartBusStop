@@ -171,7 +171,7 @@ class Control:
             if bool(b):
                 self.TTS.playVoice(self.TTS.status.bus_stop,b.busNumber,"입니다")
             
-                print("버스 도칙" +str(b.busNumber))
+                print("버스 도착 : " + str(b.busNumber) 
 
                 if self.userBus.checkBus(b):
                     busDel_Thread = Thread(target=self.enterBusDelete,args=(b,))  # LED를 위해 조금 기다렸다가 삭제
@@ -183,8 +183,8 @@ class Control:
         time.sleep(3)
         self.userBus.endDelete(b)
 
-        if not self.userBus.nextBus():
-            self.SystemEnd(self.TTS.status.error_bus_not)
+        #if not self.userBus.nextBus():
+        #    self.SystemEnd(self.TTS.status.error_bus_not)
 
 
 
