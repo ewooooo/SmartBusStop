@@ -56,7 +56,7 @@
 - RaspberryPi 4 (OS : Raspbian)
 - python
 - OpenCV 4.3.0 / Tesseract-OCR / DNN(YOLOv4)
-- TCP Socket Commuication (Wifi)
+- TCP Socket Commuication
 
 ```powershell
 # OpenCV
@@ -95,7 +95,7 @@ python3 SubMain.py
 
 - RaspberryPi 4 (OS : Raspbian)
 - python 3.8
-- TCP Socket Commuication (LAN)
+- TCP Socket Commuication
 - Multi Thread
 - 모듈화(각 모듈 개별 동작 가능, 기능별 분리) _baseModule
 
