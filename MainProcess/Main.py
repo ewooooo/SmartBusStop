@@ -79,18 +79,18 @@ class UserBus:
             self.userBusList_play.append(self.userBusList_play[0])
             del self.userBusList_play[0]
         self.userSemaphore.release()
-        self.checkupdate()
         return nextbus
+
     def checkBus(self, bus):
         if bus in self.userBusList:
-            self.checkupdate()
             return True
         else :
-            self.checkupdate()
             return False
     def checkupdate(self):
         self.userSemaphore.acquire()
+        print("="*25)
         print(self.userBusList_play)
+        print("="*25)
         self.userSemaphore.release()
     
 class Control:
@@ -174,8 +174,8 @@ class Control:
 
                 
     def __enterBusDelete(self,bus):
-        print("버스 진입 음성출력 성공")
-        time.sleep(10)
+        print("버스 진입 음성출력 성공 : "+bus.busNumber)
+        time.sleep(3)
         self.userBus.endDelete(bus)
             
         if not self.userBus.nextBus():
@@ -192,7 +192,7 @@ class Control:
             
             if bus :
                 self.main.led.SET_LED(bus.busNumber)
-                time.sleep(3)
+                time.sleep(2)
             else :
                 self.main.led.OFF_LED()
             
