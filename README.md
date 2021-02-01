@@ -11,9 +11,9 @@
 ### YouTube 영상 
 
 
-[![Video Label](https://img.youtube.com/vi/a2DLfB-0HCw/0.jpg)](https://www.youtube.com/watch?v=a2DLfB-0HCw) 
-    <- Click 
-  
+[![Video Label](https://img.youtube.com/vi/a2DLfB-0HCw/0.jpg)](https://www.youtube.com/watch?v=a2DLfB-0HCw) [![Video Label](https://img.youtube.com/vi/S9qLWyBcDVc/0.jpg)](https://www.youtube.com/watch?v=S9qLWyBcDVc)
+
+
 ---
 
 
@@ -336,5 +336,12 @@ Extraction Module Based on Raspberry Pi", Journal of Korea Multimedia Society Vo
 - 시연용 가상 bus 도착정보 xml 서버 : [https://lab.hanium.or.kr/20_pf008/bus_xml_-virtual_server](https://lab.hanium.or.kr/20_pf008/bus_xml_-virtual_server)
 
 ## Youtube
+### 작품 소개
+- https://www.youtube.com/watch?v=a2DLfB-0HCw
+- https://www.youtube.com/watch?v=D0dp2txQrz4
 
-https://www.youtube.com/watch?v=a2DLfB-0HCw&feature=youtu.be
+### 2020 프로보노 공모전 작품 시상식 [대상]
+- https://www.youtube.com/watch?v=S9qLWyBcDVc
+
+### 2020 ICT 멘토링 인터뷰
+- https://www.youtube.com/watch?v=rvYDuF_x1go
