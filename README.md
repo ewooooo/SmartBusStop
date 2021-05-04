@@ -337,7 +337,6 @@ Extraction Module Based on Raspberry Pi", Journal of Korea Multimedia Society Vo
 
 ## Youtube
 ### 작품 소개
-- https://www.youtube.com/watch?v=a2DLfB-0HCw
 - https://www.youtube.com/watch?v=D0dp2txQrz4
 
 ### 2020 프로보노 공모전 작품 시상식 [대상]
