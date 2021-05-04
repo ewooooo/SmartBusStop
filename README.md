@@ -10,8 +10,7 @@
 
 ### YouTube 영상 
 
-
-[![Video Label](https://img.youtube.com/vi/a2DLfB-0HCw/0.jpg)](https://www.youtube.com/watch?v=a2DLfB-0HCw) [![Video Label](https://img.youtube.com/vi/S9qLWyBcDVc/0.jpg)](https://www.youtube.com/watch?v=S9qLWyBcDVc)
+[![Video Label](https://img.youtube.com/vi/S9qLWyBcDVc/0.jpg)](https://www.youtube.com/watch?v=S9qLWyBcDVc)
 
 
 ---
